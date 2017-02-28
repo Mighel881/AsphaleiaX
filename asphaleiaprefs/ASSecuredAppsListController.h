@@ -1,14 +1,15 @@
 #import <Preferences/PSListController.h>
+#import <AppList/AppList.h>
 
-@interface ASSecuredAppsListController : PSListController{
-	NSMutableDictionary *systemApps;
-	NSArray *systemAppsSortedTitles;
-	NSDictionary *appStoreApps;
-	NSArray *appStoreAppsSortedTitles;
-	NSMutableArray *systemAppsSortedKeys;
-	NSMutableArray *appStoreAppsSortedKeys;
-	NSArray *allAppsSortedKeys;
-	NSMutableDictionary *securedApps;
-	NSMutableDictionary *asphaleiaSettings;
+@interface ALApplicationTableDataSource (Private)
+- (void)sectionRequestedSectionReload:(id)section animated:(BOOL)animated;
+@end
+
+@interface ALLinkCell : ALValueCell
+@end
+
+@interface ASSecuredAppsListController : PSViewController <UITableViewDelegate> {
+	UITableView *_tableView;
+	ALApplicationTableDataSource *_dataSource;
 }
 @end

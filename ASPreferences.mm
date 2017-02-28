@@ -171,6 +171,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 - (BOOL)protectAllApps {
 	if (![self requireAuthorisationOnWifi] || [ASPreferences sharedInstance].asphaleiaDisabled) {
+		HBLogDebug(@"returning no for protectAllApps");
 		return NO;
 	}
 	return [self objectForKey:kProtectAllAppsKey] ? [[self objectForKey:kProtectAllAppsKey] boolValue] : NO;
@@ -252,8 +253,8 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (BOOL)securityEnabledForApp:(NSString *)app {
-	NSDictionary *apps = [self objectForKey:kSecuredAppsKey];
-	return [[apps objectForKey:app] boolValue];
+	NSString *key = [NSString stringWithFormat:@"securedApps-%@-enabled", app];
+	return ![self objectForKey:key] ? NO : [[self objectForKey:key] boolValue];
 }
 
 - (BOOL)requiresSecurityForApp:(NSString *)app {
@@ -267,14 +268,14 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 		tempUnlockedApp = reply[@"bundleIdentifier"];
 	}
 
-	NSDictionary *apps = [self objectForKey:kSecuredAppsKey];
-	if (!apps || ![self requireAuthorisationOnWifi] || [ASPreferences sharedInstance].itemSecurityDisabled || [ASPreferences sharedInstance].asphaleiaDisabled || [tempUnlockedApp isEqualToString:app]) {
+	NSString *key = [NSString stringWithFormat:@"securedApps-%@-enabled", app];
+	if (![self requireAuthorisationOnWifi] || [ASPreferences sharedInstance].itemSecurityDisabled || [ASPreferences sharedInstance].asphaleiaDisabled || [tempUnlockedApp isEqualToString:app]) {
 		return NO;
 	} else if ([self protectAllApps]) {
 		return YES;
 	}
 
-	return [[apps objectForKey:app] boolValue];
+	return [[self objectForKey:key] boolValue];
 }
 
 - (BOOL)requiresSecurityForFolder:(NSString *)folder {

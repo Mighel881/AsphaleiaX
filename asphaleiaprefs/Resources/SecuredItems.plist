@@ -26,7 +26,7 @@
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
-		<dict> 
+		<dict>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
@@ -55,6 +55,20 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.a3tweaks.asphaleia</string>
+			<key>key</key>
+			<string>globalAppSecurity</string>
+			<key>label</key>
+			<string>Global App Security</string>
+			<key>PostNotification</key>
+			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
