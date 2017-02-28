@@ -74,6 +74,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 - (BOOL)showPhotosProtectMessage;
 - (void)increasePhotosProtectMessageCount;
 - (BOOL)securityEnabledForApp:(NSString *)app;
+- (NSInteger)securityLevelForApp:(NSString*)app;
 - (BOOL)requiresSecurityForApp:(NSString *)app;
 - (BOOL)requiresSecurityForFolder:(NSString *)folder;
 - (BOOL)requiresSecurityForPanel:(NSString *)panel;

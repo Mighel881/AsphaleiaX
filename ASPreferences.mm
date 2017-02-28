@@ -257,6 +257,11 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	return ![self objectForKey:key] ? NO : [[self objectForKey:key] boolValue];
 }
 
+- (NSInteger)securityLevelForApp:(NSString*)app {
+	NSString *key = [NSString stringWithFormat:@"securedApps-%@-protectionLevel", app];
+	return ![self objectForKey:key] ? 1 : [[self objectForKey:key] intValue];
+}
+
 - (BOOL)requiresSecurityForApp:(NSString *)app {
 	NSString *tempUnlockedApp;
 	if (objc_getClass("SpringBoard") && objc_getClass("ASAuthenticationController")) {

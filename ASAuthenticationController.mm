@@ -225,6 +225,7 @@ static ASAuthenticationController *sharedCommonObj;
     currentAuthAppBundleID = iconView.icon.applicationBundleID;
 
     if (_fingerglyph && _currentHSIconView) {
+        HBLogDebug(@"fingerglyph exists");
         [iconView setHighlighted:NO];
         if ([iconView isEqual:_currentHSIconView]) {
             [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:iconView eventBlock:^void(BOOL authenticated){
@@ -240,7 +241,8 @@ static ASAuthenticationController *sharedCommonObj;
     } else if (([iconView.icon isApplicationIcon] && ![[ASPreferences sharedInstance] requiresSecurityForApp:iconView.icon.applicationBundleID]) || ([iconView.icon isFolderIcon] && ![[ASPreferences sharedInstance] requiresSecurityForFolder:displayName])) {
         [iconView setHighlighted:NO];
         return NO;
-    } else if (![[ASPreferences sharedInstance] touchIDEnabled] && [[ASPreferences sharedInstance] passcodeEnabled]) {
+    } else if ((![[ASPreferences sharedInstance] touchIDEnabled] || [[ASPreferences sharedInstance] securityLevelForApp:currentAuthAppBundleID] == 0) && [[ASPreferences sharedInstance] passcodeEnabled]) {
+        HBLogDebug(@"security level 0");
         [iconView setHighlighted:NO];
         [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:iconView eventBlock:^void(BOOL authenticated){
 
