@@ -15,6 +15,8 @@
 - (UIImage *)colouriseImage:(UIImage *)origImage withColour:(UIColor *)tintColour;
 @end
 
+BOOL blockPasscode;
+
 %subclass ASAuthenticationAlert : SBAlertItem
 
 %new
@@ -64,6 +66,8 @@
 		}
 		self.icon = imgView;
 
+		blockPasscode = ([[ASPreferences sharedInstance] securityLevelForApp:identifier] == 2);
+
 		self.useSmallIcon = NO;
 	}
 	return self;
@@ -95,7 +99,6 @@
 		[[ASAuthenticationController sharedInstance] setCurrentAuthAlert:nil];
 		if (self.delegate) {
 			SBIconView *icon = [self.icon isKindOfClass:%c(SBIconView)] ? (SBIconView *)self.icon : nil;
-
 			id delegateReference = self.delegate;
 			[[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:icon eventBlock:^void(BOOL authenticated){
 				if (authenticated) {
@@ -108,7 +111,10 @@
 	}];
 
 	[[self alertController] addAction:cancelButton];
-	[[self alertController] addAction:passcodeButton];
+	if (!blockPasscode) {
+		[[self alertController] addAction:passcodeButton];
+	}
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self addSubviewToAlert:self.icon];
 	});
