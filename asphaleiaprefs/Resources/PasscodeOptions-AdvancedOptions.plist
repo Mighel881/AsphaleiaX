@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Black out multitasking previews for secured apps.</string>
+			<string>BLACKOUT_MULTITASKING_FOOTER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -20,7 +20,7 @@
 			<key>key</key>
 			<string>obscureAppContent</string>
 			<key>label</key>
-			<string>Obscure App Content</string>
+			<string>OBSCURE_APP_CONTENT</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -28,7 +28,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Black out notifications for secured apps.</string>
+			<string>BLACKOUT_NOTIF_FOOTER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -40,7 +40,7 @@
 			<key>key</key>
 			<string>obscureBanners</string>
 			<key>label</key>
-			<string>Obscure Notifications</string>
+			<string>OBSCURE_NOTIFICATIONS</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -48,7 +48,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Do not require re-authorization of a secured app if it is already open upon unlocking.</string>
+			<string>REAUTH_FOOTER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -60,7 +60,7 @@
 			<key>key</key>
 			<string>easyUnlockIntoApp</string>
 			<key>label</key>
-			<string>Unlock to App Unsecured</string>
+			<string>UNLOCK_UNSECURED</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -68,7 +68,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Set a limited amount of time after unlocking before App Security is enabled.</string>
+			<string>TIME_LIMIT_FOOTER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -80,7 +80,7 @@
 			<key>key</key>
 			<string>delayAfterLock</string>
 			<key>label</key>
-			<string>Delay Asphaleia</string>
+			<string>DELAY_ASPHALEIA</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -94,7 +94,7 @@
 			<key>key</key>
 			<string>timeIntervalLock</string>
 			<key>label</key>
-			<string>Delay Length</string>
+			<string>DELAY_LENGTH</string>
 			<key>validTitles</key>
 			<array>
 				<string>For 10 seconds</string>
@@ -120,7 +120,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Unprotect everything when on your home network. Add multiple networks separating them with a comma and a space e.g. 'A, B'</string>
+			<string>NETWORK_FOOTER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -132,7 +132,7 @@
 			<key>key</key>
 			<string>wifiUnlock</string>
 			<key>label</key>
-			<string>Wi-Fi Unlock</string>
+			<string>WIFI_UNLOCK</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -142,7 +142,7 @@
 			<key>id</key>
 			<string>WiFiNetworkTextCell</string>
 			<key>label</key>
-			<string>Network Name:</string>
+			<string>NETWORK_NAME</string>
 			<key>noAutoCorrect</key>
 			<true/>
 			<key>defaults</key>
@@ -160,7 +160,7 @@
 			<key>action</key>
 			<string>addCurrentNetwork</string>
 			<key>label</key>
-			<string>Add Current Network</string>
+			<string>ADD_CURRENT_NETWORK</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -180,10 +180,10 @@
 			<key>isController</key>
 			<true/>
 			<key>label</key>
-			<string>Fingerprints</string>
+			<string>FINGERPRINTS</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Advanced Options</string>
+	<string>TITLE</string>
 </dict>
 </plist>

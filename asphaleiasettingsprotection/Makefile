@@ -1,5 +1,4 @@
-ARCHS = armv7 arm64
-TARGET = iphone:9.2
+INSTALL_TARGET_PROCESSES = Preferences
 
 include $(THEOS)/makefiles/common.mk
 
@@ -11,6 +10,3 @@ AsphaleiaSettingsProtection_LDFLAGS = -L"../.theos/obj/debug"
 AsphaleiaSettingsProtection_LIBRARIES = asphaleiaui
 
 include $(THEOS_MAKE_PATH)/tweak.mk
-
-after-install::
-	install.exec "killall -9 Preferences"

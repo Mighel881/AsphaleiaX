@@ -1,0 +1,10 @@
+Bugs:
+- ASAlert broken due to 10.x
+- Some protections dont work
+- 3D touch and Tage bypass
+
+Things to do:
+- Revamp alerts with %property
+- Maybe coding style revise
+- Maybe fix Dummmy Passcode view in prefs
+- Finish localizations 

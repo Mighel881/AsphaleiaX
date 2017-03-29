@@ -10,8 +10,6 @@
 #define titleWithSpacingForIcon(t) [NSString stringWithFormat:@"\n\n\n%@",t]
 #define titleWithSpacingForSmallIcon(t) [NSString stringWithFormat:@"\n\n%@",t]
 
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-
 @interface ASAuthenticationController ()
 - (void)receivedNotificationOfName:(NSString *)name fingerprint:(id)fingerprint;
 @end
@@ -217,7 +215,7 @@ static ASAuthenticationController *sharedCommonObj;
     }
 
     NSString *displayName;
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.4")) {
+    if (IS_IOS_OR_NEWER(iOS_8_4)) {
         displayName = [iconView.icon displayNameForLocation:iconView.location];
     } else {
         displayName = [iconView.icon displayName];
@@ -308,7 +306,7 @@ static ASAuthenticationController *sharedCommonObj;
         } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.authsuccess"]) {
             if (_fingerglyph && _currentHSIconView) {
                 [ASAuthenticationController sharedInstance].appUserAuthorisedID = currentAuthAppBundleID;
-                if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.3")) {
+                if (IS_IOS_OR_NEWER(iOS_8_3)) {
                     [_currentHSIconView.icon launchFromLocation:_currentHSIconView.location context:nil];
                 } else {
                     [_currentHSIconView.icon launchFromLocation:_currentHSIconView.location];

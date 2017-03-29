@@ -1,5 +1,6 @@
-ARCHS = armv7 arm64
-TARGET = iphone:9.2
+export TARGET = iphone:9.2
+
+INSTALL_TARGET_PROCESSES = SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 
@@ -21,14 +22,9 @@ Asphaleia_CFLAGS = -fobjc-arc -O2 -Wno-deprecated-declarations
 BUNDLE_NAME = AsphaleiaAssets
 AsphaleiaAssets_INSTALL_PATH = /Library/Application Support/Asphaleia
 
+SUBPROJECTS = asphaleiaprefs asphaleiaphotosprotection asphaleiaflipswitch asphaleiasettingsprotection
+
 include $(THEOS_MAKE_PATH)/library.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
 include $(THEOS)/makefiles/bundle.mk
-
-after-install::
-	install.exec "killall -9 SpringBoard"
-SUBPROJECTS += asphaleiaprefs
-SUBPROJECTS += asphaleiaphotosprotection
-SUBPROJECTS += asphaleiaflipswitch
-SUBPROJECTS += asphaleiasettingsprotection
 include $(THEOS_MAKE_PATH)/aggregate.mk

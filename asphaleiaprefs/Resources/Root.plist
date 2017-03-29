@@ -14,7 +14,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>Secured Items</string>
+			<string>SECURED_ITEMS</string>
 			<key>icon</key>
 			<string>SecuredApps@2x.png</string>
 			<key>action</key>
@@ -28,7 +28,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>Passcode Options</string>
+			<string>PASSCODE_OPTIONS</string>
 			<key>icon</key>
 			<string>PasscodeOptions@2x.png</string>
 			<key>action</key>
@@ -44,7 +44,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>The Creators</string>
+			<string>THE_CREATORS</string>
 			<key>icon</key>
 			<string>TheCreators@2x.png</string>
 			<key>action</key>
@@ -58,7 +58,7 @@
 			<key>footerAlignment</key>
 			<integer>1</integer>
 		</dict>
-		<dict> 
+		<dict>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>

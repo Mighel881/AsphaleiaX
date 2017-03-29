@@ -1,6 +1,3 @@
-ARCHS = armv7 arm64
-TARGET = iphone:9.2
-
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = AsphaleiaPhotosProtection

@@ -19,8 +19,6 @@
 
 #define asphaleiaLog() NSLog(@"[Asphaleia] Method called: %@",NSStringFromSelector(_cmd))
 
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-
 SBAppSwitcherIconController *iconController;
 NSTimer *currentTempUnlockTimer;
 NSTimer *currentTempGlobalDisableTimer;
@@ -47,7 +45,7 @@ void DeregisterForTouchIDNotifications(id observer) {
 - (void)iconTapped:(SBIconView *)iconView {
 	BOOL isProtected = [[ASAuthenticationController sharedInstance] authenticateAppWithIconView:iconView authenticatedHandler:^void(BOOL wasCancelled){
 		if (!wasCancelled) {
-			if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.3")) {
+			if (IS_IOS_OR_NEWER(iOS_8_3)) {
 				[iconView.icon launchFromLocation:iconView.location context:nil];
 			} else {
 				[iconView.icon launchFromLocation:iconView.location];
@@ -676,7 +674,9 @@ BOOL currentBannerAuthenticated;
 BOOL currentSwitchAuthenticated;
 
 - (void)setState:(int)arg1 forSwitchIdentifier:(NSString *)identifier {
+	HBLogDebug(@"running setState");
 	if (![[ASPreferences sharedInstance] requiresSecurityForSwitch:identifier]) {
+		HBLogDebug(@"requiresSecurityForSwitch %@: NO", identifier);
 		%orig;
 		return;
 	}
@@ -692,6 +692,7 @@ BOOL currentSwitchAuthenticated;
 }
 - (void)applyActionForSwitchIdentifier:(NSString *)identifier {
 	if (![[ASPreferences sharedInstance] requiresSecurityForSwitch:identifier]) {
+		HBLogDebug(@"requiresSecurityForSwitch %@: NO", identifier);
 		%orig;
 		return;
 	}
@@ -712,6 +713,7 @@ BOOL currentSwitchAuthenticated;
 }
 - (void)applyAlternateActionForSwitchIdentifier:(NSString *)identifier {
 	if (![[ASPreferences sharedInstance] requiresSecurityForSwitch:identifier]) {
+		HBLogDebug(@"requiresSecurityForSwitch %@: NO", identifier);
 		%orig;
 		return;
 	}
@@ -732,8 +734,15 @@ BOOL currentSwitchAuthenticated;
 }
 %end
 
+%hook NCNotificationListCell
+- (id)initWithFrame:(CGRect)arg1 {
+	HBLogDebug(@"called init");
+	return %orig;
+}
+%end
+
 %ctor {
-	if (![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.springboard"]) {
+	if (!IN_SPRINGBOARD) {
 		HBLogWarn(@"[Asphaleia] Attempting to load into non-SpringBoard process. Stop.");
 		return;
 	} else {

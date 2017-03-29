@@ -12,24 +12,24 @@
 
 void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
 	[[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated){
-        if (authenticated) {
-        	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.passcodeauthsuccess"), NULL, NULL, YES);
-        } else {
-        	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.passcodeauthfailed"), NULL, NULL, YES);
-        }
-    }];
+		if (authenticated) {
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.passcodeauthsuccess"), NULL, NULL, YES);
+		} else {
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.passcodeauthfailed"), NULL, NULL, YES);
+		}
+	}];
 }
 
 @implementation ASPasscodeHandler
 
 + (instancetype)sharedInstance {
-    static id sharedInstance = nil;
-    static dispatch_once_t token = 0;
-    dispatch_once(&token, ^{
-        sharedInstance = [self new];
-        addObserver(showPasscodeView,"com.a3tweaks.asphaleia.showpasscodeview");
-    });
-    return sharedInstance;
+	static id sharedInstance = nil;
+	static dispatch_once_t token = 0;
+	dispatch_once(&token, ^{
+	  sharedInstance = [self new];
+	  addObserver(showPasscodeView,"com.a3tweaks.asphaleia.showpasscodeview");
+	});
+	return sharedInstance;
 }
 
 - (void)showInKeyWindowWithPasscode:(NSString *)passcode iconView:(SBIconView *)iconView eventBlock:(ASPasscodeHandlerEventBlock)eventBlock {
@@ -71,14 +71,14 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 	[self.passcodeView _evaluateLuminance];
 
 	[self.passcodeWindow addSubview:iconImageView];
-  [self.passcodeWindow addSubview:self.passcodeView];
-  [self.passcodeWindow setAlpha:0.f];
-  [self.passcodeWindow makeKeyAndVisible];
+	[self.passcodeWindow addSubview:self.passcodeView];
+	[self.passcodeWindow setAlpha:0.f];
+	[self.passcodeWindow makeKeyAndVisible];
 	[self.passcodeView updateStatusText:@"Enter Passcode" subtitle:nil animated:NO];
-  [UIView animateWithDuration:.15f delay:0.0
-                  options:UIViewAnimationOptionCurveEaseIn
-               animations:^{[self.passcodeWindow setAlpha:1.f];}
-               completion:nil];
+	[UIView animateWithDuration:.15f delay:0.0
+	                options:UIViewAnimationOptionCurveEaseIn
+	             animations:^{[self.passcodeWindow setAlpha:1.f];}
+	             completion:nil];
 }
 
 - (void)passcodeLockViewPasscodeEntered:(SBUIPasscodeLockViewSimpleFixedDigitKeypad *)arg1 {
@@ -103,34 +103,32 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 }
 
 - (void)passcodeLockViewCancelButtonPressed:(id)arg1 {
-	[UIView animateWithDuration:.15f delay:0.0
-                    options:UIViewAnimationOptionCurveEaseIn
-                 animations:^{[self.passcodeWindow setAlpha:0.f];}
-                 completion:^(BOOL finished){
-                 	if (finished) {
-                 		[self.passcodeView removeFromSuperview];
-						[self.passcodeWindow setHidden:YES];
-						self.passcodeView = nil;
-						self.passcodeWindow = nil;
-						self.eventBlock(NO);
-                 	}
-                 }];
+	[UIView animateWithDuration:.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		[self.passcodeWindow setAlpha:0.f];
+	} completion:^(BOOL finished) {
+		if (finished) {
+			[self.passcodeView removeFromSuperview];
+			[self.passcodeWindow setHidden:YES];
+			self.passcodeView = nil;
+			self.passcodeWindow = nil;
+			self.eventBlock(NO);
+		}
+	}];
 }
 
 - (void)dismissPasscodeView {
 	if (self.passcodeWindow) {
-		[UIView animateWithDuration:.15f delay:0.0
-    	                options:UIViewAnimationOptionCurveEaseIn
-    	             animations:^{[self.passcodeWindow setAlpha:0.f];}
-    	             completion:^(BOOL finished){
-    	             	if (finished) {
-    	             		[self.passcodeView removeFromSuperview];
-							[self.passcodeWindow setHidden:YES];
-							self.passcodeView = nil;
-							self.passcodeWindow = nil;
-							self.eventBlock(NO);
-    	             	}
-    	             }];
+		[UIView animateWithDuration:.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+			[self.passcodeWindow setAlpha:0.f];
+		} completion:^(BOOL finished){
+			if (finished) {
+				[self.passcodeView removeFromSuperview];
+				[self.passcodeWindow setHidden:YES];
+				self.passcodeView = nil;
+				self.passcodeWindow = nil;
+				self.eventBlock(NO);
+			}
+		}];
 	}
 }
 

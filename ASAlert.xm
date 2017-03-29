@@ -12,6 +12,7 @@
 - (void)addSubviewToAlert:(UIView *)view;
 @end
 
+//TODO: Needs %property and revamp asap
 %subclass ASAlert : SBAlertItem
 
 %new
@@ -27,17 +28,13 @@
 
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode {
 	%orig;
-	self.alertSheet.title = self.title;
-	self.alertSheet.message = self.message;
-
-	for (NSString *button in self.buttons) {
-		[self.alertSheet addButtonWithTitle:button];
-	}
+	[self alertController].title = self.title;
+	[self alertController].message = self.message;
 
 	self.alertSheet.cancelButtonIndex = self.cancelButtonIndex;
 
 	if (self.aboveTitleSubview) {
-		self.alertSheet.title = titleWithSpacingForSmallIcon(self.title);
+		[self alertController].title = titleWithSpacingForSmallIcon(self.title);
 		self.aboveTitleSubview.center = CGPointMake(270/2,32);
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self addSubviewToAlert:self.aboveTitleSubview];
@@ -59,25 +56,25 @@
 
 %new
 - (void)addSubviewToAlert:(UIView *)view {
-    UIView *labelSuperview;
-    for (id subview in [self allSubviewsOfView:[[self alertController] view]]) {
-        if ([subview isKindOfClass:[UILabel class]]) {
-            labelSuperview = [subview superview];
-        }
-    }
-    if ([labelSuperview respondsToSelector:@selector(addSubview:)]) {
-        [labelSuperview addSubview:view];
-    }
+	UIView *labelSuperview;
+	for (id subview in [self allSubviewsOfView:[[self alertController] view]]) {
+		if ([subview isKindOfClass:[UILabel class]]) {
+		  labelSuperview = [subview superview];
+		}
+	}
+	if ([labelSuperview respondsToSelector:@selector(addSubview:)]) {
+		[labelSuperview addSubview:view];
+	}
 }
 
 %new
 - (NSArray *)allSubviewsOfView:(UIView *)view {
-    NSMutableArray *viewArray = [[NSMutableArray alloc] init];
-    [viewArray addObject:view];
-    for (UIView *subview in view.subviews) {
-        [viewArray addObjectsFromArray:(NSArray *)[self allSubviewsOfView:subview]];
-    }
-    return [NSArray arrayWithArray:viewArray];
+	NSMutableArray *viewArray = [[NSMutableArray alloc] init];
+	[viewArray addObject:view];
+	for (UIView *subview in view.subviews) {
+	  [viewArray addObjectsFromArray:(NSArray *)[self allSubviewsOfView:subview]];
+	}
+	return [NSArray arrayWithArray:viewArray];
 }
 
 %new

@@ -17,6 +17,7 @@
 
 BOOL blockPasscode;
 
+//TODO: also needs %property asap
 %subclass ASAuthenticationAlert : SBAlertItem
 
 %new

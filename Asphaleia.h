@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import <version.h>
 
 @interface BBBulletin : NSObject
 - (NSString *)sectionID;
@@ -309,7 +310,7 @@
 @interface SBAlertItem : NSObject {
 	_SBAlertController* _alertController;
 }
-- (id)alertController;
+- (_SBAlertController*)alertController;
 - (void)dismiss;
 - (void)configure:(BOOL)arg1 requirePasscodeForActions:(BOOL)arg2;
 @end

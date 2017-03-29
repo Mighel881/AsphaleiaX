@@ -195,22 +195,22 @@ SEL origSelector;
 
 %ctor {
 	if ([[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.mobileslideshow"]) {
-		return;		
+		return;
 	}
 	BOOL loaded;
-	if (NSClassFromString(@"PHPhotoLibrary") != nil) {
+	if (%c(PHPhotoLibrary) != nil) {
 		loaded = YES;
 		%init(PHPhotoLibrary);
 	}
-	if (NSClassFromString(@"ALAssetsLibrary") != nil) {
+	if (%c(ALAssetsLibrary) != nil) {
 		loaded = YES;
 		%init(ALAssetsLibrary);
 	}
-	if (NSClassFromString(@"UIImagePickerController") != nil) {
+	if (%c(UIImagePickerController) != nil) {
 		loaded = YES;
 		%init(UIImagePickerController);
 	}
-	if (NSClassFromString(@"CAMImageWell") != nil) {
+	if (%c(CAMImageWell) != nil) {
 		loaded = YES;
 		%init(CAMImageWell);
 	}
