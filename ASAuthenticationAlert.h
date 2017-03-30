@@ -12,7 +12,7 @@
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSString *message;
 @property (nonatomic, weak) id<ASAuthenticationAlertDelegate> delegate;
-@property(nonatomic) NSInteger tag;
+@property (nonatomic) NSInteger tag;
 @property (nonatomic) UIView *icon;
 @property (nonatomic) NSTimer *resetFingerprintTimer;
 @property BOOL useSmallIcon;

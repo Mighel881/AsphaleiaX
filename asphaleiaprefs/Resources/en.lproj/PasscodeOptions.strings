@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>TITLE</key>
+  <string>Passcode Options</string>
+
+  <key>PIN_FOOTER</key>
+  <string>Open Secured Items with a 6-digit number.</string>
+  <key>CHANGE_PASSCODE</key>
+  <string>Change Passcode</string>
+  <key>PASSCODE</key>
+  <string>Passcode</string>
+
+  <key>FINGERPRINT_FOOTER</key>
+  <string>Open Secured Items by scanning your fingerprint. Tap icon again to enter passcode instead, or tap anywhere to cancel.</string>
+  <key>TOUCHID</key>
+  <string>Touch ID</string>
+  <key>VIBRATE_ON_FAIL</key>
+  <string>Vibrate On Fail</string>
+
+  <key>AUTH_FOOTER</key>
+  <string>Set how long after exiting an app before authorization is required to open it again.</string>
+  <key>REQUIRE_AUTHORIZATION</key>
+  <string>Require Authorization</string>
+
+  <key>ADVANCED_OPTIONS</key>
+  <string>Advanced Options</string>
+
+  <key>CONTROL_PANEL</key>
+  <string>Asphaleia Control Panel</string>
+
+  <key>RESET_SETTINGS</key>
+  <string>Reset All Settings</string>
+</dict>
+</plist>

@@ -39,9 +39,9 @@
 			<string>protectionLevel</string>
 			<key>validTitles</key>
 			<array>
-				<string>Passcode Only</string>
-				<string>Passcode + TouchID</string>
-				<string>TouchID Only</string>
+				<string>PASSCODE_ONLY</string>
+				<string>PASSCODE_AND_TOUCHID</string>
+				<string>TOUCHID_ONLY</string>
 			</array>
 			<key>validValues</key>
 			<array>
@@ -52,6 +52,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>App Settings</string>
+	<string>TITLE</string>
 </dict>
 </plist>

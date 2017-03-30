@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>TITLE</key>
+  <string>Secured Items</string>
+
+  <key>ACTIVATOR_FOOTER</key>
+  <string>Use Activator in an app to add or remove it from your Secured Apps list.</string>
+  <key>DYNAMIC_SELECTION</key>
+  <string>Dynamic Selection</string>
+  <key>ACTIVATOR_ACTIONS</key>
+  <string>Activator Actions</string>
+
+  <key>ADVANCED_SECURITY</key>
+  <string>Advanced Security</string>
+
+  <key>GLOBAL_APP_SECURITY</key>
+  <string>Global App Security</string>
+  <key>SECURED_APPS</key>
+  <string>Secured Apps</string>
+  <key>SECURED_FOLDERS</key>
+  <string>Secured Folders</string>
+  <key>SECURED_SETTINGS_PANELS</key>
+  <string>Secured Settings Panels</string>
+  <key>SECURED_FLIPSWITCHES</key>
+  <string>Secured Flipswitch Switches</string>
+</dict>
+</plist>

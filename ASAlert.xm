@@ -1,23 +1,32 @@
 #import "ASAlert.h"
+#import "ASPreferences.h"
 #import <SpringBoard/SBAlertItemsController.h>
 
 #define titleWithSpacingForIcon(t) [NSString stringWithFormat:@"\n\n\n%@",t]
 #define titleWithSpacingForSmallIcon(t) [NSString stringWithFormat:@"\n\n%@",t]
 
+@interface ASPreferences ()
+@property (readwrite) BOOL asphaleiaDisabled;
+@property (readwrite) BOOL itemSecurityDisabled;
+@end
+
 @interface ASAlert ()
 @property (nonatomic) NSMutableArray *buttons;
 @property (nonatomic) UIView *aboveTitleSubview;
-@property NSInteger cancelButtonIndex;
 - (NSArray *)allSubviewsOfView:(UIView *)view;
 - (void)addSubviewToAlert:(UIView *)view;
 @end
 
-//TODO: Needs %property and revamp asap
 %subclass ASAlert : SBAlertItem
+%property (nonatomic, copy) NSString *title;
+%property (nonatomic, copy) NSString *message;
+%property (nonatomic, assign) NSInteger tag;
+%property (nonatomic, retain) UIView *aboveTitleSubview;
 
 %new
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id<ASAlertDelegate>)delegate {
-	if ((self = [self init])) {
+	self = [self init];
+	if (self) {
 		self.title = title;
 		self.message = message;
 		self.delegate = delegate;
@@ -31,7 +40,46 @@
 	[self alertController].title = self.title;
 	[self alertController].message = self.message;
 
-	self.alertSheet.cancelButtonIndex = self.cancelButtonIndex;
+	SBApplication *frontmostApp = [(SpringBoard *)[UIApplication sharedApplication] _accessibilityFrontMostApplication];
+	NSString *bundleID = [frontmostApp bundleIdentifier];
+
+	UIAlertAction *securedItemsAction = [UIAlertAction actionWithTitle:self.buttons[0] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		[ASPreferences sharedInstance].itemSecurityDisabled = ![ASPreferences sharedInstance].itemSecurityDisabled;
+		if ([ASPreferences sharedInstance].itemSecurityDisabled && [[ASPreferences sharedInstance] protectAllApps]) {
+			[[ASPreferences sharedInstance] setObject:[NSNumber numberWithBool:NO] forKey:kProtectAllAppsKey];
+		}
+		[self dismiss];
+	}];
+
+	UIAlertAction *globalSecurityAction = [UIAlertAction actionWithTitle:self.buttons[1] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		[[ASPreferences sharedInstance] setObject:[NSNumber numberWithBool:![[ASPreferences sharedInstance] protectAllApps]] forKey:kProtectAllAppsKey];
+		if ([ASPreferences sharedInstance].itemSecurityDisabled && [[ASPreferences sharedInstance] protectAllApps]) {
+				[ASPreferences sharedInstance].itemSecurityDisabled = NO;
+		}
+		[self dismiss];
+	}];
+
+	[[self alertController] addAction:securedItemsAction];
+	[[self alertController] addAction:globalSecurityAction];
+
+	if (self.buttons.count == 3) {
+		UIAlertAction *removeAppAction = [UIAlertAction actionWithTitle:self.buttons[2] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			if (![[ASPreferences sharedInstance] objectForKey:kSecuredAppsKey]) {
+				[[ASPreferences sharedInstance] setObject:[NSMutableDictionary dictionary] forKey:kSecuredAppsKey];
+			}
+			NSMutableDictionary *dict = [[ASPreferences sharedInstance] objectForKey:kSecuredAppsKey];
+			[dict setObject:[NSNumber numberWithBool:![[ASPreferences sharedInstance] securityEnabledForApp:bundleID]] forKey:frontmostApp.bundleIdentifier];
+			[[ASPreferences sharedInstance] setObject:dict forKey:kSecuredAppsKey];
+			[self dismiss];
+		}];
+
+		[[self alertController] addAction:removeAppAction];
+	}
+
+	UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+		[self dismiss];
+	}];
+	[[self alertController] addAction:cancelAction];
 
 	if (self.aboveTitleSubview) {
 		[self alertController].title = titleWithSpacingForSmallIcon(self.title);
@@ -40,14 +88,6 @@
 			[self addSubviewToAlert:self.aboveTitleSubview];
 		});
 	}
-}
-
-- (void)alertView:(id)arg1 clickedButtonAtIndex:(NSInteger)arg2 {
-	if (self.delegate && [self.delegate respondsToSelector:@selector(alertView:clickedButtonAtIndex:)]) {
-		[self.delegate alertView:arg1 clickedButtonAtIndex:arg2];
-	}
-
-	[self dismiss];
 }
 
 - (BOOL)shouldShowInLockScreen {
@@ -103,27 +143,10 @@
 
 // Properties
 %new
-- (void)setTitle:(NSString *)title {
-	objc_setAssociatedObject(self, @selector(title), title, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (NSString *)title {
-	return objc_getAssociatedObject(self, @selector(title));
-}
-
-%new
-- (void)setMessage:(NSString *)message {
-	objc_setAssociatedObject(self, @selector(message), message, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (NSString *)message {
-	return objc_getAssociatedObject(self, @selector(message));
-}
-
-%new
 - (void)setDelegate:(id<ASAlertDelegate>)delegate {
 	objc_setAssociatedObject(self, @selector(delegate), delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
 %new
 - (id<ASAlertDelegate>)delegate {
 	return objc_getAssociatedObject(self, @selector(delegate));
@@ -136,33 +159,6 @@
 %new
 - (NSMutableArray *)buttons {
 	return objc_getAssociatedObject(self, @selector(buttons));
-}
-
-%new
-- (void)setTag:(NSInteger)tag {
-	objc_setAssociatedObject(self, @selector(tag), [NSNumber numberWithInt:tag], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (NSInteger)tag {
-	return [objc_getAssociatedObject(self, @selector(tag)) intValue];
-}
-
-%new
-- (void)setAboveTitleSubview:(UIView *)aboveTitleSubview {
-	objc_setAssociatedObject(self, @selector(aboveTitleSubview), aboveTitleSubview, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (UIView *)aboveTitleSubview {
-	return objc_getAssociatedObject(self, @selector(aboveTitleSubview));
-}
-
-%new
-- (void)setCancelButtonIndex:(NSInteger)cancelButtonIndex {
-	objc_setAssociatedObject(self, @selector(cancelButtonIndex), [NSNumber numberWithInt:cancelButtonIndex], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (NSInteger)cancelButtonIndex {
-	return [objc_getAssociatedObject(self, @selector(cancelButtonIndex)) intValue];
 }
 
 %end

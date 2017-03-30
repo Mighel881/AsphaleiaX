@@ -17,12 +17,16 @@
 
 BOOL blockPasscode;
 
-//TODO: also needs %property asap
 %subclass ASAuthenticationAlert : SBAlertItem
+%property (nonatomic, assign) NSInteger tag;
+%property (nonatomic, retain) UIView *icon;
+%property (nonatomic, retain) NSTimer *resetFingerprintTimer;
+%property (nonatomic, assign) BOOL useSmallIcon;
 
 %new
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message icon:(UIView *)icon smallIcon:(BOOL)useSmallIcon delegate:(id<ASAuthenticationAlertDelegate>)delegate {
-	if ((self = [self init])) {
+	self = [self init];
+	if (self) {
 		self.title = title;
 		self.message = message;
 		self.delegate = delegate;
@@ -38,7 +42,8 @@ BOOL blockPasscode;
 		return nil;
 	}
 
-	if ((self = [self init])) {
+	self = [self init];
+	if (self) {
 		SBApplication *application = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:identifier];
 		self.title = application.displayName;
 		self.message = message;
@@ -250,42 +255,6 @@ BOOL blockPasscode;
 %new
 - (id<ASAuthenticationAlertDelegate>)delegate {
 	return objc_getAssociatedObject(self, @selector(delegate));
-}
-
-%new
-- (void)setTag:(NSInteger)tag {
-	objc_setAssociatedObject(self, @selector(tag), [NSNumber numberWithInt:tag], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (NSInteger)tag {
-	return [objc_getAssociatedObject(self, @selector(tag)) intValue];
-}
-
-%new
-- (void)setIcon:(UIView *)icon {
-	objc_setAssociatedObject(self, @selector(icon), icon, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (UIView *)icon {
-	return objc_getAssociatedObject(self, @selector(icon));
-}
-
-%new
-- (void)setUseSmallIcon:(BOOL)useSmallIcon {
-	objc_setAssociatedObject(self, @selector(useSmallIcon), [NSNumber numberWithBool:useSmallIcon], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (BOOL)useSmallIcon {
-	return [objc_getAssociatedObject(self, @selector(useSmallIcon)) boolValue];
-}
-
-%new
-- (void)setResetFingerprintTimer:(NSTimer *)resetFingerprintTimer {
-	objc_setAssociatedObject(self, @selector(resetFingerprintTimer), resetFingerprintTimer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (UIView *)resetFingerprintTimer {
-	return objc_getAssociatedObject(self, @selector(resetFingerprintTimer));
 }
 
 // Other

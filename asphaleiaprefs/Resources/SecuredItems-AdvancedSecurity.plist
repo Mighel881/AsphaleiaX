@@ -18,7 +18,7 @@
 			<key>key</key>
 			<string>preventAppDeletion</string>
 			<key>label</key>
-			<string>App Arranging</string>
+			<string>APP_ARRANGING</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -36,7 +36,7 @@
 			<key>key</key>
 			<string>preventPowerOff</string>
 			<key>label</key>
-			<string>Slide to Power Off</string>
+			<string>SLIDE_TO_POWER_OFF</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -54,7 +54,7 @@
 			<key>key</key>
 			<string>secureSwitcher</string>
 			<key>label</key>
-			<string>Multitasking</string>
+			<string>MULTITASKING</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>key</key>
 			<string>secureCC</string>
 			<key>label</key>
-			<string>Control Center</string>
+			<string>CONTROL_CENTER</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -90,7 +90,7 @@
 			<key>key</key>
 			<string>secureSpotlight</string>
 			<key>label</key>
-			<string>Spotlight</string>
+			<string>SPOTLIGHT</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -98,7 +98,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Photos protection does not work everywhere, and may cause crashes, app instability, or may require you to reopen the screen you were in. Use at your own risk.</string>
+			<string>PHOTOS_FOOTER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -110,12 +110,12 @@
 			<key>key</key>
 			<string>securePhotos</string>
 			<key>label</key>
-			<string>Photos</string>
+			<string>PHOTOS</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Advanced</string>
+	<string>TITLE</string>
 </dict>
 </plist>

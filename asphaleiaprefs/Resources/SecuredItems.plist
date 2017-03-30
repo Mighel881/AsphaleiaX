@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Use Activator in an app to add or remove it from your Secured Apps list.</string>
+			<string>ACTIVATOR_FOOTER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -22,7 +22,7 @@
 			<key>key</key>
 			<string>dynamicSelection</string>
 			<key>label</key>
-			<string>Dynamic Selection</string>
+			<string>DYNAMIC_SELECTION</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -30,7 +30,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>Activator Actions</string>
+			<string>ACTIVATOR_ACTIONS</string>
 			<key>id</key>
 			<string>dynamicSelectionActionsCell</string>
 			<key>action</key>
@@ -50,7 +50,7 @@
 			<key>isController</key>
 			<true/>
 			<key>label</key>
-			<string>Advanced Security</string>
+			<string>ADVANCED_SECURITY</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -66,7 +66,7 @@
 			<key>key</key>
 			<string>globalAppSecurity</string>
 			<key>label</key>
-			<string>Global App Security</string>
+			<string>GLOBAL_APP_SECURITY</string>
 			<key>PostNotification</key>
 			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
 		</dict>
@@ -78,7 +78,7 @@
 			<key>isController</key>
 			<true/>
 			<key>label</key>
-			<string>Secured Apps</string>
+			<string>SECURED_APPS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -88,7 +88,7 @@
 			<key>isController</key>
 			<true/>
 			<key>label</key>
-			<string>Secured Folders</string>
+			<string>SECURED_FOLDERS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -98,7 +98,7 @@
 			<key>isController</key>
 			<true/>
 			<key>label</key>
-			<string>Secured Settings Panels</string>
+			<string>SECURED_SETTINGS_PANELS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -108,10 +108,10 @@
 			<key>isController</key>
 			<true/>
 			<key>label</key>
-			<string>Secured Flipswitch Switches</string>
+			<string>SECURED_FLIPSWITCHES</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Secured Items</string>
+	<string>TITLE</string>
 </dict>
 </plist>

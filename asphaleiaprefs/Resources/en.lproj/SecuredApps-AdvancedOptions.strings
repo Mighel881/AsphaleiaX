@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>TITLE</key>
+  <string>App Settings</string>
+
+  <key>PASSCODE_ONLY</key>
+  <string>Passcode Only</string>
+  <key>PASSCODE_AND_TOUCHID</key>
+  <string>Passcode + TouchID</string>
+  <key>TOUCHID_ONLY</key>
+  <string>TouchID Only</string>
+</dict>
+</plist>

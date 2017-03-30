@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>TITLE</key>
+  <string>Advanced</string>
+
+  <key>APP_ARRANGING</key>
+  <string>App Arranging</string>
+
+  <key>SLIDE_TO_POWER_OFF</key>
+  <string>Slide to Power Off</string>
+
+  <key>MULTITASKING</key>
+  <string>Multitasking</string>
+
+  <key>CONTROL_CENTER</key>
+  <string>Control Center</string>
+
+  <key>SPOTLIGHT</key>
+  <string>Spotlight</string>
+
+  <key>PHOTOS_FOOTER</key>
+  <string>Photos protection does not work everywhere, and may cause crashes, app instability, or may require you to reopen the screen you were in. Use at your own risk.</string>
+  <key>PHOTOS</key>
+  <string>Photos</string>
+</dict>
+</plist>

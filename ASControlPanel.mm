@@ -59,8 +59,7 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
             for (NSString *buttonTitle in buttonTitleArray) {
               [self.alertView addButtonWithTitle:buttonTitle];
             }
-            [self.alertView addButtonWithTitle:@"Close"];
-            [self.alertView setCancelButtonIndex:buttonTitleArray.count];
+
             NSBundle *asphaleiaAssets = [[NSBundle alloc] initWithPath:kBundlePath];
             UIImage *iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
             UIImageView *imgView = [[UIImageView alloc] initWithImage:iconImage];
@@ -73,41 +72,6 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
     }];
 
     [event setHandled:YES];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    SBApplication *frontmostApp = [(SpringBoard *)[UIApplication sharedApplication] _accessibilityFrontMostApplication];
-    NSString *bundleID = [frontmostApp bundleIdentifier];
-    switch (buttonIndex) {
-        case 0: {
-          [ASPreferences sharedInstance].itemSecurityDisabled = ![ASPreferences sharedInstance].itemSecurityDisabled;
-          if ([ASPreferences sharedInstance].itemSecurityDisabled && [[ASPreferences sharedInstance] protectAllApps]) {
-              [[ASPreferences sharedInstance] setObject:[NSNumber numberWithBool:NO] forKey:kProtectAllAppsKey];
-          }
-          break;
-        }
-        case 1: {
-          [[ASPreferences sharedInstance] setObject:[NSNumber numberWithBool:![[ASPreferences sharedInstance] protectAllApps]] forKey:kProtectAllAppsKey];
-
-          if ([ASPreferences sharedInstance].itemSecurityDisabled && [[ASPreferences sharedInstance] protectAllApps]) {
-              [ASPreferences sharedInstance].itemSecurityDisabled = NO;
-          }
-          break;
-        }
-        case 2: {
-          if (alertView.cancelButtonIndex == 2) {
-            break;
-          }
-          if (![[ASPreferences sharedInstance] objectForKey:kSecuredAppsKey]) {
-            [[ASPreferences sharedInstance] setObject:[NSMutableDictionary dictionary] forKey:kSecuredAppsKey];
-          }
-
-          NSMutableDictionary *dict = [[ASPreferences sharedInstance] objectForKey:kSecuredAppsKey];
-          [dict setObject:[NSNumber numberWithBool:![[ASPreferences sharedInstance] securityEnabledForApp:bundleID]] forKey:frontmostApp.bundleIdentifier];
-          [[ASPreferences sharedInstance] setObject:dict forKey:kSecuredAppsKey];
-          break;
-        }
-    }
 }
 
 - (void)activator:(LAActivator *)activator abortEvent:(LAEvent *)event {
@@ -128,7 +92,7 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 - (void)unload {
     if (objc_getClass("LAActivator")) {
         if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
-          [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Control Panel"];          
+          [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Control Panel"];
         }
     }
 }

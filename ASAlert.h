@@ -3,7 +3,6 @@
 @class ASAlert;
 
 @protocol ASAlertDelegate <NSObject>
-- (void)alertView:(ASAlert *)alertView clickedButtonAtIndex:(NSInteger)index;
 @optional
 - (void)willPresentAlertView:(ASAlert *)alertView;
 @end
@@ -12,7 +11,7 @@
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSString *message;
 @property (nonatomic, weak) id<ASAlertDelegate> delegate;
-@property(nonatomic) NSInteger tag;
+@property (nonatomic) NSInteger tag;
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id<ASAlertDelegate>)delegate;
 - (_SBAlertController*)alertController;
 - (void)addButtonWithTitle:(NSString *)buttonTitle;
