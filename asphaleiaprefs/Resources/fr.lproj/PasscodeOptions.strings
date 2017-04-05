@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>TITLE</key>
+  <string>Options du mot de passe</string>
+
+  <key>PIN_FOOTER</key>
+  <string>Ouvrir les applications sécurisés avec un nombre à 6 chiffres.</string>
+  <key>CHANGE_PASSCODE</key>
+  <string>Changer le mot de passe</string>
+  <key>PASSCODE</key>
+  <string>Mot de passe</string>
+
+  <key>FINGERPRINT_FOOTER</key>
+  <string>Ouvrez les éléments sécurisés en numérisant vos empreintes digitales. Appuyez de nouveau sur l'icône pour entrer le mot de passe ou appuyez sur n'importe où pour annuler.</string>
+  <key>TOUCHID</key>
+  <string>Touch ID</string>
+  <key>VIBRATE_ON_FAIL</key>
+  <string>Vibreur en cas d'échec</string>
+
+  <key>AUTH_FOOTER</key>
+  <string>Définissez la durée de la sortie d'une application avant l'autorisation requise pour l'ouvrir à nouveau.</string>
+  <key>REQUIRE_AUTHORIZATION</key>
+  <string>Autorisation requise</string>
+
+  <key>ADVANCED_OPTIONS</key>
+  <string>Options avancées</string>
+
+  <key>CONTROL_PANEL</key>
+  <string>panneau de contrôle d'Asphaleia</string>
+
+  <key>RESET_SETTINGS</key>
+  <string>Réinitialiser tous les réglages</string>
+</dict>
+</plist>

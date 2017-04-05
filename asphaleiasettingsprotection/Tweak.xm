@@ -19,7 +19,7 @@
 		%orig;
 		return;
 	}
-	[[ASCommon sharedInstance] authenticateFunction:ASAuthenticationAlertSettingsPanel dismissedHandler:^(BOOL wasCancelled){
+	[[ASCommon sharedInstance] authenticateFunction:ASAuthenticationAlertSettingsPanel dismissedHandler:^(BOOL wasCancelled) {
 		if (!wasCancelled) {
 			%orig;
 		} else {

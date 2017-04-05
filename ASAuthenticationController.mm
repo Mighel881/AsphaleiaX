@@ -204,7 +204,7 @@ static ASAuthenticationController *sharedCommonObj;
 }
 
 - (BOOL)authenticateAppWithIconView:(SBIconView *)iconView authenticatedHandler:(ASCommonAuthenticationHandler)handler {
-    if (![[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
+    if (!IN_SPRINGBOARD) {
       return NO;
     }
 
@@ -285,40 +285,42 @@ static ASAuthenticationController *sharedCommonObj;
 }
 
 - (void)receivedNotificationOfName:(NSString *)name fingerprint:(id)fingerprint {
-    if (self.currentHSIconView) {
-        if ([fingerprint isKindOfClass:objc_getClass("BiometricKitIdentity")]) {
-            if (![[ASPreferences sharedInstance] fingerprintProtectsSecureItems:[fingerprint name]]) {
-              name = @"com.a3tweaks.asphaleia.authfailed";
-            }
+    if (!self.currentHSIconView) {
+        return;
+    }
+
+    if ([fingerprint isKindOfClass:objc_getClass("BiometricKitIdentity")]) {
+        if (![[ASPreferences sharedInstance] fingerprintProtectsSecureItems:[fingerprint name]]) {
+          name = @"com.a3tweaks.asphaleia.authfailed";
         }
-        if (![[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
-          return;
+    }
+    if (!IN_SPRINGBOARD) {
+      return;
+    }
+    if ([name isEqualToString:@"com.a3tweaks.asphaleia.fingerdown"]) {
+        if (_fingerglyph && _currentHSIconView) {
+            [_fingerglyph setState:1 animated:YES completionHandler:nil];
+            [_currentHSIconView asphaleia_updateLabelWithText:@"Scanning..."];
         }
-        if ([name isEqualToString:@"com.a3tweaks.asphaleia.fingerdown"]) {
-            if (_fingerglyph && _currentHSIconView) {
-                [_fingerglyph setState:1 animated:YES completionHandler:nil];
-                [_currentHSIconView asphaleia_updateLabelWithText:@"Scanning..."];
+    } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.fingerup"]) {
+        if (_fingerglyph) {
+          [_fingerglyph setState:0 animated:YES completionHandler:nil];
+        }
+    } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.authsuccess"]) {
+        if (_fingerglyph && _currentHSIconView) {
+            [ASAuthenticationController sharedInstance].appUserAuthorisedID = currentAuthAppBundleID;
+            if (IS_IOS_OR_NEWER(iOS_8_3)) {
+                [_currentHSIconView.icon launchFromLocation:_currentHSIconView.location context:nil];
+            } else {
+                [_currentHSIconView.icon launchFromLocation:_currentHSIconView.location];
             }
-        } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.fingerup"]) {
-            if (_fingerglyph) {
-              [_fingerglyph setState:0 animated:YES completionHandler:nil];
-            }
-        } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.authsuccess"]) {
-            if (_fingerglyph && _currentHSIconView) {
-                [ASAuthenticationController sharedInstance].appUserAuthorisedID = currentAuthAppBundleID;
-                if (IS_IOS_OR_NEWER(iOS_8_3)) {
-                    [_currentHSIconView.icon launchFromLocation:_currentHSIconView.location context:nil];
-                } else {
-                    [_currentHSIconView.icon launchFromLocation:_currentHSIconView.location];
-                }
-                [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
-                currentAuthAppBundleID = nil;
-            }
-        } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.authfailed"]) {
-            if (_fingerglyph && _currentHSIconView) {
-                [_fingerglyph setState:0 animated:YES completionHandler:nil];
-                [_currentHSIconView asphaleia_updateLabelWithText:@"Scan finger..."];
-            }
+            [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
+            currentAuthAppBundleID = nil;
+        }
+    } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.authfailed"]) {
+        if (_fingerglyph && _currentHSIconView) {
+            [_fingerglyph setState:0 animated:YES completionHandler:nil];
+            [_currentHSIconView asphaleia_updateLabelWithText:@"Scan finger..."];
         }
     }
 }
@@ -335,8 +337,10 @@ static ASAuthenticationController *sharedCommonObj;
 }
 
 - (void)dismissAnyAuthenticationAlerts {
-    if (self.currentAuthAlert)
-        [self.currentAuthAlert dismiss];
+    if (!self.currentAuthAlert) {
+        return;
+    }
+    [self.currentAuthAlert dismiss];
 }
 
 - (NSArray *)allSubviewsOfView:(UIView *)view {
@@ -349,11 +353,13 @@ static ASAuthenticationController *sharedCommonObj;
 }
 
 - (void)initialiseGlyphIfRequired {
-    if (!_fingerglyph) {
-        _fingerglyph = [(PKGlyphView*)[objc_getClass("PKGlyphView") alloc] initWithStyle:1];
-        _fingerglyph.secondaryColor = [UIColor grayColor];
-        _fingerglyph.primaryColor = [UIColor redColor];
+    if (_fingerglyph) {
+        return;
     }
+
+    _fingerglyph = [(PKGlyphView*)[objc_getClass("PKGlyphView") alloc] initWithStyle:1];
+    _fingerglyph.secondaryColor = [UIColor grayColor];
+    _fingerglyph.primaryColor = [UIColor redColor];
 }
 
 // ASAuthenticationAlert delegate methods

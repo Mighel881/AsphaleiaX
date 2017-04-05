@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>TITLE</key>
+  <string>Avancée</string>
+
+  <key>APP_ARRANGING</key>
+  <string>Arrangement des applications</string>
+
+  <key>SLIDE_TO_POWER_OFF</key>
+  <string>Glisser pour éteindre</string>
+
+  <key>MULTITASKING</key>
+  <string>Multitâche</string>
+
+  <key>CONTROL_CENTER</key>
+  <string>Centre de contrôle</string>
+
+  <key>SPOTLIGHT</key>
+  <string>Spotlight</string>
+
+  <key>PHOTOS_FOOTER</key>
+  <string>La protection des photos ne fonctionne pas partout, elle peut provoquer des collisions, une instabilité de l'application ou vous obliger à rouvrir l'écran. Utilisez à vos risques et périls.</string>
+  <key>PHOTOS</key>
+  <string>Photos</string>
+</dict>
+</plist>

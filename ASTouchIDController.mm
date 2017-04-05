@@ -102,13 +102,15 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)matchResult:(id)result withDetails:(id)details {
-	if (result) {
-		asphaleiaLogMsg(@"Finger matched");
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.authsuccess" object:self userInfo:@{ @"fingerprint" : result }];
-		self.lastMatchedFingerprint = result;
-		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.authsuccess"), NULL, NULL, YES);
-		_shouldBlockLockscreenMonitor = NO;
+	if (!result) {
+		return;
 	}
+
+	asphaleiaLogMsg(@"Finger matched");
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.authsuccess" object:self userInfo:@{ @"fingerprint" : result }];
+	self.lastMatchedFingerprint = result;
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.authsuccess"), NULL, NULL, YES);
+	_shouldBlockLockscreenMonitor = NO;
 }
 
 - (void)startMonitoring {

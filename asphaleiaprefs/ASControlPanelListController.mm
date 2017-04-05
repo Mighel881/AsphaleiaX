@@ -11,9 +11,9 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-      _specifiers = [[self loadSpecifiersFromPlistName:@"PasscodeOptions-AsphaleiaControlPanel" target:self] retain];
-  }
-  return _specifiers;
+		_specifiers = [[self loadSpecifiersFromPlistName:@"PasscodeOptions-AsphaleiaControlPanel" target:self] retain];
+	}
+	return _specifiers;
 }
 
 - (void)openActivatorControlPanel {

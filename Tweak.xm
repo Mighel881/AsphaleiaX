@@ -674,7 +674,7 @@ BOOL currentBannerAuthenticated;
 BOOL currentSwitchAuthenticated;
 
 - (void)setState:(int)arg1 forSwitchIdentifier:(NSString *)identifier {
-	HBLogDebug(@"running setState");
+	HBLogDebug(@"setState:%d forSwitchIdentifier:%@", arg1, identifier);
 	if (![[ASPreferences sharedInstance] requiresSecurityForSwitch:identifier]) {
 		HBLogDebug(@"requiresSecurityForSwitch %@: NO", identifier);
 		%orig;
@@ -690,7 +690,9 @@ BOOL currentSwitchAuthenticated;
 		}
 	}];
 }
+
 - (void)applyActionForSwitchIdentifier:(NSString *)identifier {
+	HBLogDebug(@"applyActionForSwitchIdentifier:%@", identifier);
 	if (![[ASPreferences sharedInstance] requiresSecurityForSwitch:identifier]) {
 		HBLogDebug(@"requiresSecurityForSwitch %@: NO", identifier);
 		%orig;
@@ -711,7 +713,9 @@ BOOL currentSwitchAuthenticated;
 		}
 	}];
 }
+
 - (void)applyAlternateActionForSwitchIdentifier:(NSString *)identifier {
+	HBLogDebug(@"applyAlternateActionForSwitchIdentifier:%@", identifier);
 	if (![[ASPreferences sharedInstance] requiresSecurityForSwitch:identifier]) {
 		HBLogDebug(@"requiresSecurityForSwitch %@: NO", identifier);
 		%orig;

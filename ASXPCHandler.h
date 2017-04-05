@@ -1,4 +1,4 @@
-#define xpcNotifications @[\
+static NSArray * const xpcNotifications = @[\
 	@"com.a3tweaks.asphaleia.xpc/CheckSlideUpControllerActive",\
 	@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState",\
 	@"com.a3tweaks.asphaleia.xpc/ReadAsphaleiaState",\

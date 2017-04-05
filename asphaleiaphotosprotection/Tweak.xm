@@ -198,19 +198,19 @@ SEL origSelector;
 		return;
 	}
 	BOOL loaded;
-	if (%c(PHPhotoLibrary) != nil) {
+	if (%c(PHPhotoLibrary)) {
 		loaded = YES;
 		%init(PHPhotoLibrary);
 	}
-	if (%c(ALAssetsLibrary) != nil) {
+	if (%c(ALAssetsLibrary)) {
 		loaded = YES;
 		%init(ALAssetsLibrary);
 	}
-	if (%c(UIImagePickerController) != nil) {
+	if (%c(UIImagePickerController)) {
 		loaded = YES;
 		%init(UIImagePickerController);
 	}
-	if (%c(CAMImageWell) != nil) {
+	if (%c(CAMImageWell)) {
 		loaded = YES;
 		%init(CAMImageWell);
 	}

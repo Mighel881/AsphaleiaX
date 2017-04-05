@@ -11,19 +11,19 @@ static UITextField *wifiTextField;
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-      _specifiers = [[self loadSpecifiersFromPlistName:@"PasscodeOptions-AdvancedOptions" target:self] retain];
-  }
-	
-	if (!isTouchIDDevice()) {
-			NSMutableArray *mutableSpecifiers = [_specifiers mutableCopy];
-      for (PSSpecifier *specifier in [_specifiers copy]) {
-          if ([[specifier identifier] isEqualToString:@"fingerprintCell"] || [[specifier identifier] isEqualToString:@"fingerprintGroupCell"])
-              [mutableSpecifiers removeObject:specifier];
-      }
-			_specifiers = [mutableSpecifiers copy];
-  }
+		_specifiers = [[self loadSpecifiersFromPlistName:@"PasscodeOptions-AdvancedOptions" target:self] retain];
+	}
 
-  return _specifiers;
+	if (!isTouchIDDevice()) {
+		NSMutableArray *mutableSpecifiers = [_specifiers mutableCopy];
+		for (PSSpecifier *specifier in [_specifiers copy]) {
+		    if ([[specifier identifier] isEqualToString:@"fingerprintCell"] || [[specifier identifier] isEqualToString:@"fingerprintGroupCell"])
+		        [mutableSpecifiers removeObject:specifier];
+	}
+		_specifiers = [mutableSpecifiers copy];
+	}
+
+	return _specifiers;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

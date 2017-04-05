@@ -1,6 +1,6 @@
 #import "TouchIDInfo.h"
 #import <objc/runtime.h>
-#import <RocketBootstrap/RocketBootstrap.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import "../ASPreferences.h"
 

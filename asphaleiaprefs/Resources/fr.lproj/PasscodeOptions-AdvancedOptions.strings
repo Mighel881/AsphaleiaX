@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>TITLE</key>
+  <string>Advanced Options</string>
+
+  <key>BLACKOUT_MULTITASKING_FOOTER</key>
+  <string>Black out multitasking previews for secured apps.</string>
+  <key>OBSCURE_APP_CONTENT</key>
+  <string>Obscure App Content</string>
+
+  <key>BLACKOUT_NOTIF_FOOTER</key>
+  <string>Black out notifications for secured apps.</string>
+  <key>OBSCURE_NOTIFICATIONS</key>
+  <string>Obscure Notifications</string>
+
+  <key>REAUTH_FOOTER</key>
+  <string>Do not require re-authorization of a secured app if it is already open upon unlocking.</string>
+  <key>UNLOCK_UNSECURED</key>
+  <string>Unlock to App Unsecured</string>
+
+  <key>TIME_LIMIT_FOOTER</key>
+  <string>Set a limited amount of time after unlocking before App Security is enabled.</string>
+  <key>DELAY_ASPHALEIA</key>
+  <string>Delay Asphaleia</string>
+  <key>DELAY_LENGTH</key>
+  <string>Delay Length</string>
+
+  <key>NETWORK_FOOTER</key>
+  <string>Unprotect everything when on your home network. Add multiple networks separating them with a comma and a space e.g. 'A, B'</string>
+  <key>WIFI_UNLOCK</key>
+  <string>Wi-Fi Unlock</string>
+  <key>NETWORK_NAME</key>
+  <string>Network Name:</string>
+  <key>ADD_CURRENT_NETWORK</key>
+  <string>Add Current Network</string>
+
+  <key>FINGERPRINTS</key>
+  <string>Fingerprints</string>
+</dict>
+</plist>

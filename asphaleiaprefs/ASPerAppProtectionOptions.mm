@@ -14,11 +14,11 @@ extern void AppListNeedsToReload();
 }
 
 - (instancetype)initWithAppName:(NSString*)appName identifier:(NSString*)identifier {
-	_appName = appName;
-	_identifier = identifier;
+  _appName = appName;
+  _identifier = identifier;
 
   self.title = appName;
-	return [self init];
+  return [self init];
 }
 
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {

@@ -75,25 +75,30 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 }
 
 - (void)activator:(LAActivator *)activator abortEvent:(LAEvent *)event {
-    if (self.alertView) {
-        [self.alertView dismiss];
-        self.alertView = nil;
+    if (!self.alertView) {
+        return;
     }
+    [self.alertView dismiss];
+    self.alertView = nil;
 }
 
 - (void)load {
-    if (objc_getClass("LAActivator")) {
-        if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
-          [[objc_getClass("LAActivator") sharedInstance] registerListener:self forName:@"Control Panel"];
-        }
+    if (!objc_getClass("LAActivator")) {
+      return;
+    }
+
+    if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
+      [[objc_getClass("LAActivator") sharedInstance] registerListener:self forName:@"Control Panel"];
     }
 }
 
 - (void)unload {
-    if (objc_getClass("LAActivator")) {
-        if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
-          [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Control Panel"];
-        }
+    if (!objc_getClass("LAActivator")) {
+        return;
+    }
+
+    if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
+        [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Control Panel"];
     }
 }
 

@@ -12,10 +12,10 @@
     [super viewDidLoad];
     self.title = @"Creators";
 }
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        if([[NSFileManager defaultManager]fileExistsAtPath:kPreferencesPath]){
+        if ([[NSFileManager defaultManager]fileExistsAtPath:kPreferencesPath]) {
            CPPrefs = [[NSMutableDictionary alloc]initWithContentsOfFile:kPreferencesPath];
         } else {
             CPPrefs = [[NSMutableDictionary alloc]init];
@@ -74,7 +74,7 @@
     NSString *reuseIdentifier = @"Profile";
     asphaleiaTVC *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
 
-    if (cell == nil) {
+    if (!cell) {
         cell = [[asphaleiaTVC alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     }
 

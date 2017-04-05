@@ -5,3 +5,4 @@ Bugs:
 Things to do:
 - Maybe coding style revise
 - Implement better passcode view for prefs
+- Give credit to translators

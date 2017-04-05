@@ -1,4 +1,4 @@
-#import <Preferences/PSListController.h>
+#import <Preferences/PSViewController.h>
 #import <AppList/AppList.h>
 
 @interface ALApplicationTableDataSource (Private)

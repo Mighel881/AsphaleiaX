@@ -56,7 +56,7 @@ static ASCommon *sharedCommonObj;
 
 - (BOOL)authenticateFunction:(ASAuthenticationAlertType)alertType dismissedHandler:(ASCommonAuthenticationHandler)handler {
     if (objc_getClass("ASAuthenticationController")) {
-      return [[objc_getClass("ASAuthenticationController") sharedInstance] authenticateFunction:alertType dismissedHandler:handler];      
+      return [[objc_getClass("ASAuthenticationController") sharedInstance] authenticateFunction:alertType dismissedHandler:handler];
     }
 
     authHandler = [handler copy];
@@ -67,10 +67,11 @@ static ASCommon *sharedCommonObj;
 }
 
 - (void)authenticated:(BOOL)wasCancelled {
-    if (authHandler) {
-        authHandler(wasCancelled);
-        authHandler = nil;
+    if (!authHandler) {
+        return;
     }
+    authHandler(wasCancelled);
+    authHandler = nil;
 }
 
 @end
