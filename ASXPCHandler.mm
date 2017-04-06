@@ -3,7 +3,7 @@
 #import <objc/runtime.h>
 #import "ASPreferences.h"
 #import "ASAuthenticationController.h"
-#import <RocketBootstrap/RocketBootstrap.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 
 @interface ASPreferences ()
@@ -63,7 +63,7 @@ static ASXPCHandler *sharedHandlerObj;
 		if ([ASAuthenticationController sharedInstance].temporarilyUnlockedAppBundleID) {
 			return @{ @"bundleIdentifier" : [ASAuthenticationController sharedInstance].temporarilyUnlockedAppBundleID };
 		} else {
-			return @{ @"bundleIdentifier" : [NSNull null] };			
+			return @{ @"bundleIdentifier" : [NSNull null] };
 		}
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice"]) {
 		return @{ @"isTouchIDDevice" : [NSNumber numberWithBool:[ASPreferences isTouchIDDevice]] };

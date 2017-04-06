@@ -6,7 +6,7 @@
 #import "ASPreferences.h"
 #import "ASPasscodeHandler.h"
 #import "ASAuthenticationController.h"
-#import <RocketBootstrap/RocketBootstrap.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 
 @interface ASCommon ()

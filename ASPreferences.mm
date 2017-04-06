@@ -2,11 +2,11 @@
 #import "ASPreferences.h"
 #import "ASAuthenticationController.h"
 #import "Asphaleia.h"
-#import <FlipSwitch/FlipSwitch.h>
+#import <Flipswitch/Flipswitch.h>
 #import <dlfcn.h>
 #import <LocalAuthentication/LocalAuthentication.h>
 #import <SystemConfiguration/CaptiveNetwork.h>
-#import <RocketBootstrap/RocketBootstrap.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 
 static NSString *const kPreferencesFilePath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
