@@ -19,6 +19,7 @@
 @end
 
 @interface SBAppSwitcherSnapshotView : UIView
+@property (nonatomic, retain) UIView *obscurityView;
 @property(retain, nonatomic) UIImage *deferredUpdateImage;
 @property(readonly, copy, nonatomic) SBDisplayItem *displayItem;
 @end

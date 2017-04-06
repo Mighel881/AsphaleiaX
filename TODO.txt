@@ -1,6 +1,8 @@
 Bugs:
 - Some protections dont work
 - 3D touch and Tage bypass
+- Cant launch notifications from LS
+- Alert when authenticating ReachApp app dismisses reachability.
 
 Things to do:
 - Maybe coding style revise

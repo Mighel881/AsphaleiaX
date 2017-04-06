@@ -15,7 +15,7 @@
 - (UIImage *)colouriseImage:(UIImage *)origImage withColour:(UIColor *)tintColour;
 @end
 
-BOOL blockPasscode;
+static BOOL blockPasscode;
 
 %subclass ASAuthenticationAlert : SBAlertItem
 %property (nonatomic, assign) NSInteger tag;
@@ -90,7 +90,7 @@ BOOL blockPasscode;
 	}
 	[self alertController].message = self.message;
 
-	UIAlertAction *cancelButton = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+	UIAlertAction *cancelButton = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, NULL, YES);
 		[[ASAuthenticationController sharedInstance] setCurrentAuthAlert:nil];
 		if (self.delegate) {
@@ -100,7 +100,7 @@ BOOL blockPasscode;
 		[self dismiss];
 	}];
 
-	UIAlertAction *passcodeButton = [UIAlertAction actionWithTitle:@"Passcode" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+	UIAlertAction *passcodeButton = [UIAlertAction actionWithTitle:@"Passcode" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, NULL, YES);
 		[[ASAuthenticationController sharedInstance] setCurrentAuthAlert:nil];
 		if (self.delegate) {
@@ -121,9 +121,7 @@ BOOL blockPasscode;
 		[[self alertController] addAction:passcodeButton];
 	}
 
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self addSubviewToAlert:self.icon];
-	});
+	[self addSubviewToAlert:self.icon];
 }
 
 - (BOOL)shouldShowInLockScreen {
@@ -131,7 +129,7 @@ BOOL blockPasscode;
 }
 
 %new
--(void)addSubviewToAlert:(UIView *)view {
+- (void)addSubviewToAlert:(UIView *)view {
 	UIView *labelSuperview;
 	for (id subview in [self allSubviewsOfView:[[self alertController] view]]) {
 		if ([subview isKindOfClass:[UILabel class]]) {

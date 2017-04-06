@@ -11,7 +11,7 @@
 #import "ASPasscodeHandler.h"
 #import "ASTouchWindow.h"
 #import "Asphaleia.h"
-#import <RocketBootstrap/RocketBootstrap.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import "ASXPCHandler.h"
 
@@ -117,6 +117,8 @@ void DeregisterForTouchIDNotifications(id observer) {
 %end
 
 %hook SBAppSwitcherSnapshotView
+%property (nonatomic, retain) UIView *obscurityView;
+
 - (void)_layoutStatusBar {
 	if (![[ASPreferences sharedInstance] requiresSecurityForApp:self.displayItem.displayIdentifier] || ![[ASPreferences sharedInstance] obscureAppContent]) {
 		%orig;
@@ -149,17 +151,17 @@ void DeregisterForTouchIDNotifications(id observer) {
 	obscurityView.tag = 80085; // ;)
 
 	[self addSubview:obscurityView];
-	objc_setAssociatedObject(self, @selector(asphaleia_obscurityView), obscurityView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	self.obscurityView = obscurityView;
 }
 
 - (void)respondToBecomingInvisibleIfNecessary {
 	self.layer.filters = nil;
-	UIView *obscurityView = objc_getAssociatedObject(self, @selector(asphaleia_obscurityView));
+	UIView *obscurityView = self.obscurityView;
 	if (obscurityView) {
 		[obscurityView removeFromSuperview];
 	}
 
-	objc_setAssociatedObject(self, @selector(asphaleia_obscurityView), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	self.obscurityView = nil;
 	%orig;
 }
 %end
@@ -427,6 +429,7 @@ static BOOL openURLHasAuthenticated;
 }
 %end
 
+/*
 %hook SBBannerContainerViewController
 UIVisualEffectView *notificationBlurView;
 PKGlyphView *bannerFingerGlyph;
@@ -597,6 +600,7 @@ BOOL currentBannerAuthenticated;
 	}
 }
 %end
+*/
 
 %hook SBMainWorkspace
 - (void)setCurrentTransaction:(id)transaction {
@@ -738,12 +742,14 @@ BOOL currentSwitchAuthenticated;
 }
 %end
 
+/*
 %hook NCNotificationListCell
 - (id)initWithFrame:(CGRect)arg1 {
 	HBLogDebug(@"called init");
 	return %orig;
 }
 %end
+*/
 
 %ctor {
 	if (!IN_SPRINGBOARD) {

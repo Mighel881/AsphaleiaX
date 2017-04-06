@@ -117,19 +117,21 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 }
 
 - (void)dismissPasscodeView {
-	if (self.passcodeWindow) {
-		[UIView animateWithDuration:.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-			[self.passcodeWindow setAlpha:0.f];
-		} completion:^(BOOL finished){
-			if (finished) {
-				[self.passcodeView removeFromSuperview];
-				[self.passcodeWindow setHidden:YES];
-				self.passcodeView = nil;
-				self.passcodeWindow = nil;
-				self.eventBlock(NO);
-			}
-		}];
+	if (!self.passcodeWindow) {
+		return;
 	}
+	
+	[UIView animateWithDuration:.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		[self.passcodeWindow setAlpha:0.f];
+	} completion:^(BOOL finished){
+		if (finished) {
+			[self.passcodeView removeFromSuperview];
+			[self.passcodeWindow setHidden:YES];
+			self.passcodeView = nil;
+			self.passcodeWindow = nil;
+			self.eventBlock(NO);
+		}
+	}];
 }
 
 @end
