@@ -46,7 +46,6 @@
 }
 
 - (NSDictionary *)handleMessageNamed:(NSString *)name withUserInfo:(NSDictionary *)userInfo {
-	HBLogDebug(@"handleMessageNamed: %@", name);
 	if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/CheckSlideUpControllerActive"]) {
 		return @{ @"active" : [NSNumber numberWithBool:_slideUpControllerActive] };
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState"]) {
@@ -91,7 +90,6 @@
 			return @{ @"bundleIdentifier" : [NSNull null] };
 		}
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice"]) {
-		HBLogDebug(@"got request");
 		return @{ @"isTouchIDDevice" : [NSNumber numberWithBool:[ASPreferences isTouchIDDevice]] };
 	}
 	return nil;
