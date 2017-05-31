@@ -674,11 +674,11 @@ BOOL currentBannerAuthenticated;
 }
 %end
 
-%hook FSSwitchMainPanel
+%hook FSSwitchPanel
 BOOL currentSwitchAuthenticated;
 
-- (void)setState:(int)arg1 forSwitchIdentifier:(NSString *)identifier {
-	HBLogDebug(@"setState:%d forSwitchIdentifier:%@", arg1, identifier);
+- (void)setState:(NSInteger)arg1 forSwitchIdentifier:(NSString *)identifier {
+	HBLogDebug(@"setState:%zd forSwitchIdentifier:%@", arg1, identifier);
 	if (![[ASPreferences sharedInstance] requiresSecurityForSwitch:identifier]) {
 		HBLogDebug(@"requiresSecurityForSwitch %@: NO", identifier);
 		%orig;
@@ -762,10 +762,4 @@ BOOL currentSwitchAuthenticated;
 	loadPreferences();
 	[[ASControlPanel sharedInstance] load];
 	[[ASActivatorListener sharedInstance] load];
-	centre = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
-	rocketbootstrap_distributedmessagingcenter_apply(centre);
-	[centre runServerOnCurrentThread];
-	for (NSString *notification in xpcNotifications) {
-		[centre registerForMessageName:notification target:[ASXPCHandler sharedInstance] selector:@selector(handleMessageNamed:withUserInfo:)];
-	}
 }
