@@ -4,7 +4,6 @@
 #import "ASPreferences.h"
 #import "ASAuthenticationController.h"
 #import <rocketbootstrap/rocketbootstrap.h>
-#import <AppSupport/CPDistributedMessagingCenter.h>
 
 @interface ASPreferences ()
 @property (readwrite) BOOL asphaleiaDisabled;
@@ -12,16 +11,42 @@
 @end
 
 @implementation ASXPCHandler
-static ASXPCHandler *sharedHandlerObj;
+
 + (instancetype)sharedInstance {
-	static dispatch_once_t token = 0;
+	static ASXPCHandler *sharedHandlerObj = nil;
+	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-		sharedHandlerObj = [[ASXPCHandler alloc] init];
+		sharedHandlerObj = [[self alloc] init];
+		[sharedHandlerObj loadServer];
 	});
 	return sharedHandlerObj;
 }
 
+- (void)loadServer {
+	_messagingServer = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+
+	void* handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
+	if (handle) {
+		void (*rocketbootstrap_distributedmessagingcenter_apply)(CPDistributedMessagingCenter*) = (void(*)(CPDistributedMessagingCenter*))dlsym(handle, "rocketbootstrap_distributedmessagingcenter_apply");
+		rocketbootstrap_distributedmessagingcenter_apply(_messagingServer);
+		dlclose(handle);
+	}
+
+	[_messagingServer runServerOnCurrentThread];
+
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/CheckSlideUpControllerActive" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/ReadAsphaleiaState" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/SetUserAuthorisedApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/AuthenticateApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/AuthenticateFunction" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/GetCurrentAuthAlert" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/GetCurrentTempUnlockedApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+}
+
 - (NSDictionary *)handleMessageNamed:(NSString *)name withUserInfo:(NSDictionary *)userInfo {
+	HBLogDebug(@"handleMessageNamed: %@", name);
 	if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/CheckSlideUpControllerActive"]) {
 		return @{ @"active" : [NSNumber numberWithBool:_slideUpControllerActive] };
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState"]) {
@@ -66,9 +91,18 @@ static ASXPCHandler *sharedHandlerObj;
 			return @{ @"bundleIdentifier" : [NSNull null] };
 		}
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice"]) {
+		HBLogDebug(@"got request");
 		return @{ @"isTouchIDDevice" : [NSNumber numberWithBool:[ASPreferences isTouchIDDevice]] };
 	}
 	return nil;
 }
 
 @end
+
+%ctor {
+	if (!IN_SPRINGBOARD) {
+		return;
+	}
+
+	[ASXPCHandler sharedInstance];
+}
