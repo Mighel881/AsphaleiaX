@@ -173,8 +173,8 @@
 @end
 
 @interface BiometricKit : NSObject
-+(id)manager;
--(NSDictionary *)identities:(id)object;
++(instancetype)manager;
+-(id)identities:(id)object;
 -(BOOL)isTouchIDCapable;
 @end
 
@@ -314,4 +314,22 @@
 - (_SBAlertController*)alertController;
 - (void)dismiss;
 - (void)configure:(BOOL)arg1 requirePasscodeForActions:(BOOL)arg2;
+@end
+
+@protocol _SBUIBiometricKitInterfaceDelegate
+@required
+- (void)biometricKitInterface:(id)interface handleEvent:(unsigned long long)event;
+@end
+
+@interface _SBUIBiometricKitInterface : NSObject
+@property (assign,nonatomic) id<_SBUIBiometricKitInterfaceDelegate> delegate;
+- (void)cancel;
+- (void)setDelegate:(id<_SBUIBiometricKitInterfaceDelegate>)arg1;
+- (int)detectFingerWithOptions:(id)arg1 ;
+- (int)matchWithMode:(unsigned long long)arg1 andCredentialSet:(id)arg2;
+- (BOOL)hasEnrolledIdentities;
+@end
+
+@interface SBWiFiManager : NSObject
+- (NSString*)currentNetworkName;
 @end

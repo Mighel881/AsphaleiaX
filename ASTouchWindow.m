@@ -15,9 +15,9 @@
     self = [super initWithFrame:aRect];
     if (self) {
         self.windowLevel = UIWindowLevelAlert;
-        [self setHidden:NO];
-        [self setAlpha:1.0];
-        [self setBackgroundColor:[UIColor clearColor]];
+        self.hidden = NO;
+        self.alpha = 1.0;
+        self.backgroundColor = [UIColor clearColor];
     }
 
     return self;
