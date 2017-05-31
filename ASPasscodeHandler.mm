@@ -23,8 +23,8 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 @implementation ASPasscodeHandler
 
 + (instancetype)sharedInstance {
-	static id sharedInstance = nil;
-	static dispatch_once_t token = 0;
+	static ASPasscodeHandler *sharedInstance = nil;
+	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 	  sharedInstance = [self new];
 	  addObserver(showPasscodeView,"com.a3tweaks.asphaleia.showpasscodeview");
@@ -120,7 +120,7 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 	if (!self.passcodeWindow) {
 		return;
 	}
-	
+
 	[UIView animateWithDuration:.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
 		[self.passcodeWindow setAlpha:0.f];
 	} completion:^(BOOL finished){

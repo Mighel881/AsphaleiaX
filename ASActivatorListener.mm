@@ -11,8 +11,8 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 @implementation ASActivatorListener
 
 + (instancetype)sharedInstance {
-    static id sharedInstance = nil;
-    static dispatch_once_t token = 0;
+    static ASActivatorListener *sharedInstance = nil;
+    static dispatch_once_t token;
     dispatch_once(&token, ^{
         sharedInstance = [self new];
         dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
@@ -71,7 +71,7 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 - (void)unload {
     if (objc_getClass("LAActivator")) {
         if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
-          [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Dynamic Selection"];  
+          [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Dynamic Selection"];
         }
     }
 }

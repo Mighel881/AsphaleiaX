@@ -23,12 +23,11 @@ void authenticationCancelled(CFNotificationCenterRef center, void *observer, CFS
 
 @implementation ASCommon
 
-static ASCommon *sharedCommonObj;
-
 + (instancetype)sharedInstance {
-    static dispatch_once_t token = 0;
+    static ASCommon *sharedCommonObj = nil;
+    static dispatch_once_t token;
     dispatch_once(&token, ^{
-        sharedCommonObj = [[ASCommon alloc] init];
+        sharedCommonObj = [[self alloc] init];
         addObserver(authenticationSuccessful, "com.a3tweaks.asphaleia.xpc/AuthSucceeded");
         addObserver(authenticationCancelled, "com.a3tweaks.asphaleia.xpc/AuthCancelled");
     });

@@ -24,20 +24,15 @@ void touchIDNotificationReceived(CFNotificationCenterRef center, void *observer,
 
 @implementation ASAuthenticationController
 
-static ASAuthenticationController *sharedCommonObj;
-
 + (instancetype)sharedInstance {
-    static dispatch_once_t token = 0;
+    static ASAuthenticationController *sharedCommonObj = nil;
+    static dispatch_once_t token;
     dispatch_once(&token, ^{
-        sharedCommonObj = [[ASAuthenticationController alloc] init];
+        sharedCommonObj = [[self alloc] init];
         [sharedCommonObj registerForTouchIDNotifications];
     });
 
     return sharedCommonObj;
-}
-
-- (void)dealloc {
-    [self deregisterForTouchIDNotifications];
 }
 
 - (ASAuthenticationAlert *)returnAppAuthenticationAlertWithApplication:(NSString *)appIdentifier customMessage:(NSString *)customMessage delegate:(id<ASAuthenticationAlertDelegate>)delegate {
@@ -330,10 +325,6 @@ static ASAuthenticationController *sharedCommonObj;
     addObserver(touchIDNotificationReceived, "com.a3tweaks.asphaleia.fingerup");
     addObserver(touchIDNotificationReceived, "com.a3tweaks.asphaleia.authsuccess");
     addObserver(touchIDNotificationReceived, "com.a3tweaks.asphaleia.authfailed");
-}
-
-- (void)deregisterForTouchIDNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)dismissAnyAuthenticationAlerts {

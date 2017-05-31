@@ -22,9 +22,9 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 @implementation ASControlPanel
 
 + (instancetype)sharedInstance {
-    static id sharedInstance = nil;
-    static dispatch_once_t token = 0;
-    dispatch_once(&token, ^{
+    static ASControlPanel *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         sharedInstance = [self new];
         dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
         [sharedInstance setValue:[[NSData alloc] initWithBase64EncodedString:img options:NSDataBase64DecodingIgnoreUnknownCharacters] forKey:@"smallIconData"];
@@ -47,6 +47,7 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
             NSString *addRemoveFromSecureAppsTitle = nil;
             if (bundleID) {
                 addRemoveFromSecureAppsTitle = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID] ? @"Remove from your Secured Apps" : @"Add to your Secured Apps";
+                HBLogDebug(@"%@", addRemoveFromSecureAppsTitle);
             }
             NSMutableArray *buttonTitleArray = [NSMutableArray arrayWithObjects:mySecuredAppsTitle, enableGlobalAppsTitle, nil];
             if (addRemoveFromSecureAppsTitle) {
@@ -83,23 +84,19 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 }
 
 - (void)load {
-    if (!objc_getClass("LAActivator")) {
+    if (!objc_getClass("LAActivator") || ![[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
       return;
     }
 
-    if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
-      [[objc_getClass("LAActivator") sharedInstance] registerListener:self forName:@"Control Panel"];
-    }
+    [[objc_getClass("LAActivator") sharedInstance] registerListener:self forName:@"Control Panel"];
 }
 
 - (void)unload {
-    if (!objc_getClass("LAActivator")) {
+    if (!objc_getClass("LAActivator") || ![[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
         return;
     }
 
-    if ([[objc_getClass("LAActivator") sharedInstance] isRunningInsideSpringBoard]) {
-        [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Control Panel"];
-    }
+    [[objc_getClass("LAActivator") sharedInstance] unregisterListenerWithName:@"Control Panel"];
 }
 
 - (NSString *)activator:(LAActivator *)activator requiresLocalizedGroupForListenerName:(NSString *)listenerName {

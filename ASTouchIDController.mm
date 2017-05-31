@@ -37,8 +37,8 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 
 + (instancetype)sharedInstance {
 	// Setup instance for current class once
-	static id sharedInstance = nil;
-	static dispatch_once_t token = 0;
+	static ASTouchIDController *sharedInstance = nil;
+	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedInstance = [self new];
 		addObserver(startMonitoringNotification,"com.a3tweaks.asphaleia.startmonitoring");
