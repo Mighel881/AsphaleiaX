@@ -1,5 +1,6 @@
 #import <notify.h>
 #import <objc/message.h>
+#import <AppSupport/CPDistributedMessagingCenter.h>
 
 #define addObserver(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce)
 #define loadPreferences() preferencesChangedCallback(NULL, NULL, NULL, NULL, NULL)
@@ -41,6 +42,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 @interface ASPreferences : NSObject {
 	NSDictionary *_prefs;
+	CPDistributedMessagingCenter *_center;
 }
 @property (readonly) BOOL asphaleiaDisabled;
 @property (readonly) BOOL itemSecurityDisabled;
