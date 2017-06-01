@@ -202,6 +202,7 @@ BOOL switcherAuthenticating;
 }
 %end
 
+
 %hook SBLockScreenManager
 UIWindow *blurredWindow;
 
@@ -246,12 +247,15 @@ UIWindow *blurredWindow;
 		[blurredWindow makeKeyAndVisible];
 	}
 }
-
-- (void)unlockUIFromSource:(int)source withOptions:(id)options {
+/* Not sure what this is for but It breaks unlocks from notifications
+- (void)unlockUIFromSource:(NSInteger)source withOptions:(id)options {
+	HBLogDebug(@"unlockUIFromSource:%zd", source);
 	if (source != 14 || ![[ASTouchIDController sharedInstance] shouldBlockLockscreenMonitor] || ![[ASTouchIDController sharedInstance] isMonitoring]) {
+		HBLogDebug(@"running orig");
 		%orig;
 	}
 }
+*/
 %end
 
 %hook SBDashBoardViewController
