@@ -15,7 +15,7 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 	}
 	UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle/NavHeart@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(loveMeh)];
 	UIImageView *A3ImageView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle/NavA3tweaks@2x.png"]];

@@ -35,7 +35,7 @@
 @end
 @implementation asphaleiaTVC
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 	if ((self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier])) {
 		profileView = [[UIImageView alloc] init];
 		profileView.layer.cornerRadius = PROFILE_SIZE / 2.0f;

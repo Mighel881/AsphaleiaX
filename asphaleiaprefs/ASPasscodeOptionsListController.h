@@ -1,4 +1,4 @@
 #import <Preferences/PSListController.h>
 
-@interface ASPasscodeOptionsListController : PSListController 
+@interface ASPasscodeOptionsListController : PSListController
 @end

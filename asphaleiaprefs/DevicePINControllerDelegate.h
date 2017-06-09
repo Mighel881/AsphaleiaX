@@ -20,5 +20,5 @@
 -(void)didAcceptEnteredPIN;
 -(void)willCancelEnteringPIN;
 -(void)didCancelEnteringPIN;
+-(void)didChangePasscode;
 @end
-

@@ -34,10 +34,6 @@
 	return _specifiers;
 }
 
-- (BOOL)dummyIsTouchIDDevice {
-	return isTouchIDDevice();
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
 	if ([cell.textLabel.text isEqualToString:@"Reset All Settings"]) {

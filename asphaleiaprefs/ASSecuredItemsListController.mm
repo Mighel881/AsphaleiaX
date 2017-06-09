@@ -9,7 +9,7 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"SecuredItems" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"SecuredItems" target:self];
 	}
 	dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
   Class la = objc_getClass("LAActivator");
@@ -47,7 +47,7 @@
     [defaults addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:PreferencesPath]];
     [defaults setObject:value forKey:specifier.properties[@"key"]];
     [defaults writeToFile:PreferencesPath atomically:YES];
-    CFStringRef toPost = (CFStringRef)specifier.properties[@"PostNotification"];
+    CFStringRef toPost = (__bridge CFStringRef)specifier.properties[@"PostNotification"];
     if (toPost) CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), toPost, NULL, NULL, YES);
 }
 

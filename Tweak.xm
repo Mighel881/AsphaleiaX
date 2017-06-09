@@ -759,11 +759,11 @@ BOOL currentSwitchAuthenticated;
 	if (!IN_SPRINGBOARD) {
 		HBLogWarn(@"[Asphaleia] Attempting to load into non-SpringBoard process. Stop.");
 		return;
-	} else {
-		%init;
 	}
+
 	dlopen("/Library/MobileSubstrate/DynamicLibraries/Flipswitch.dylib", RTLD_NOW);
 	loadPreferences();
 	[[ASControlPanel sharedInstance] load];
 	[[ASActivatorListener sharedInstance] load];
+	%init;
 }

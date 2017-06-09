@@ -2,11 +2,9 @@
 
 @implementation AsphaleiaTitleCell
 
-- (id)initWithSpecifier:(PSSpecifier *)specifier {
+- (instancetype)initWithSpecifier:(PSSpecifier *)specifier {
 	self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-
 	if (self) {
-
 		int width = [[UIScreen mainScreen] bounds].size.width;
 
 		CGRect frame = CGRectMake(0, 10, width, 60);
@@ -50,7 +48,7 @@
 }
 
 - (CGFloat)preferredHeightForWidth:(CGFloat)arg1{
-    return 125.0f;
+	return 125.0f;
 }
 
 @end

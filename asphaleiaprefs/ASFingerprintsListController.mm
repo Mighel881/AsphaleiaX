@@ -1,5 +1,6 @@
 #include "ASFingerprintsListController.h"
 #import "ASRootListController.h"
+#import "../Asphaleia.h"
 #import <Preferences/PSSpecifier.h>
 #import <dlfcn.h>
 #import <objc/runtime.h>

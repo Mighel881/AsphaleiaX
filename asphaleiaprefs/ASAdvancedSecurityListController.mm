@@ -7,7 +7,7 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"SecuredItems-AdvancedSecurity" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"SecuredItems-AdvancedSecurity" target:self];
 	}
 
 	return _specifiers;
@@ -42,7 +42,7 @@
 	[defaults addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:PreferencesPath]];
 	[defaults setObject:value forKey:specifier.properties[@"key"]];
 	[defaults writeToFile:PreferencesPath atomically:YES];
-	CFStringRef toPost = (CFStringRef)specifier.properties[@"PostNotification"];
+	CFStringRef toPost = (__bridge CFStringRef)specifier.properties[@"PostNotification"];
 	if (toPost) CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), toPost, NULL, NULL, YES);
 }
 

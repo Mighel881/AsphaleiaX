@@ -29,8 +29,15 @@
 }
 
 @property (assign,nonatomic) id<DevicePINControllerDelegate> pinDelegate;              //@synthesize pinDelegate=_pinDelegate - In the implementation block
-@property (assign,nonatomic) BOOL hidesNavigationButtons;                              //@synthesize hidesNavigationButtons=_hidesNavigationButtons - In the implementation block
-+(BOOL)settingEnabled;
+@property (assign,nonatomic) BOOL hidesNavigationButtons;                                     //@synthesize hidesNavigationButtons=_hidesNavigationButtons - In the implementation block
+@property (assign,nonatomic) BOOL hidesCancelButton;                                          //@synthesize hidesCancelButton=_hidesCancelButton - In the implementation block
+@property (assign,nonatomic) BOOL shouldDismissWhenDone;                                      //@synthesize shouldDismissWhenDone=_shouldDismissWhenDone - In the implementation block
+@property (nonatomic,copy) NSString * doneButtonTitle;                                        //@synthesize doneButtonTitle=_doneButtonTitle - In the implementation block
+@property (assign,nonatomic) BOOL requiresKeyboard;
+@property (assign,nonatomic) int pinLength;
+@property (assign,nonatomic) BOOL simplePIN;
+@property (assign,getter=isNumericPIN,nonatomic) BOOL numericPIN;
+@property (assign,nonatomic) BOOL allowOptionsButton; +(BOOL)settingEnabled;
 -(BOOL)isBlocked;
 -(BOOL)success;
 -(void)setSpecifier:(id)arg1 ;
@@ -62,8 +69,8 @@
 -(CFStringRef)blockedStateKey;
 -(double)unblockTime;
 -(void)_clearBlockedState;
--(long long)numberOfFailedAttempts;
--(void)_setNumberOfFailedAttempts:(long long)arg1 ;
+-(long)numberOfFailedAttempts;
+-(void)_setNumberOfFailedAttempts:(long)arg1 ;
 -(void)_setUnblockTime:(double)arg1 ;
 -(id)stringsBundle;
 -(id)stringsTable;
@@ -97,4 +104,3 @@
 -(void)setHidesNavigationButtons:(BOOL)arg1 ;
 -(void)setSuccess:(BOOL)arg1 ;
 @end
-

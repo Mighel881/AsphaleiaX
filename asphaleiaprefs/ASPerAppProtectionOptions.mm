@@ -7,7 +7,7 @@ extern void AppListNeedsToReload();
 @implementation ASPerAppProtectionOptions
 - (NSArray*)specifiers {
   if (!_specifiers) {
-      _specifiers = [[self loadSpecifiersFromPlistName:@"SecuredApps-AdvancedOptions" target:self] retain];
+      _specifiers = [self loadSpecifiersFromPlistName:@"SecuredApps-AdvancedOptions" target:self];
   }
 
   return _specifiers;
@@ -28,7 +28,7 @@ extern void AppListNeedsToReload();
     NSString *key = [NSString stringWithFormat:@"securedApps-%@-%@",_identifier,[specifier propertyForKey:@"key"]];
     [defaults setObject:value forKey:key];
     [defaults writeToFile:PreferencesPath atomically:YES];
-    CFStringRef toPost = (CFStringRef)specifier.properties[@"PostNotification"];
+    CFStringRef toPost = (__bridge CFStringRef)specifier.properties[@"PostNotification"];
     if (toPost) {
       CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), toPost, NULL, NULL, YES);
     }
