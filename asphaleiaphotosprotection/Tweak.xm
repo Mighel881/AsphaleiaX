@@ -11,6 +11,7 @@
 
 BOOL authenticated;
 BOOL authenticating;
+NSBundle *bundle;
 
 %group UIImagePickerController
 %hook UIImagePickerController
@@ -30,7 +31,9 @@ BOOL authenticating;
 		} else {
 			[self dismissViewControllerAnimated:YES completion:nil];
 			if ([[ASPreferences sharedInstance] showPhotosProtectMessage]) {
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Asphaleia" message:@"You have allowed this app to access your photos until you close it. If no photos are shown, try opening this section of the app again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+				NSString *title = [bundle localizedStringForKey:@"ASPHALEIA" value:nil table:@"Localizable"];
+				NSString *message = [bundle localizedStringForKey:@"PHOTO_PROTECTION_MESSAGE" value:nil table:@"Localizable"];
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 				[alert show];
 				[[ASPreferences sharedInstance] increasePhotosProtectMessageCount];
 			}
@@ -71,7 +74,9 @@ ALAssetsLibraryAccessFailureBlock block2;
 			authenticated = YES;
 			%orig(arg1,block1,block2);
 			if ([[ASPreferences sharedInstance] showPhotosProtectMessage]) {
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Asphaleia" message:@"You have allowed this app to access your photos until you close it. If no photos are shown, try opening this section of the app again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+				NSString *title = [bundle localizedStringForKey:@"ASPHALEIA" value:nil table:@"Localizable"];
+				NSString *message = [bundle localizedStringForKey:@"PHOTO_PROTECTION_MESSAGE" value:nil table:@"Localizable"];
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 				[alert show];
 				[[ASPreferences sharedInstance] increasePhotosProtectMessageCount];
 			}
@@ -117,7 +122,9 @@ PHAuthBlock authBlock;
 				%orig(authBlock);
 				authenticated = YES;
 				if ([[ASPreferences sharedInstance] showPhotosProtectMessage]) {
-					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Asphaleia" message:@"You have allowed this app to access your photos until you close it. If no photos are shown, try opening this section of the app again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+					NSString *title = [bundle localizedStringForKey:@"ASPHALEIA" value:nil table:@"Localizable"];
+					NSString *message = [bundle localizedStringForKey:@"PHOTO_PROTECTION_MESSAGE" value:nil table:@"Localizable"];
+					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 					[alert show];
 					[[ASPreferences sharedInstance] increasePhotosProtectMessageCount];
 				}
@@ -194,9 +201,10 @@ SEL origSelector;
 %end
 
 %ctor {
-	if ([[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.mobileslideshow"]) {
+	if (IN_BUNDLE(@"com.apple.mobileslideshow")) {
 		return;
 	}
+
 	BOOL loaded;
 	if (%c(PHPhotoLibrary)) {
 		loaded = YES;
@@ -216,6 +224,7 @@ SEL origSelector;
 	}
 	if (loaded) {
 		loadPreferences();
+		bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
 		%init;
 	}
 }

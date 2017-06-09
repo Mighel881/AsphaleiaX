@@ -29,6 +29,8 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
       return;
     }
 
+    NSBundle *bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
+
     [[ASCommon sharedInstance] authenticateFunction:ASAuthenticationAlertDynamicSelection dismissedHandler:^(BOOL wasCancelled){
         if (!wasCancelled) {
             BOOL appSecureValue = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID];
@@ -40,11 +42,13 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
             NSString *title = nil;
             NSString *description = nil;
             if (appSecureValue) {
-                title = @"Disabled authentication";
-                description = [NSString stringWithFormat:@"Disabled authentication for %@", frontmostApp.displayName];
+                title = [bundle localizedStringForKey:@"DISABLE_AUTH" value:nil table:@"Localizable"];
+                NSString *format = [bundle localizedStringForKey:@"DISABLE_AUTH_FOR" value:nil table:@"Localizable"];
+                description = [NSString stringWithFormat:format, frontmostApp.displayName];
             } else {
-                title = @"Enabled authentication";
-                description = [NSString stringWithFormat:@"Enabled authentication for %@", frontmostApp.displayName];
+                title = [bundle localizedStringForKey:@"ENABLE_AUTH" value:nil table:@"Localizable"];
+                NSString *format = [bundle localizedStringForKey:@"ENABLE_AUTH_FOR" value:nil table:@"Localizable"];
+                description = [NSString stringWithFormat:format, frontmostApp.displayName];
             }
 
             ASAlert *alertView = [[objc_getClass("ASAlert") alloc] initWithTitle:title

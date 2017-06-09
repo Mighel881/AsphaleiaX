@@ -173,7 +173,6 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 - (BOOL)protectAllApps {
 	if (![self requireAuthorisationOnWifi] || [ASPreferences sharedInstance].asphaleiaDisabled) {
-		HBLogDebug(@"returning no for protectAllApps");
 		return NO;
 	}
 	return [self objectForKey:kProtectAllAppsKey] ? [[self objectForKey:kProtectAllAppsKey] boolValue] : NO;

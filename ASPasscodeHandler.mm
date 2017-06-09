@@ -20,6 +20,8 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 	}];
 }
 
+static NSBundle *bundle;
+
 @implementation ASPasscodeHandler
 
 + (instancetype)sharedInstance {
@@ -28,6 +30,7 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 	dispatch_once(&token, ^{
 	  sharedInstance = [self new];
 	  addObserver(showPasscodeView,"com.a3tweaks.asphaleia.showpasscodeview");
+		bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
 	});
 	return sharedInstance;
 }
@@ -74,7 +77,7 @@ void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRe
 	[self.passcodeWindow addSubview:self.passcodeView];
 	[self.passcodeWindow setAlpha:0.f];
 	[self.passcodeWindow makeKeyAndVisible];
-	[self.passcodeView updateStatusText:@"Enter Passcode" subtitle:nil animated:NO];
+	[self.passcodeView updateStatusText:[bundle localizedStringForKey:@"ENTER_PASS" value:nil table:@"Localizable"] subtitle:nil animated:NO];
 	[UIView animateWithDuration:.15f delay:0.0
 	                options:UIViewAnimationOptionCurveEaseIn
 	             animations:^{[self.passcodeWindow setAlpha:1.f];}

@@ -22,6 +22,8 @@ void touchIDNotificationReceived(CFNotificationCenterRef center, void *observer,
     [[ASAuthenticationController sharedInstance] receivedNotificationOfName:(__bridge NSString *)name fingerprint:fingerprint];
 }
 
+static NSBundle *bundle;
+
 @implementation ASAuthenticationController
 
 + (instancetype)sharedInstance {
@@ -30,6 +32,7 @@ void touchIDNotificationReceived(CFNotificationCenterRef center, void *observer,
     dispatch_once(&token, ^{
         sharedCommonObj = [[self alloc] init];
         [sharedCommonObj registerForTouchIDNotifications];
+        bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
     });
 
     return sharedCommonObj;
@@ -40,7 +43,7 @@ void touchIDNotificationReceived(CFNotificationCenterRef center, void *observer,
     if (customMessage) {
       message = customMessage;
     } else {
-      message = @"Scan fingerprint to open.";
+      message = [bundle localizedStringForKey:@"SCAN_FINGER_OPEN" value:nil table:@"Localizable"];
     }
 
     ASAuthenticationAlert *alertView = [[objc_getClass("ASAuthenticationAlert") alloc] initWithApplication:appIdentifier
@@ -61,67 +64,67 @@ void touchIDNotificationReceived(CFNotificationCenterRef center, void *observer,
     int tag;
     switch (alertType) {
         case ASAuthenticationAlertAppArranging: {
-          title = @"Arrange Apps";
+          title = [bundle localizedStringForKey:@"ARRANGE_APPS" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconEditMode.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationFunction;
           break;
         }
         case ASAuthenticationAlertSwitcher: {
-          title = @"Multitasking";
+          title = [bundle localizedStringForKey:@"MULTITASKING" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconMultitasking.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationFunction;
           break;
         }
         case ASAuthenticationAlertSpotlight: {
-          title = @"Spotlight";
+          title = [bundle localizedStringForKey:@"SPOTLIGHT" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconSpotlight.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationFunction;
           break;
         }
         case ASAuthenticationAlertPowerDown: {
-          title = @"Slide to Power Off";
+          title = [bundle localizedStringForKey:@"SLIDE_TO_POWER_OFF" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconPowerOff.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationFunction;
           break;
         }
         case ASAuthenticationAlertControlCentre: {
-          title = @"Control Center";
+          title = [bundle localizedStringForKey:@"CONTROL_CENTER" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconControlCenter.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationFunction;
           break;
         }
         case ASAuthenticationAlertControlPanel: {
-          title = @"Asphaleia Control Panel";
+          title = [bundle localizedStringForKey:@"CONTROL_PANEL" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationSecurityMod;
           break;
         }
         case ASAuthenticationAlertDynamicSelection: {
-          title = @"Dynamic Selection";
+          title = [bundle localizedStringForKey:@"DYNAMIC_SELECTION" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationSecurityMod;
           break;
         }
         case ASAuthenticationAlertPhotos: {
-          title = @"Photo Library";
+          title = [bundle localizedStringForKey:@"PHOTO_LIBRARY" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationFunction;
           break;
         }
         case ASAuthenticationAlertSettingsPanel: {
-          title = @"Settings Panel";
+          title = [bundle localizedStringForKey:@"SETTINGS_PANEL" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationItem;
           break;
         }
         case ASAuthenticationAlertFlipswitch: {
-          title = @"Flipswitch";
+          title = [bundle localizedStringForKey:@"FLIPSWITCH" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationItem;
           break;
         }
         default: {
-          title = @"Asphaleia";
+          title = [bundle localizedStringForKey:@"ASPHALEIA" value:nil table:@"Localizable"];
           iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
           tag = ASAuthenticationFunction;
           break;
@@ -132,7 +135,7 @@ void touchIDNotificationReceived(CFNotificationCenterRef center, void *observer,
     imgView.frame = CGRectMake(0,0,iconImage.size.width,iconImage.size.height);
 
     ASAuthenticationAlert *alertView = [[objc_getClass("ASAuthenticationAlert") alloc] initWithTitle:title
-                   message:@"Scan fingerprint to access."
+                   message:[bundle localizedStringForKey:@"SCAN_FINGER_ACCESS" value:nil table:@"Localizable"]
                    icon:imgView
                    smallIcon:YES
                    delegate:delegate];
@@ -234,7 +237,6 @@ void touchIDNotificationReceived(CFNotificationCenterRef center, void *observer,
         [iconView setHighlighted:NO];
         return NO;
     } else if ((![[ASPreferences sharedInstance] touchIDEnabled] || [[ASPreferences sharedInstance] securityLevelForApp:currentAuthAppBundleID] == 0) && [[ASPreferences sharedInstance] passcodeEnabled]) {
-        HBLogDebug(@"security level 0");
         [iconView setHighlighted:NO];
         [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:iconView eventBlock:^void(BOOL authenticated){
 

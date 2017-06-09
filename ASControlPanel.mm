@@ -19,6 +19,8 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 @property (readwrite) BOOL itemSecurityDisabled;
 @end
 
+static NSBundle *bundle;
+
 @implementation ASControlPanel
 
 + (instancetype)sharedInstance {
@@ -28,6 +30,7 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
         sharedInstance = [self new];
         dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
         [sharedInstance setValue:[[NSData alloc] initWithBase64EncodedString:img options:NSDataBase64DecodingIgnoreUnknownCharacters] forKey:@"smallIconData"];
+        bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
     });
     return sharedInstance;
 }
@@ -42,11 +45,13 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
 
     [[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertControlPanel dismissedHandler:^(BOOL wasCancelled) {
         if (!wasCancelled) {
-            NSString *mySecuredAppsTitle = [ASPreferences sharedInstance].itemSecurityDisabled ? @"Enable My Secured Items" : @"Disable My Secured Items";
-            NSString *enableGlobalAppsTitle = ![[ASPreferences sharedInstance] protectAllApps] ? @"Enable Global App Security" : @"Disable Global App Security"; // Enable/Disable
+            NSString *mySecuredAppsTitle = [ASPreferences sharedInstance].itemSecurityDisabled ? [bundle localizedStringForKey:@"ENABLE_SECURED_ITEMS" value:nil table:@"Localizable"] : [bundle localizedStringForKey:@"DISABLE_SECURED_ITEMS" value:nil table:@"Localizable"];
+            NSString *enableGlobalAppsTitle = ![[ASPreferences sharedInstance] protectAllApps] ? [bundle localizedStringForKey:@"ENABLE_GLOBAL_SECURITY" value:nil table:@"Localizable"] : [bundle localizedStringForKey:@"DISABLE_GLOBAL_SECURITY" value:nil table:@"Localizable"]; // Enable/Disable
             NSString *addRemoveFromSecureAppsTitle = nil;
             if (bundleID) {
-                addRemoveFromSecureAppsTitle = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID] ? @"Remove from your Secured Apps" : @"Add to your Secured Apps";
+                NSString *removeApp = [bundle localizedStringForKey:@"REMOVE_APP" value:nil table:@"Localizable"];
+                NSString *addApp = [bundle localizedStringForKey:@"ADD_APP" value:nil table:@"Localizable"];
+                addRemoveFromSecureAppsTitle = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID] ? removeApp : addApp;
                 HBLogDebug(@"%@", addRemoveFromSecureAppsTitle);
             }
             NSMutableArray *buttonTitleArray = [NSMutableArray arrayWithObjects:mySecuredAppsTitle, enableGlobalAppsTitle, nil];
@@ -54,7 +59,7 @@ static NSString *img = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAKQWlDQ1B
               [buttonTitleArray addObject:addRemoveFromSecureAppsTitle];
             }
 
-            self.alertView = [[objc_getClass("ASAlert") alloc] initWithTitle:@"Asphaleia Control Panel"
+            self.alertView = [[objc_getClass("ASAlert") alloc] initWithTitle:[bundle localizedStringForKey:@"CONTROL_PANEL" value:nil table:@"Localizable"]
                                 message:nil
                                 delegate:self];
             for (NSString *buttonTitle in buttonTitleArray) {
