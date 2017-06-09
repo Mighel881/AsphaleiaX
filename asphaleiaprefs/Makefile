@@ -1,11 +1,11 @@
-GO_EASY_ON_ME = 1
+CFLAGS = -fobjc-arc
 
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = AsphaleiaPrefs
 AsphaleiaPrefs_FILES = $(wildcard *.mm) $(wildcard *.m)
 AsphaleiaPrefs_INSTALL_PATH = /Library/PreferenceBundles
-AsphaleiaPrefs_FRAMEWORKS = UIKit CoreGraphics AudioToolbox QuartzCore Social MessageUI SystemConfiguration LocalAuthentication
+AsphaleiaPrefs_FRAMEWORKS = UIKit CoreGraphics AudioToolbox QuartzCore Social MessageUI LocalAuthentication
 AsphaleiaPrefs_PRIVATE_FRAMEWORKS = Preferences
 AsphaleiaPrefs_LDFLAGS = -L"../.theos/obj/debug" -lapplist -lmobilegestalt -lflipswitch -lrocketbootstrap -lasphaleiaui
 
