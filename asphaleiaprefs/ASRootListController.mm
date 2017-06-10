@@ -44,10 +44,6 @@
 	}
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
-}
-
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	if (!_enteredCorrectly && !self.passcodeViewIsTransitioning) {

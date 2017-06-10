@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>TITLE</key>
+    <string>Korunanlar</string>
+
+    <key>ACTIVATOR_FOOTER</key>
+    <string>Bir uygulamayı Güvenli uygulamalar listesinden kaldırmak veya listeye eklemek için Activator kullan</string>
+    <key>DYNAMIC_SELECTION</key>
+    <string>Dinamik seçim</string>
+    <key>ACTIVATOR_ACTIONS</key>
+    <string>ACtivator hareketleri</string>
+
+    <key>ADVANCED_SECURITY</key>
+    <string>Gelişmiş Güvenlik</string>
+
+    <key>GLOBAL_APP_SECURITY</key>
+    <string>Genel uygulama koruması</string>
+    <key>SECURED_APPS</key>
+    <string>Korunan uygulamalar</string>
+    <key>SECURED_FOLDERS</key>
+    <string>Korunan klasörler</string>
+    <key>SECURED_SETTINGS_PANELS</key>
+    <string>Korunan ayar panelleri</string>
+    <key>SECURED_FLIPSWITCHES</key>
+    <string>Korunan Flipswich ayarları</string>
+</dict>
+</plist>

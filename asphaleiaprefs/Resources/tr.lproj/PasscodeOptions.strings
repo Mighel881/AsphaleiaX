@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>TITLE</key>
+    <string>Parola Ayarları</string>
+
+    <key>PIN_FOOTER</key>
+    <string>Korunan uygulamaları 6 haneli parola ile aç</string>
+    <key>CHANGE_PASSCODE</key>
+    <string>Parola Değiştir</string>
+    <key>PASSCODE</key>
+    <string>Parola</string>
+
+    <key>FINGERPRINT_FOOTER</key>
+    <string>Uygulamayı açmak için parmağınızı okutun, parola girmek için uygulamaya bir kez daha dokunun, kapatmak için herhangi bir yere dokunun</string>
+    <key>TOUCHID</key>
+    <string>Touch ID</string>
+    <key>VIBRATE_ON_FAIL</key>
+    <string>Hata durumunda titret</string>
+
+    <key>AUTH_FOOTER</key>
+    <string>Yetkilendirmeden sonra ne kadar sürede tekrar yetkilendirme gerekeceğini ayarla</string>
+    <key>REQUIRE_AUTHORIZATION</key>
+    <string>Yetkilendirme Gerekli</string>
+
+    <key>ADVANCED_OPTIONS</key>
+    <string>Gelişmiş Ayarlar</string>
+
+    <key>CONTROL_PANEL</key>
+    <string>Asphaleia Kontrol Paneli</string>
+
+    <key>RESET_SETTINGS</key>
+    <string>Tüm ayarları sıfırla</string>
+</dict>
+</plist>

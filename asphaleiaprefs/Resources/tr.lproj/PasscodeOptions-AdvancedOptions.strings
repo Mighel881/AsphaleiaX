@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>TITLE</key>
+    <string>Gelişmiş Seçenekler</string>
+
+    <key>BLACKOUT_MULTITASKING_FOOTER</key>
+    <string>Görev yöneticisinde, korunan uygulamaları karart</string>
+    <key>OBSCURE_APP_CONTENT</key>
+    <string>Belirsiz uygulama içeriği</string>
+
+    <key>BLACKOUT_NOTIF_FOOTER</key>
+    <string>Bildirimlerde, korunan uygulamaları karart</string>
+    <key>OBSCURE_NOTIFICATIONS</key>
+    <string>Belirsiz bildirimler</string>
+
+    <key>REAUTH_FOOTER</key>
+    <string>Güvenli uygulamanın kilidi açılmışsa yeniden doğrulama gerektirme</string>
+    <key>UNLOCK_UNSECURED</key>
+    <string>Güvenli olmayan uygulamanın kilidini aç</string>
+
+    <key>TIME_LIMIT_FOOTER</key>
+    <string>Uygulama güvenliği etkinleştirilmeden önce kilidini açtıktan sonra sınırlı bir süre ayarlayın.</string>
+    <key>DELAY_ASPHALEIA</key>
+    <string>Asphaleia gecikmesi</string>
+    <key>DELAY_LENGTH</key>
+    <string>Gecikme uzunluğu</string>
+
+    <key>NETWORK_FOOTER</key>
+    <string>Ev ağındayken her şeyi güvensiz hale getir. Virgül ve boşluk ile ayrılacak çoklu ağlar ekle</string>
+    <key>WIFI_UNLOCK</key>
+    <string>Wi-Fi Kilidi</string>
+    <key>NETWORK_NAME</key>
+    <string>Ağ Adı:</string>
+    <key>ADD_CURRENT_NETWORK</key>
+    <string>Geçerli Ağ Ekle</string>
+
+    <key>FINGERPRINTS</key>
+    <string>Parmak izleri</string>
+</dict>
+</plist>

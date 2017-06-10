@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>DISABLE_AUTH</key>
+    <string>Kimlik doğrulama devre dışı</string>
+    <key>DISABLE_AUTH_FOR</key>
+    <string>%@ için kimlik doğrulama devre dışı</string>
+    <key>ENABLE_AUTH</key>
+    <string>Kimlik doğrulama açık</string>
+    <key>ENABLE_AUTH_FOR</key>
+    <string>%@ için kimlik doğrulama açık</string>
+
+    <key>ARRANGE_APPS</key>
+    <string>Uygulamaları Taşıma</string>
+    <key>MULTITASKING</key>
+    <string>Çoklu Görev</string>
+    <key>SPOTLIGHT</key>
+    <string>Spotlight</string>
+    <key>SLIDE_TO_POWER_OFF</key>
+    <string>Kapatmak için kaydırın</string>
+    <key>CONTROL_CENTER</key>
+    <string>Kontrol Merkezi</string>
+    <key>CONTROL_PANEL</key>
+    <string>Asphaleia Kontrol Paneli</string>
+    <key>DYNAMIC_SELECTION</key>
+    <string>Dinamik Seçim</string>
+    <key>PHOTO_LIBRARY</key>
+    <string>Fotoğraf Kütüphanesi</string>
+    <key>SETTINGS_PANEL</key>
+    <string>Ayarlar Paneli</string>
+    <key>FLIPSWITCH</key>
+    <string>Flipswitch</string>
+    <key>ASPHALEIA</key>
+    <string>Asphaleia</string>
+
+    <key>SCAN_FINGER_ACCESS</key>
+    <string>Erişim için parmak izinizi taratın.</string>
+    <key>SCAN_FINGER_OPEN</key>
+    <string>Açmak için parmağınızı taratın.</string>
+
+    <key>ENABLE_SECURED_ITEMS</key>
+    <string>Güvenli eşyaları etkinleştir</string>
+    <key>DISABLE_SECURED_ITEMS</key>
+    <string>Güvenli eşyaları devre dışı bırak</string>
+    <key>ENABLE_GLOBAL_SECURITY</key>
+    <string>Tüm uygulamaları koru</string>
+    <key>DISABLE_GLOBAL_SECURITY</key>
+    <string>Tüm uygulamaları korumayı kapat </string>
+    <key>REMOVE_APP</key>
+    <string>Güvenliği uygulamalardan kaldır</string>
+    <key>ADD_APP</key>
+    <string>Korunacak uygulama ekle</string>
+
+    <key>ENTER_PASS</key>
+    <string>Parola Giriniz</string>
+
+    <key>PHOTO_PROTECTION_MESSAGE</key>
+    <string>Bu uygulamanın siz kapatana kadar fotoğraflarına ulaşmasına izin verdiniz. Eğer hiç fotoğraf  görünmüyorsa , uygulamayı yeniden açmayı deneyin</string>
+</dict>
+</plist>

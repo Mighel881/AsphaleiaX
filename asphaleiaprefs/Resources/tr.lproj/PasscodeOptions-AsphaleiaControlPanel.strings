@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>TITLE</key>
+    <string>Kontrol Paneli</string>
+
+    <key>CONTROL_PANEL_FOOTER</key>
+    <string>Asphaleia kontrol paneline erişmek için Activator kullan</string>
+    <key>CONTROL_PANEL</key>
+    <string>Kontrol Paneli</string>
+    <key>ACTIVATOR_ACTIONS</key>
+    <string>Activator Hareketleri</string>
+
+    <key>ALLOW_IN_APPS</key>
+    <string>Uygulamalarda erişime izin ver</string>
+</dict>
+</plist>
