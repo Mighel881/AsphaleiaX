@@ -437,8 +437,9 @@
     }
     [_textField resignFirstResponder];
     [self dismissViewControllerAnimated:YES completion:^{
-        if ([_delegate respondsToSelector:@selector(setPasscodeViewIsTransitioning:)])
+        if ([_delegate respondsToSelector:@selector(setPasscodeViewIsTransitioning:)]) {
             [(AsphaleiaPrefsListController *)_delegate setPasscodeViewIsTransitioning:NO];
+        }
     }];
 
 }
@@ -446,4 +447,5 @@
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
 }
+
 @end

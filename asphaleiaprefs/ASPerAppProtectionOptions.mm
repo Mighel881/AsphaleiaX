@@ -6,19 +6,19 @@ extern void AppListNeedsToReload();
 
 @implementation ASPerAppProtectionOptions
 - (NSArray*)specifiers {
-  if (!_specifiers) {
-      _specifiers = [self loadSpecifiersFromPlistName:@"SecuredApps-AdvancedOptions" target:self];
-  }
+    if (!_specifiers) {
+        _specifiers = [self loadSpecifiersFromPlistName:@"SecuredApps-AdvancedOptions" target:self];
+    }
 
-  return _specifiers;
+    return _specifiers;
 }
 
 - (instancetype)initWithAppName:(NSString*)appName identifier:(NSString*)identifier {
-  _appName = appName;
-  _identifier = identifier;
+    _appName = appName;
+    _identifier = identifier;
 
-  self.title = appName;
-  return [self init];
+    self.title = appName;
+    return [self init];
 }
 
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
