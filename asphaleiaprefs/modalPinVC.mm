@@ -70,7 +70,7 @@
         _altView.frame = CGRectMake(0, 64, self.screenWidth, [UIScreen mainScreen].bounds.size.height - 216 - 64);
 
         UIView *dashContainerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,233,19)];
-        dashContainerView.center = CGPointMake(CGRectGetMidX([UIScreen mainScreen]._referenceBounds),((_altView.frame.size.height-20)/2)+7);
+        dashContainerView.center = CGPointMake(CGRectGetMidX([UIScreen mainScreen].bounds),((_altView.frame.size.height-20)/2)+7);
         [_altView addSubview:dashContainerView];
 
         NSMutableArray *overallAray = [[NSMutableArray alloc] init];
@@ -444,6 +444,6 @@
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
 }
 @end
