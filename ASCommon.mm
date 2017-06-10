@@ -1,7 +1,6 @@
 #import "ASCommon.h"
 #include <sys/sysctl.h>
 #import <objc/runtime.h>
-#import <AudioToolbox/AudioServices.h>
 #import "NSTimer+Blocks.h"
 #import "ASPreferences.h"
 #import "ASPasscodeHandler.h"

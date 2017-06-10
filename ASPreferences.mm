@@ -4,7 +4,6 @@
 #import "Asphaleia.h"
 #import <Flipswitch/Flipswitch.h>
 #import <dlfcn.h>
-#import <LocalAuthentication/LocalAuthentication.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 
 static NSString *const kPreferencesFilePath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
@@ -31,7 +30,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	static ASPreferences *sharedInstance = nil;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-		sharedInstance = [self new];
+			sharedInstance = [self new];
 	});
 
 	return sharedInstance;

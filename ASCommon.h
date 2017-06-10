@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, ASAuthenticationType) {
 
 typedef void (^ASCommonAuthenticationHandler) (BOOL wasCancelled);
 
-@interface ASCommon : NSObject <UIAlertViewDelegate> {
+@interface ASCommon : NSObject {
 	ASCommonAuthenticationHandler authHandler;
 }
 + (instancetype)sharedInstance;
