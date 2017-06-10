@@ -12,10 +12,9 @@
 - (id)initWithStyle:(int)style reuseIdentifier:(id)arg2;
 @end
 
-@interface AsphaleiaTitleCell : PSTableCell <PreferencesTableCustomView> {
-	UILabel *tweakTitle;
-	UILabel *tweakSubtitle;
-	UILabel *tweakThankSubtitle;
-}
+@interface AsphaleiaTitleCell : PSTableCell <PreferencesTableCustomView>
+@property (strong, nonatomic) UILabel *tweakTitle;
+@property (strong, nonatomic) UILabel *tweakSubtitle;
+@property (strong, nonatomic) UILabel *tweakThankSubtitle;
 
 @end
