@@ -1,7 +1,9 @@
 Bugs:
 - Some protections dont work
+  - Multitasking
   - Spotlight
   - Notification Banners
+  - Photos
 - 3D touch and Tage bypass
 - Alert when authenticating ReachApp app dismisses reachability.
 

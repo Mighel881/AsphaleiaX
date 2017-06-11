@@ -52,8 +52,10 @@ void DeregisterForTouchIDNotifications(id observer) {
 			}
 		}
 	}];
-	if (!isProtected)
+
+	if (!isProtected) {
 		%orig;
+	}
 }
 
 - (void)iconHandleLongPress:(SBIconView *)iconView withFeedbackBehavior:(id)arg2 {
@@ -167,32 +169,6 @@ void DeregisterForTouchIDNotifications(id observer) {
 %end
 
 %hook SBUIController
-BOOL switcherAuthenticating;
-
-- (void)_accessibilityWillBeginAppSwitcherRevealAnimation {
-	asphaleiaLog();
-	if (![[ASPreferences sharedInstance] secureSwitcher]) {
-		%orig;
-		return;
-	}
-	if (!switcherAuthenticating) {
-		switcherAuthenticating = YES;
-		[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
-			switcherAuthenticating = NO;
-			if (!wasCancelled)
-				%orig;
-		}];
-	}
-}
-
-- (BOOL)isAppSwitcherShowing {
-	if (switcherAuthenticating) {
-		return YES;
-	} else {
-		return %orig;
-	}
-}
-
 - (BOOL)handleHomeButtonSinglePressUp {
 	if (![[ASAuthenticationController sharedInstance] currentAuthAlert]) {
 		return %orig;
@@ -200,6 +176,37 @@ BOOL switcherAuthenticating;
 
 	return NO;
 }
+%end
+
+%hook SBMainSwitcherViewController
+BOOL switcherAuthenticating;
+
+- (BOOL)isVisible {
+	if (switcherAuthenticating) {
+		return YES;
+	} else {
+		return %orig;
+	}
+}
+
+- (BOOL)activateSwitcherNoninteractively {
+		//Semi works so whatever
+		BOOL orig = %orig;
+		if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticating) {
+				return orig;
+		}
+
+		switcherAuthenticating = YES;
+		BOOL authenticated = [[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
+				switcherAuthenticating = NO;
+				if (wasCancelled) {
+						[self dismissSwitcherNoninteractively];
+				}
+		}];
+
+		return authenticated;
+}
+
 %end
 
 

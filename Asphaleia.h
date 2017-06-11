@@ -167,6 +167,13 @@
 -(void)_handleGotoHomeScreenShortcut:(id)arg1 ;
 @end
 
+@interface SBMainSwitcherViewController : UIViewController
++ (instancetype)sharedInstance;
+- (BOOL)toggleSwitcherNoninteractively;
+- (BOOL)activateSwitcherNoninteractively;
+- (BOOL)dismissSwitcherNoninteractively;
+@end
+
 @interface SBBannerController : NSObject
 +(id)sharedInstance;
 -(BOOL)isShowingBanner;
