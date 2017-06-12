@@ -76,6 +76,14 @@
           	<key>user</key>
           	<string>A3tweaks</string>
         </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSLinkCell</string>
+            <key>label</key>
+            <string>Translators</string>
+            <key>detail</key>
+            <string>ASTranslatorsController</string>
+        </dict>
     </array>
     <key>title</key>
     <string>Creators</string>

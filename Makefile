@@ -7,7 +7,7 @@ INSTALL_TARGET_PROCESSES += SpringBoard
 endif
 
 ifeq ($(IPAD),1)
-export THEOS_DEVICE_IP=192.168.254.5
+export THEOS_DEVICE_IP=192.168.254.8
 export THEOS_DEVICE_PORT=22
 endif
 
