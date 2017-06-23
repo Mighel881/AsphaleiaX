@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>DISABLE_AUTH</key>
+    <string>Authentification désactivée</string>
+    <key>DISABLE_AUTH_FOR</key>
+    <string>Authentification désactivée pour %@</string>
+    <key>ENABLE_AUTH</key>
+    <string>Authentification activée</string>
+    <key>ENABLE_AUTH_FOR</key>
+    <string>Authentification activée pour %@</string>
+
+    <key>ARRANGE_APPS</key>
+    <string>Organiser des applications</string>
+…
+    <key>MULTITASKING</key>
+    <string>Multitâche</string>
+    <key>SPOTLIGHT</key>
+    <string>Spotlight</string>
+    <key>SLIDE_TO_POWER_OFF</key>
+    <string>Glisser pour éteindre</string>
+    <key>CONTROL_CENTER</key>
+    <string>Centre de contrôle</string>
+    <key>CONTROL_PANEL</key>
+    <string>Panneau de contrôle Asphaleia</string>
+…
+    <key>DYNAMIC_SELECTION</key>
+    <string>Sélection dynamique</string>
+    <key>PHOTO_LIBRARY</key>
+    <string>Galerie de photos</string>
+    <key>SETTINGS_PANEL</key>
+    <string>Panneau de configuration</string>
+    <key>FLIPSWITCH</key>
+    <string>Flipswitch</string>
+    <key>ASPHALEIA</key>
+    <string>Asphaleia</string>
+
+    <key>SCAN_FINGER_ACCESS</key>
+    <string>Scannez l'empreinte digitale pour accéder.</string>
+    <key>SCAN_FINGER_OPEN</key>
+    <string>Scannez l'empreinte digitale pour ouvrir.</string>
+
+    <key>ENABLE_SECURED_ITEMS</key>
+    <string>Activer mes éléments sécurisés</string>
+    <key>DISABLE_SECURED_ITEMS</key>
+    <string>Désactiver mes éléments sécurisés</string>
+    <key>ENABLE_GLOBAL_SECURITY</key>
+    <string>Activer la sécurité globale de l'application</string>
+    <key>DISABLE_GLOBAL_SECURITY</key>
+    <string>Désactiver la sécurité globale de l'application</string>
+    <key>REMOVE_APP</key>
+    <string>Supprimer de vos applications sécurisées</string>
+    <key>ADD_APP</key>
+    <string>Ajoutez à vos applications sécurisées</string>
+
+    <key>ENTER_PASS</key>
+    <string>Entrer le mot de passe</string>
+
+    <key>PHOTO_PROTECTION_MESSAGE</key>
+    <string>Vous avez autorisé cette application à accéder à vos photos jusqu'à ce que vous les fermez. Si aucune photo n'est affichée, essayez d'ouvrir cette section de l'application à nouveau.</string>
+</dict>
+</plist>
