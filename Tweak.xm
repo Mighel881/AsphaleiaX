@@ -22,7 +22,7 @@
 SBAppSwitcherIconController *iconController;
 NSTimer *currentTempUnlockTimer;
 NSTimer *currentTempGlobalDisableTimer;
-SBBannerContainerViewController *controller;
+NCNotificationShortLookViewController *controller;
 CPDistributedMessagingCenter *centre;
 
 void RegisterForTouchIDNotifications(id observer, SEL selector) {
@@ -440,34 +440,35 @@ static BOOL openURLHasAuthenticated;
 }
 %end
 
-/*
-%hook SBBannerContainerViewController
+%hook NCNotificationShortLookViewController
 UIVisualEffectView *notificationBlurView;
 PKGlyphView *bannerFingerGlyph;
 BOOL currentBannerAuthenticated;
+NSString *bundleIdentifier;
 
-- (id)initWithNibName:(id)nibName bundle:(id)bundle {
+- (instancetype)_initWithNotificationRequest:(NCNotificationRequest*)request revealingAdditionalContentOnPresentation:(BOOL)arg2 {
 	controller = %orig;
 	RegisterForTouchIDNotifications(controller, @selector(receiveTouchIDNotification:));
+	bundleIdentifier = request.sectionIdentifier;
 	return controller;
 }
 
-- (void)loadView {
+- (void)viewWillLayoutSubviews {
 	%orig;
 
 	currentBannerAuthenticated = NO;
 
-	if (![[ASPreferences sharedInstance] requiresSecurityForApp:[[self _bulletin] sectionID]] || ![[ASPreferences sharedInstance] obscureNotifications]) {
+	if (![[ASPreferences sharedInstance] requiresSecurityForApp:bundleIdentifier] || ![[ASPreferences sharedInstance] obscureNotifications]) {
 		return;
 	}
 
-	UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+	UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 	notificationBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-	notificationBlurView.frame = self._bannerFrame;
+	notificationBlurView.frame = [self _notificationShortLookViewIfLoaded].frame;
 	notificationBlurView.userInteractionEnabled = NO;
-	[self.bannerContextView addSubview:notificationBlurView];
+	[[self _notificationShortLookViewIfLoaded] addSubview:notificationBlurView];
 
-	SBApplication *application = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:[[self _bulletin] sectionID]];
+	SBApplication *application = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:bundleIdentifier];
 	SBApplicationIcon *appIcon = [[%c(SBApplicationIcon) alloc] initWithApplication:application];
 	SBIconView *iconView = [[%c(SBIconView) alloc] initWithContentType:0];
 	[iconView _setIcon:appIcon animated:YES];
@@ -514,8 +515,8 @@ BOOL currentBannerAuthenticated;
 	[[ASTouchIDController sharedInstance] startMonitoring];
 }
 
-- (void)_handleBannerTapGesture:(id)gesture {
-	if (![[ASPreferences sharedInstance] requiresSecurityForApp:[[self _bulletin] sectionID]] || currentBannerAuthenticated || ![[ASPreferences sharedInstance] obscureNotifications]) {
+- (void)_handleTapOnView:(id)arg1 {
+	if (![[ASPreferences sharedInstance] requiresSecurityForApp:bundleIdentifier] || currentBannerAuthenticated || ![[ASPreferences sharedInstance] obscureNotifications]) {
 		%orig;
 	} else {
 		[[ASTouchIDController sharedInstance] stopMonitoring];
@@ -523,7 +524,7 @@ BOOL currentBannerAuthenticated;
 			if (authenticated) {
 				if (notificationBlurView) {
 					currentBannerAuthenticated = YES;
-					[ASAuthenticationController sharedInstance].appUserAuthorisedID = [[self _bulletin] sectionID];
+					[ASAuthenticationController sharedInstance].appUserAuthorisedID = bundleIdentifier;
 					[UIView animateWithDuration:0.3f animations:^{
 						[notificationBlurView setAlpha:0.0f];
 					} completion:^(BOOL finished){
@@ -584,7 +585,7 @@ BOOL currentBannerAuthenticated;
 	} else if ([[notification name] isEqualToString:@"com.a3tweaks.asphaleia.authsuccess"]) {
 		if (bannerFingerGlyph && notificationBlurView) {
 			currentBannerAuthenticated = YES;
-			[ASAuthenticationController sharedInstance].appUserAuthorisedID = [[self _bulletin] sectionID];
+			[ASAuthenticationController sharedInstance].appUserAuthorisedID = bundleIdentifier;
 			[[ASTouchIDController sharedInstance] stopMonitoring];
 			[UIView animateWithDuration:0.3f animations:^{
 				[notificationBlurView setAlpha:0.0f];
@@ -604,14 +605,13 @@ BOOL currentBannerAuthenticated;
 
 %hook SBBannerController
 - (BOOL)gestureRecognizerShouldBegin:(id)gestureRecognizer {
-	if (![[ASPreferences sharedInstance] requiresSecurityForApp:[[controller _bulletin] sectionID]] || currentBannerAuthenticated || ![[ASPreferences sharedInstance] obscureNotifications]) {
+	if (![[ASPreferences sharedInstance] requiresSecurityForApp:bundleIdentifier] || currentBannerAuthenticated || ![[ASPreferences sharedInstance] obscureNotifications]) {
 		return %orig;
 	} else {
 		return NO;
 	}
 }
 %end
-*/
 
 %hook SBMainWorkspace
 - (void)setCurrentTransaction:(id)transaction {

@@ -10,7 +10,5 @@ Bugs:
 Things to do:
 - Maybe coding style revise
 - Implement better passcode view for prefs
-- Get rid of custom twitter cells in favor for cephei?
 - Give credit to translators
   - Add as many as possible
-  - Get French translator to translate new strings

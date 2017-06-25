@@ -340,3 +340,38 @@
 @interface SBWiFiManager : NSObject
 - (NSString*)currentNetworkName;
 @end
+
+@interface NCNotificationShortLookView : UIView
+@property (nonatomic,retain) UIImage * icon;
+@property (nonatomic,copy) NSString * title;
+@property (nonatomic,copy) NSDate * date;
+@property (getter=isDateAllDay,nonatomic,readonly) BOOL dateAllDay;
+@property (nonatomic,copy) NSTimeZone * timeZone;
+@property (nonatomic,copy) NSString * primaryText;
+@property (nonatomic,copy) NSString * primarySubtitleText;
+@property (nonatomic,copy) NSString * secondaryText;
+@property (nonatomic,retain) NSArray * interfaceActions;
+@property (nonatomic,retain) UIImage * thumbnail;
+@property (nonatomic,copy) NSString * hintText;
+@property (nonatomic,retain) UIView * accessoryView;
+@property (assign,nonatomic) unsigned long long messageNumberOfLines;
+@property (nonatomic,copy) NSString * groupName;
+@end
+
+@interface NCNotificationRequest : NSObject
+@property (nonatomic,copy,readonly) NSString * sectionIdentifier;                           //@synthesize sectionIdentifier=_sectionIdentifier - In the implementation block
+@property (nonatomic,copy,readonly) NSString * notificationIdentifier;                      //@synthesize notificationIdentifier=_notificationIdentifier - In the implementation block
+@property (nonatomic,copy,readonly) NSString * threadIdentifier;                            //@synthesize threadIdentifier=_threadIdentifier - In the implementation block
+@property (nonatomic,copy,readonly) NSString * categoryIdentifier;                          //@synthesize categoryIdentifier=_categoryIdentifier - In the implementation block
+@property (nonatomic,copy,readonly) NSSet * subSectionIdentifiers;                          //@synthesize subSectionIdentifiers=_subSectionIdentifiers - In the implementation block
+@property (nonatomic,copy,readonly) NSArray * peopleIdentifiers;                            //@synthesize peopleIdentifiers=_peopleIdentifiers - In the implementation block
+@property (nonatomic,copy,readonly) NSString * parentSectionIdentifier;
+@end
+
+@interface NCNotificationShortLookViewController : UIViewController {
+		UIView* _contextDefiningContainerView;
+}
+@property (nonatomic,retain) NSString * groupName;
+- (NCNotificationShortLookView*)_notificationShortLookViewIfLoaded;
+- (CGRect)_frameForTransitionViewInScrollView;
+@end
