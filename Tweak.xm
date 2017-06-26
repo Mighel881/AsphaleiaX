@@ -462,7 +462,7 @@ NSString *bundleIdentifier;
 		return;
 	}
 
-	UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+	UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
 	NCNotificationShortLookView *bannerView = [self _notificationShortLookViewIfLoaded];
 	notificationBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 	notificationBlurView.frame = bannerView.frame;
