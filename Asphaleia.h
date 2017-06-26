@@ -356,6 +356,7 @@
 @property (nonatomic,retain) UIView * accessoryView;
 @property (assign,nonatomic) unsigned long long messageNumberOfLines;
 @property (nonatomic,copy) NSString * groupName;
+@property (assign,nonatomic) double cornerRadius;
 @end
 
 @interface NCNotificationRequest : NSObject

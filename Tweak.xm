@@ -463,10 +463,13 @@ NSString *bundleIdentifier;
 	}
 
 	UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+	NCNotificationShortLookView *bannerView = [self _notificationShortLookViewIfLoaded];
 	notificationBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-	notificationBlurView.frame = [self _notificationShortLookViewIfLoaded].frame;
+	notificationBlurView.frame = bannerView.frame;
 	notificationBlurView.userInteractionEnabled = NO;
-	[[self _notificationShortLookViewIfLoaded] addSubview:notificationBlurView];
+	notificationBlurView.layer.cornerRadius = bannerView.cornerRadius;
+	notificationBlurView.layer.masksToBounds = YES;
+	[bannerView addSubview:notificationBlurView];
 
 	SBApplication *application = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:bundleIdentifier];
 	SBApplicationIcon *appIcon = [[%c(SBApplicationIcon) alloc] initWithApplication:application];
