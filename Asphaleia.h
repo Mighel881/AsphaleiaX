@@ -1,13 +1,15 @@
+#import <SpringBoard/SBApplication.h>
+#import <SpringBoard/SBApplicationController.h>
+#import <SpringBoard/SBApplicationIcon.h>
+#import <SpringBoard/SBDisplayItem.h>
+#import <SpringBoard/SBDisplayLayout.h>
+#import <SpringBoard/SBLockScreenManager.h>
 #import <UIKit/UIKit.h>
 #import <version.h>
 
 @interface BBBulletin : NSObject
 - (NSString *)sectionID;
 - (id)modalAlertContent;
-@end
-
-@interface SBDisplayItem : NSObject
-@property (nonatomic,readonly) NSString *displayIdentifier;
 @end
 
 @interface CAFilter : NSObject
@@ -22,21 +24,6 @@
 @property (nonatomic, retain) UIView *obscurityView;
 @property(retain, nonatomic) UIImage *deferredUpdateImage;
 @property(readonly, copy, nonatomic) SBDisplayItem *displayItem;
-@end
-
-@interface SBApplication : NSObject
-- (id)bundleIdentifier;
-- (NSString*)displayName;
-- (NSString*)longDisplayName;
-@end
-
-@interface SBApplicationController : NSObject
-- (id)sharedInstance;
-- (id)applicationWithBundleIdentifier:(NSString*)bundleID;
-@end
-
-@interface SBApplicationIcon : NSObject
-- (id)initWithApplication:(id)application;
 @end
 
 @interface SBBannerContainerViewController : UIViewController
@@ -62,10 +49,24 @@
 -(void)abortAnimatedTransition;
 @end
 
-@interface SBDisplayLayout : NSObject
-@property (nonatomic,readonly) long long layoutSize;
-@property (nonatomic,readonly) NSArray * displayItems;
--(NSArray *)displayItems;
+@interface SBSwitchAppList : NSObject
+@property (nonatomic,retain) NSArray * list;              //@synthesize list=_list - In the implementation block
+- (BOOL)containsBundleID:(id)arg1;
+@end
+
+@interface SBWorkspaceApplication : NSObject
+@property (nonatomic,retain) SBApplication * application;
+@property (nonatomic,copy,readonly) NSString * bundleIdentifier;
+@end
+
+@interface SBWorkspaceApplicationTransitionContext : NSObject
+@property (nonatomic,retain) SBWorkspaceApplication *activatingApplication;
+@end
+
+@interface SBSwitchAppSystemGestureWorkspaceTransaction : NSObject {
+		SBWorkspaceApplicationTransitionContext *_currentTransitionContext;
+}
+@property (nonatomic,copy) SBSwitchAppList * switchAppList;
 @end
 
 @interface SBIcon : NSObject
@@ -157,10 +158,10 @@
 @end
 
 @interface SpringBoard : NSObject
+@property (nonatomic, retain, readonly) SBApplication *_accessibilityFrontMostApplication;
 -(void)_revealSpotlight;
 -(void)_runHomeScreenIconPullToSpotlight;
 -(void)_runHomeScreenIconPullToSpotlightDismiss;
--(SBApplication *)_accessibilityFrontMostApplication;
 -(void)_applicationOpenURL:(id)url withApplication:(id)application sender:(id)sender publicURLsOnly:(BOOL)only animating:(BOOL)animating activationSettings:(id)settings withResult:(id)result;
 -(BOOL)_requestPermissionToOpenURL:(id)openURL withApplication:(id)application sender:(id)sender;
 -(void)applicationOpenURL:(id)url;
@@ -185,10 +186,8 @@
 -(BOOL)isTouchIDCapable;
 @end
 
-@interface SBLockScreenManager : NSObject
-@property(readonly, assign) BOOL isUILocked;
+@interface SBLockScreenManager ()
 @property(assign, nonatomic, getter=isUIUnlocking) BOOL UIUnlocking;
-+(id)sharedInstance;
 @end
 
 @interface UIWindow ()
@@ -209,10 +208,6 @@
 
 @protocol SBUIBiometricEventObserver
 -(void)matchResult:(id)result withDetails:(id)details;
-@end
-
-@interface SBWorkspaceApplication : NSObject
-@property(retain, nonatomic) SBApplication *application;
 @end
 
 @interface SBToAppsWorkspaceTransaction : NSObject
