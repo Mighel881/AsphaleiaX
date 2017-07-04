@@ -143,6 +143,7 @@
 @end
 
 @interface SPUISearchHeader : UIView
+@property (retain) UIButton *cancelButton;
 -(void)cancelButtonClicked:(id)arg1;
 -(BOOL)textFieldShouldReturn:(id)arg1 ;
 -(void)focusSearchField;

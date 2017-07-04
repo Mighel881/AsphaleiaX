@@ -17,7 +17,7 @@
 
 #define kBundlePath @"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle"
 
-#define asphaleiaLog() NSLog(@"[Asphaleia] Method called: %@",NSStringFromSelector(_cmd))
+#define asphaleiaLog() HBLogDebug(@"Method called: %@",NSStringFromSelector(_cmd))
 
 SBAppSwitcherIconController *iconController;
 NSTimer *currentTempUnlockTimer;
@@ -189,24 +189,28 @@ BOOL switcherAuthenticating;
 	}
 }
 
+/*
 - (BOOL)activateSwitcherNoninteractively {
-		//Semi works so whatever
-		BOOL orig = %orig;
+		// darn bool values
 		if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticating) {
-				return orig;
+				return %orig;
 		}
 
-		switcherAuthenticating = YES;
-		BOOL authenticated = [[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
-				switcherAuthenticating = NO;
-				if (wasCancelled) {
-						[self dismissSwitcherNoninteractively];
-				}
-		}];
-
-		return authenticated;
+		if (!switcherAuthenticating) {
+			[self dismissSwitcherNoninteractively];
+			switcherAuthenticating = YES;
+			BOOL authenticated = [[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
+					switcherAuthenticating = NO;
+					if (!wasCancelled) {
+							[self activateSwitcherNoninteractively];
+					}
+			}];
+			return authenticated;
+		} else {
+			return %orig;
+		}
 }
-
+*/
 %end
 
 
@@ -295,11 +299,11 @@ static BOOL searchControllerAuthenticating;
 	if (!searchControllerHasAuthenticated && !searchControllerAuthenticating && [[ASPreferences sharedInstance] secureSpotlight]) {
 		[self unfocusSearchField];
 		[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSpotlight dismissedHandler:^(BOOL wasCancelled) {
-		searchControllerAuthenticating = NO;
-		if (!wasCancelled) {
-			searchControllerHasAuthenticated = YES;
-			[self focusSearchField];
-		}
+			searchControllerAuthenticating = NO;
+			if (!wasCancelled) {
+				searchControllerHasAuthenticated = YES;
+				[self focusSearchField];
+			}
 		}];
 		searchControllerAuthenticating = YES;
 	}
@@ -751,7 +755,7 @@ BOOL currentSwitchAuthenticated;
 
 %ctor {
 	if (!IN_SPRINGBOARD) {
-		HBLogWarn(@"[Asphaleia] Attempting to load into non-SpringBoard process. Stop.");
+		HBLogError(@"[Asphaleia] Attempting to load into non-SpringBoard process. Stop.");
 		return;
 	}
 
