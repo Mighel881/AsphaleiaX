@@ -449,6 +449,9 @@ UIVisualEffectView *notificationBlurView;
 PKGlyphView *bannerFingerGlyph;
 BOOL currentBannerAuthenticated;
 NSString *bundleIdentifier;
+UIImageView *imgView;
+UILabel *appNameLabel;
+UILabel *authPassLabel;
 
 - (instancetype)_initWithNotificationRequest:(NCNotificationRequest*)request revealingAdditionalContentOnPresentation:(BOOL)arg2 {
 	controller = %orig;
@@ -457,7 +460,7 @@ NSString *bundleIdentifier;
 	return controller;
 }
 
-- (void)viewWillLayoutSubviews {
+- (void)_notificationViewControllerViewDidLoad {
 	%orig;
 
 	currentBannerAuthenticated = NO;
@@ -469,7 +472,6 @@ NSString *bundleIdentifier;
 	UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
 	NCNotificationShortLookView *bannerView = [self _notificationShortLookViewIfLoaded];
 	notificationBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-	notificationBlurView.frame = bannerView.frame;
 	notificationBlurView.userInteractionEnabled = NO;
 	notificationBlurView.layer.cornerRadius = bannerView.cornerRadius;
 	notificationBlurView.layer.masksToBounds = YES;
@@ -480,32 +482,52 @@ NSString *bundleIdentifier;
 	SBIconView *iconView = [[%c(SBIconView) alloc] initWithContentType:0];
 	[iconView _setIcon:appIcon animated:YES];
 	UIImage *iconImage = [iconView.icon getIconImage:2];
-	UIImageView *imgView = [[UIImageView alloc] initWithImage:iconImage];
-	imgView.frame = CGRectMake(0,0,notificationBlurView.frame.size.height-20,notificationBlurView.frame.size.height-20);
-	imgView.center = CGPointMake(imgView.frame.size.width/2+10,CGRectGetMidY(notificationBlurView.bounds));
+	imgView = [[UIImageView alloc] initWithImage:iconImage];
 	[notificationBlurView.contentView addSubview:imgView];
 
 	NSString *displayName = [application displayName];
-	UILabel *appNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	appNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	appNameLabel.textColor = [UIColor whiteColor];
 	appNameLabel.text = displayName;
-	[appNameLabel sizeToFit];
-	appNameLabel.center = CGPointMake(10+imgView.frame.size.width+10+appNameLabel.frame.size.width/2,CGRectGetMidY(notificationBlurView.bounds));
 	[notificationBlurView.contentView addSubview:appNameLabel];
 
 	if (![[ASPreferences sharedInstance] touchIDEnabled]) {
-		UILabel *authPassLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+		authPassLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 		authPassLabel.text = @"Tap to show";
-		[authPassLabel sizeToFit];
-		authPassLabel.center = notificationBlurView.contentView.center;
-		CGRect frame = authPassLabel.frame;
-		frame.origin.x = notificationBlurView.frame.size.width - frame.size.width - 10;
-		authPassLabel.frame = frame;
 		authPassLabel.textColor = [UIColor whiteColor];
 		[notificationBlurView.contentView addSubview:authPassLabel];
 		return;
 	}
+}
 
+- (void)viewWillLayoutSubviews {
+	%orig;
+
+	if (![[ASPreferences sharedInstance] requiresSecurityForApp:bundleIdentifier] || ![[ASPreferences sharedInstance] obscureNotifications]) {
+		return;
+	}
+
+	notificationBlurView.frame = self.view.frame;
+
+	imgView.frame = CGRectMake(0,0,notificationBlurView.frame.size.height-20,notificationBlurView.frame.size.height-20);
+	imgView.center = CGPointMake(imgView.frame.size.width/2+10,CGRectGetMidY(notificationBlurView.bounds));
+
+	[appNameLabel sizeToFit];
+	appNameLabel.center = CGPointMake(10+imgView.frame.size.width+10+appNameLabel.frame.size.width/2,CGRectGetMidY(notificationBlurView.bounds));
+
+	[authPassLabel sizeToFit];
+	authPassLabel.center = notificationBlurView.contentView.center;
+	CGRect frame = authPassLabel.frame;
+	frame.origin.x = notificationBlurView.frame.size.width - frame.size.width - 10;
+	authPassLabel.frame = frame;
+}
+
+- (void)_handleTapOnView:(id)arg1 {
+	if (![[ASPreferences sharedInstance] requiresSecurityForApp:bundleIdentifier] || currentBannerAuthenticated || ![[ASPreferences sharedInstance] obscureNotifications]) {
+		%orig;
+	}
+
+	HBLogDebug(@"_handleTapOnView");
 	if (!bannerFingerGlyph) {
 		bannerFingerGlyph = [(PKGlyphView*)[%c(PKGlyphView) alloc] initWithStyle:1];
 		bannerFingerGlyph.secondaryColor = [UIColor grayColor];
@@ -522,55 +544,21 @@ NSString *bundleIdentifier;
 	[[ASTouchIDController sharedInstance] startMonitoring];
 }
 
-- (void)_handleTapOnView:(id)arg1 {
-	if (![[ASPreferences sharedInstance] requiresSecurityForApp:bundleIdentifier] || currentBannerAuthenticated || ![[ASPreferences sharedInstance] obscureNotifications]) {
-		%orig;
-	} else {
-		[[ASTouchIDController sharedInstance] stopMonitoring];
-		[[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated){
-			if (authenticated) {
-				if (notificationBlurView) {
-					currentBannerAuthenticated = YES;
-					[ASAuthenticationController sharedInstance].appUserAuthorisedID = bundleIdentifier;
-					[UIView animateWithDuration:0.3f animations:^{
-						[notificationBlurView setAlpha:0.0f];
-					} completion:^(BOOL finished){
-						if (finished && bannerFingerGlyph) {
-							[bannerFingerGlyph setState:0 animated:NO completionHandler:nil];
-						}
-					}];
-				}
-			} else {
-				if ([[%c(SBBannerController) sharedInstance] isShowingBanner] && [[ASPreferences sharedInstance] touchIDEnabled]) {
-					[[ASTouchIDController sharedInstance] startMonitoring];
-				}
-			}
-		}];
-	}
-}
-
 - (void)viewDidDisappear:(BOOL)animated {
 	%orig;
 	currentBannerAuthenticated = NO;
 	[ASAuthenticationController sharedInstance].appUserAuthorisedID = nil;
 
-	if (![[%c(SBBannerController) sharedInstance] isShowingBanner]) {
-		[[ASTouchIDController sharedInstance] stopMonitoring];
-	}
+	[[ASTouchIDController sharedInstance] stopMonitoring];
 
 	if (bannerFingerGlyph) {
 		[bannerFingerGlyph setState:0 animated:NO completionHandler:nil];
-	}
-
-	if (notificationBlurView) {
-		[notificationBlurView removeFromSuperview];
-		notificationBlurView = nil;
 	}
 }
 
 %new
 - (void)receiveTouchIDNotification:(NSNotification *)notification {
-	if ([[notification object] isKindOfClass:NSClassFromString(@"BiometricKitIdentity")]) {
+	if ([[notification object] isKindOfClass:%c(BiometricKitIdentity)]) {
 		if (![[ASPreferences sharedInstance] fingerprintProtectsSecureItems:[[notification object] name]]) {
 			if (bannerFingerGlyph) {
 				[bannerFingerGlyph setState:0 animated:YES completionHandler:nil];

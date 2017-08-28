@@ -363,6 +363,9 @@
 @property (nonatomic,copy,readonly) NSSet * subSectionIdentifiers;                          //@synthesize subSectionIdentifiers=_subSectionIdentifiers - In the implementation block
 @property (nonatomic,copy,readonly) NSArray * peopleIdentifiers;                            //@synthesize peopleIdentifiers=_peopleIdentifiers - In the implementation block
 @property (nonatomic,copy,readonly) NSString * parentSectionIdentifier;
+@property (nonatomic,copy,readonly) NSDictionary * context;
+@property (nonatomic,readonly) BOOL isCollapsedNotification;                                //@synthesize isCollapsedNotification=_isCollapsedNotification - In the implementation block
+@property (nonatomic,copy,readonly) NSDictionary * sourceInfo;
 @end
 
 @interface NCNotificationShortLookViewController : UIViewController {
@@ -371,4 +374,5 @@
 @property (nonatomic,retain) NSString * groupName;
 - (NCNotificationShortLookView*)_notificationShortLookViewIfLoaded;
 - (CGRect)_frameForTransitionViewInScrollView;
+- (void)_updateScrollViewContentSize; 
 @end
