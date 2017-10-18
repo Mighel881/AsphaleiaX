@@ -23,10 +23,7 @@
 		[(UINavigationItem*)self.navigationItem titleView].alpha = 0.0f;
 		[(UINavigationItem*)self.navigationItem setRightBarButtonItem:nextBarButton animated:NO];
 		[(UINavigationItem*)self.navigationItem setLeftBarButtonItem:nil];
-		[(UINavigationItem*)self.navigationItem setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Asphaleia"
-				style:UIBarButtonItemStylePlain
-				target:nil
-				action:nil]];
+		[(UINavigationItem*)self.navigationItem setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Asphaleia" style:UIBarButtonItemStylePlain target:nil action:nil]];
 
 		return _specifiers;
 }

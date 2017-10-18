@@ -6,7 +6,7 @@
 #import "ASPreferences.h"
 #import "ASPasscodeHandler.h"
 
-#define kBundlePath @"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle"
+static NSString *const ASBundlePath = @"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle";
 #define titleWithSpacingForIcon(t) [NSString stringWithFormat:@"\n\n\n%@",t]
 #define titleWithSpacingForSmallIcon(t) [NSString stringWithFormat:@"\n\n%@",t]
 
@@ -46,9 +46,7 @@ static NSBundle *bundle;
       message = [bundle localizedStringForKey:@"SCAN_FINGER_OPEN" value:nil table:@"Localizable"];
     }
 
-    ASAuthenticationAlert *alertView = [[objc_getClass("ASAuthenticationAlert") alloc] initWithApplication:appIdentifier
-                   message:message
-                   delegate:delegate];
+    ASAuthenticationAlert *alertView = [[%c(ASAuthenticationAlert) alloc] initWithApplication:appIdentifier message:message delegate:delegate];
     alertView.tag = ASAuthenticationItem;
 
     currentAuthAppBundleID = appIdentifier;
@@ -57,7 +55,7 @@ static NSBundle *bundle;
 }
 
 - (ASAuthenticationAlert *)returnAuthenticationAlertOfType:(ASAuthenticationAlertType)alertType delegate:(id<ASAuthenticationAlertDelegate>)delegate {
-    NSBundle *asphaleiaAssets = [[NSBundle alloc] initWithPath:kBundlePath];
+    NSBundle *asphaleiaAssets = [[NSBundle alloc] initWithPath:ASBundlePath];
 
     NSString *title;
     UIImage *iconImage;
@@ -134,18 +132,14 @@ static NSBundle *bundle;
     UIImageView *imgView = [[UIImageView alloc] initWithImage:iconImage];
     imgView.frame = CGRectMake(0,0,iconImage.size.width,iconImage.size.height);
 
-    ASAuthenticationAlert *alertView = [[objc_getClass("ASAuthenticationAlert") alloc] initWithTitle:title
-                   message:[bundle localizedStringForKey:@"SCAN_FINGER_ACCESS" value:nil table:@"Localizable"]
-                   icon:imgView
-                   smallIcon:YES
-                   delegate:delegate];
+    ASAuthenticationAlert *alertView = [[%c(ASAuthenticationAlert) alloc] initWithTitle:title message:[bundle localizedStringForKey:@"SCAN_FINGER_ACCESS" value:nil table:@"Localizable"] icon:imgView smallIcon:YES delegate:delegate];
     alertView.tag = tag;
 
     return alertView;
 }
 
 - (BOOL)authenticateAppWithDisplayIdentifier:(NSString *)appIdentifier customMessage:(NSString *)customMessage dismissedHandler:(ASCommonAuthenticationHandler)handler {
-    [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
+    [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
 
     if (![[ASPreferences sharedInstance] requiresSecurityForApp:appIdentifier]) {
         return NO;
@@ -161,8 +155,10 @@ static NSBundle *bundle;
 
     if (![[ASPreferences sharedInstance] touchIDEnabled] || [[ASPreferences sharedInstance] securityLevelForApp:appIdentifier] == 0) {
         [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated){
-                if (authenticated)
+                if (authenticated) {
                     _appUserAuthorisedID = appIdentifier;
+                }
+
                 authHandler(!authenticated);
             }];
         return YES;
@@ -179,7 +175,7 @@ static NSBundle *bundle;
         return NO;
     }
 
-    [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
+    [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
     authHandler = [handler copy];
 
     ASAuthenticationAlert *alertView = [self returnAuthenticationAlertOfType:alertType delegate:self];
@@ -207,7 +203,7 @@ static NSBundle *bundle;
     }
 
     if ([ASPreferences sharedInstance].asphaleiaDisabled || [ASPreferences sharedInstance].itemSecurityDisabled || [[iconView icon] isDownloadingIcon]) {
-        [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
+        [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
         [iconView setHighlighted:NO];
         return NO;
     }
@@ -230,7 +226,7 @@ static NSBundle *bundle;
                 handler(!authenticated);
             }];
         }
-        [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
+        [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
 
         return YES;
     } else if (([iconView.icon isApplicationIcon] && ![[ASPreferences sharedInstance] requiresSecurityForApp:iconView.icon.applicationBundleID]) || ([iconView.icon isFolderIcon] && ![[ASPreferences sharedInstance] requiresSecurityForFolder:displayName])) {
@@ -274,7 +270,7 @@ static NSBundle *bundle;
 
     [_anywhereTouchWindow blockTouchesAllowingTouchInView:_currentHSIconView touchBlockedHandler:^void(ASTouchWindow *touchWindow, BOOL blockedTouch){
         if (blockedTouch) {
-            [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
+            [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
             handler(YES);
         }
     }];
@@ -286,7 +282,7 @@ static NSBundle *bundle;
         return;
     }
 
-    if ([fingerprint isKindOfClass:objc_getClass("BiometricKitIdentity")]) {
+    if ([fingerprint isKindOfClass:%c(BiometricKitIdentity)]) {
         if (![[ASPreferences sharedInstance] fingerprintProtectsSecureItems:[fingerprint name]]) {
           name = @"com.a3tweaks.asphaleia.authfailed";
         }
@@ -311,7 +307,7 @@ static NSBundle *bundle;
             } else {
                 [_currentHSIconView.icon launchFromLocation:_currentHSIconView.location];
             }
-            [[objc_getClass("SBIconController") sharedInstance] asphaleia_resetAsphaleiaIconView];
+            [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
             currentAuthAppBundleID = nil;
         }
     } else if ([name isEqualToString:@"com.a3tweaks.asphaleia.authfailed"]) {
@@ -350,7 +346,7 @@ static NSBundle *bundle;
         return;
     }
 
-    _fingerglyph = [(PKGlyphView*)[objc_getClass("PKGlyphView") alloc] initWithStyle:1];
+    _fingerglyph = [(PKGlyphView *)[%c(PKGlyphView) alloc] initWithStyle:1];
     _fingerglyph.secondaryColor = [UIColor grayColor];
     _fingerglyph.primaryColor = [UIColor redColor];
 }
@@ -358,7 +354,7 @@ static NSBundle *bundle;
 // ASAuthenticationAlert delegate methods
 - (void)authAlertView:(ASAuthenticationAlert *)alertView dismissed:(BOOL)dismissed authorised:(BOOL)authorised fingerprint:(BiometricKitIdentity *)fingerprint {
     BOOL correctFingerUsed = YES;
-    if ([fingerprint isKindOfClass:objc_getClass("BiometricKitIdentity")]) {
+    if ([fingerprint isKindOfClass:%c(BiometricKitIdentity)]) {
         correctFingerUsed = NO;
         switch (self.currentAuthAlert.tag) {
             case ASAuthenticationItem:

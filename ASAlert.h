@@ -13,7 +13,7 @@
 @property (nonatomic, weak) id<ASAlertDelegate> delegate;
 @property (nonatomic) NSInteger tag;
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id<ASAlertDelegate>)delegate;
-- (_SBAlertController*)alertController;
+- (_SBAlertController *)alertController;
 - (void)addButtonWithTitle:(NSString *)buttonTitle;
 - (void)removeButtonWithTitle:(NSString *)buttonTitle;
 - (void)setCancelButtonIndex:(NSInteger)cancelButtonIndex;

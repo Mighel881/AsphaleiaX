@@ -1,4 +1,3 @@
-#import <libactivator/libactivator.h>
 #import <UIKit/UIKit.h>
 #import "ASAlert.h"
 

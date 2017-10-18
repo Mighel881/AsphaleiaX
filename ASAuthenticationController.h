@@ -9,13 +9,13 @@
 	ASCommonAuthenticationHandler authHandler;
 	NSString *currentAuthAppBundleID;
 }
-@property ASAuthenticationAlert *currentAuthAlert;
-@property SBIconView *currentHSIconView;
-@property PKGlyphView *fingerglyph;
-@property NSString *appUserAuthorisedID;
-@property BOOL catchAllIgnoreRequest;
-@property NSString *temporarilyUnlockedAppBundleID;
-@property ASTouchWindow *anywhereTouchWindow;
+@property (strong, nonatomic) ASAuthenticationAlert *currentAuthAlert;
+@property (strong, nonatomic) SBIconView *currentHSIconView;
+@property (strong, nonatomic) PKGlyphView *fingerglyph;
+@property (copy, nonatomic) NSString *appUserAuthorisedID;
+@property (nonatomic) BOOL catchAllIgnoreRequest;
+@property (copy, nonatomic) NSString *temporarilyUnlockedAppBundleID;
+@property (strong, nonatomic) ASTouchWindow *anywhereTouchWindow;
 + (instancetype)sharedInstance;
 - (void)initialiseGlyphIfRequired;
 - (ASAuthenticationAlert *)returnAppAuthenticationAlertWithApplication:(NSString *)appIdentifier customMessage:(NSString *)customMessage delegate:(id<ASAuthenticationAlertDelegate>)delegate;

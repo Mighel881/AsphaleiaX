@@ -35,30 +35,30 @@ void authenticationCancelled(CFNotificationCenterRef center, void *observer, CFS
 }
 
 - (BOOL)displayingAuthAlert {
-    CPDistributedMessagingCenter *centre = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+    CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
     rocketbootstrap_distributedmessagingcenter_apply(centre);
     NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/GetCurrentAuthAlert" userInfo:nil];
     return [reply[@"displayingAuthAlert"] boolValue];
 }
 
 - (BOOL)authenticateAppWithDisplayIdentifier:(NSString *)appIdentifier customMessage:(NSString *)customMessage dismissedHandler:(ASCommonAuthenticationHandler)handler {
-    if (objc_getClass("ASAuthenticationController")) {
-      return [[objc_getClass("ASAuthenticationController") sharedInstance] authenticateAppWithDisplayIdentifier:appIdentifier customMessage:customMessage dismissedHandler:handler];
+    if (%c(ASAuthenticationController)) {
+      return [[%c(ASAuthenticationController) sharedInstance] authenticateAppWithDisplayIdentifier:appIdentifier customMessage:customMessage dismissedHandler:handler];
     }
 
-    CPDistributedMessagingCenter *centre = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+    CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
     rocketbootstrap_distributedmessagingcenter_apply(centre);
     NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/AuthenticateApp" userInfo:@{ @"appIdentifier" : appIdentifier, @"customMessage" : customMessage }];
     return [reply[@"isProtected"] boolValue];
 }
 
 - (BOOL)authenticateFunction:(ASAuthenticationAlertType)alertType dismissedHandler:(ASCommonAuthenticationHandler)handler {
-    if (objc_getClass("ASAuthenticationController")) {
-      return [[objc_getClass("ASAuthenticationController") sharedInstance] authenticateFunction:alertType dismissedHandler:handler];
+    if (%c(ASAuthenticationController)) {
+      return [[%c(ASAuthenticationController) sharedInstance] authenticateFunction:alertType dismissedHandler:handler];
     }
 
     authHandler = [handler copy];
-    CPDistributedMessagingCenter *centre = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+    CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
     rocketbootstrap_distributedmessagingcenter_apply(centre);
     NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/AuthenticateFunction" userInfo:@{ @"alertType" : [NSNumber numberWithInt:alertType] }];
     return [reply[@"isProtected"] boolValue];

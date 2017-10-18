@@ -25,14 +25,15 @@
 
 %new
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id<ASAlertDelegate>)delegate {
-	self = [self init];
-	if (self) {
-		self.title = title;
-		self.message = message;
-		self.delegate = delegate;
-		self.buttons = [[NSMutableArray alloc] init];
-	}
-	return self;
+		self = [self init];
+		if (self) {
+				self.title = title;
+				self.message = message;
+				self.delegate = delegate;
+				self.buttons = [[NSMutableArray alloc] init];
+		}
+
+		return self;
 }
 
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode {

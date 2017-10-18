@@ -5,7 +5,7 @@ https://github.com/Sassoty/BioTesting */
 
 typedef void (^BTTouchIDEventBlock) (ASTouchIDController *controller, id monitor, unsigned event);
 
-#define asphaleiaLogMsg(str) NSLog(@"[Asphaleia] %@",str)
+#define asphaleiaLogMsg(str) HBLogDebug(@"[Asphaleia] %@",str)
 
 #define TouchIDFingerDown  1
 #define TouchIDFingerUp    0
@@ -21,9 +21,9 @@ typedef void (^BTTouchIDEventBlock) (ASTouchIDController *controller, id monitor
 }
 @property (nonatomic, strong) BTTouchIDEventBlock biometricEventBlock;
 @property (readonly) BOOL isMonitoring;
-@property (readonly) id oldDelegate;
+@property (readonly) id<_SBUIBiometricKitInterfaceDelegate> oldDelegate;
 @property (readonly) id lastMatchedFingerprint;
-@property BOOL shouldBlockLockscreenMonitor;
+@property (nonatomic) BOOL shouldBlockLockscreenMonitor;
 + (instancetype)sharedInstance;
 - (void)startMonitoring;
 - (void)stopMonitoring;

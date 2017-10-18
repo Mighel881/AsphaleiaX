@@ -41,77 +41,72 @@ static NSBundle *bundle;
 
 	if (self.passcodeView && self.passcodeWindow) {
 		[self.passcodeView removeFromSuperview];
-		[self.passcodeWindow setHidden:YES];
+		self.passcodeWindow.hidden = YES;
 		self.passcodeView = nil;
 		self.passcodeWindow = nil;
 	}
 
 	self.passcodeWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.passcodeWindow.windowLevel = UIWindowLevelAlert;
-	[self.passcodeWindow _setSecure:YES];
-	self.passcodeView = [[objc_getClass("SBUIPasscodeLockViewSimpleFixedDigitKeypad") alloc] initWithLightStyle:NO numberOfDigits:[passcode length]];
-	[self.passcodeView setShowsEmergencyCallButton:NO];
-	[self.passcodeView setDelegate:(id)self];
+	self.passcodeWindow._secure = YES;
+	self.passcodeView = [[objc_getClass("SBUIPasscodeLockViewSimpleFixedDigitKeypad") alloc] initWithLightStyle:NO numberOfDigits:passcode.length];
+	self.passcodeView.showsEmergencyCallButton = NO;
+	self.passcodeView.delegate = self;
 
-	UIVisualEffect *effect;
-	effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-
-	UIVisualEffectView *effectView;
-	effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+	UIVisualEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+	UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
 
 	effectView.frame = self.passcodeWindow.bounds;
 	[self.passcodeWindow insertSubview:effectView atIndex:0];
 
-	[self.passcodeView setBackgroundAlpha:0.f];
+	self.passcodeView.backgroundAlpha = 0.f;
 
 	UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[iconView.icon getIconImage:1]];
 	iconImageView.contentMode = UIViewContentModeScaleAspectFill;
 	iconImageView.frame = CGRectMake(0,0,40,40);
 	[self.passcodeView _layoutStatusView];
-	iconImageView.center = CGPointMake(CGRectGetMidX(self.passcodeWindow.bounds),self.passcodeView.statusTitleView.center.y/2-5);
+	iconImageView.center = CGPointMake(CGRectGetMidX(self.passcodeWindow.bounds), self.passcodeView.statusTitleView.center.y / 2 - 5);
 
 	self.passcodeView.luminosityBoost = 0.33;
 	[self.passcodeView _evaluateLuminance];
 
 	[self.passcodeWindow addSubview:iconImageView];
 	[self.passcodeWindow addSubview:self.passcodeView];
-	[self.passcodeWindow setAlpha:0.f];
+	self.passcodeWindow.alpha = 0.f;
 	[self.passcodeWindow makeKeyAndVisible];
 	[self.passcodeView updateStatusText:[bundle localizedStringForKey:@"ENTER_PASS" value:nil table:@"Localizable"] subtitle:nil animated:NO];
-	[UIView animateWithDuration:.15f delay:0.0
-	                options:UIViewAnimationOptionCurveEaseIn
-	             animations:^{[self.passcodeWindow setAlpha:1.f];}
-	             completion:nil];
+	[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		self.passcodeWindow.alpha = 1.f;
+	} completion:nil];
 }
 
-- (void)passcodeLockViewPasscodeEntered:(SBUIPasscodeLockViewSimpleFixedDigitKeypad *)arg1 {
+- (void)passcodeLockViewPasscodeEntered:(SBUIPasscodeLockViewSimpleFixedDigitKeypad *)passcodeView {
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-		if (arg1.passcode.length == [self.passcode length] && [arg1.passcode isEqual:self.passcode]) {
-				[UIView animateWithDuration:.15f delay:0.0
-		                options:UIViewAnimationOptionCurveEaseIn
-		             animations:^{[self.passcodeWindow setAlpha:0.f];}
-		             completion:^(BOOL finished){
+		if ([passcodeView.passcode length] == [self.passcode length] && [passcodeView.passcode isEqualToString:self.passcode]) {
+				[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+						self.passcodeWindow.alpha = 0.f;
+				} completion:^(BOOL finished){
 						if (finished) {
-							[self.passcodeView removeFromSuperview];
-							[self.passcodeWindow setHidden:YES];
-							self.passcodeView = nil;
-							self.passcodeWindow = nil;
-							self.eventBlock(YES);
+								[self.passcodeView removeFromSuperview];
+								self.passcodeWindow.hidden = YES;
+								self.passcodeView = nil;
+								self.passcodeWindow = nil;
+								self.eventBlock(YES);
 						}
-					}];
-		} else if (arg1.passcode.length == [self.passcode length] && ![arg1.passcode isEqual:self.passcode]) {
-			[arg1 resetForFailedPasscode];
+				}];
+		} else if ([passcodeView.passcode length] == [self.passcode length] && ![passcodeView.passcode isEqualToString:self.passcode]) {
+			[passcodeView resetForFailedPasscode];
 		}
 	});
 }
 
-- (void)passcodeLockViewCancelButtonPressed:(id)arg1 {
-	[UIView animateWithDuration:.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-		[self.passcodeWindow setAlpha:0.f];
+- (void)passcodeLockViewCancelButtonPressed:(SBUIPasscodeLockViewSimpleFixedDigitKeypad *)passcodeView {
+	[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		self.passcodeWindow.alpha = 0.f;
 	} completion:^(BOOL finished) {
 		if (finished) {
 			[self.passcodeView removeFromSuperview];
-			[self.passcodeWindow setHidden:YES];
+			self.passcodeWindow.hidden = YES;
 			self.passcodeView = nil;
 			self.passcodeWindow = nil;
 			self.eventBlock(NO);
@@ -124,12 +119,12 @@ static NSBundle *bundle;
 		return;
 	}
 
-	[UIView animateWithDuration:.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-		[self.passcodeWindow setAlpha:0.f];
+	[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		self.passcodeWindow.alpha = 0.f;
 	} completion:^(BOOL finished){
 		if (finished) {
 			[self.passcodeView removeFromSuperview];
-			[self.passcodeWindow setHidden:YES];
+			self.passcodeWindow.hidden = YES;
 			self.passcodeView = nil;
 			self.passcodeWindow = nil;
 			self.eventBlock(NO);

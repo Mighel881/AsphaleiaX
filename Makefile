@@ -14,14 +14,15 @@ endif
 include $(THEOS)/makefiles/common.mk
 
 LIBRARY_NAME = libasphaleiaui
-libasphaleiaui_FILES = ASCommon.mm NSTimer+Blocks.m ASPreferences.mm
+libasphaleiaui_FILES = ASCommon.x NSTimer+Blocks.m ASPreferences.x
 libasphaleiaui_FRAMEWORKS = UIKit
+MultiplexerCore_EXTRA_FRAMEWORKS = CydiaSubstrate
 libasphaleiaui_INSTALL_PATH = /usr/lib
 libasphaleiaui_LIBRARIES = rocketbootstrap
 libasphaleiaui_CFLAGS = -fobjc-arc -flto=thin
 
 TWEAK_NAME = Asphaleia
-Asphaleia_FILES = Tweak.xm ASXPCHandler.xm ASTouchIDController.mm ASAuthenticationController.mm ASAuthenticationAlert.xm ASAlert.xm ASControlPanel.mm ASPasscodeHandler.mm ASTouchWindow.m ASActivatorListener.mm
+Asphaleia_FILES = Tweak.x ASXPCHandler.x ASTouchIDController.x ASAuthenticationController.x ASAuthenticationAlert.x ASAlert.x ASControlPanel.x ASPasscodeHandler.m ASTouchWindow.m ASActivatorListener.x
 Asphaleia_FRAMEWORKS = UIKit CoreGraphics AudioToolbox
 Asphaleia_LDFLAGS = -L$(THEOS_OBJ_DIR)
 Asphaleia_LIBRARIES = asphaleiaui rocketbootstrap

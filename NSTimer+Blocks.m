@@ -22,10 +22,12 @@
 }
 
 + (void)jdExecuteSimpleBlock:(NSTimer *)inTimer; {
-    if([inTimer userInfo]) {
-        void (^block)() = (void (^)())[inTimer userInfo];
-        block();
+    if (!inTimer.userInfo) {
+        return;
     }
+
+    void (^block)() = (void (^)())inTimer.userInfo;
+    block();
 }
 
 @end

@@ -1,10 +1,9 @@
-CFLAGS = -fobjc-arc
-
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = AsphaleiaPrefs
 AsphaleiaPrefs_FILES = $(wildcard *.mm) $(wildcard *.m)
 AsphaleiaPrefs_INSTALL_PATH = /Library/PreferenceBundles
+AsphaleiaPrefs_CFLAGS = -fobjc-arc
 AsphaleiaPrefs_FRAMEWORKS = UIKit CoreGraphics AudioToolbox Social
 AsphaleiaPrefs_PRIVATE_FRAMEWORKS = Preferences
 AsphaleiaPrefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs

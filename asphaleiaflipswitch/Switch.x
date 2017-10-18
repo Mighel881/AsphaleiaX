@@ -22,11 +22,12 @@
 @implementation AsphaleiaFlipswitchSwitch
 
 - (instancetype)init {
-	AsphaleiaFlipswitchSwitch *flipswitch = [super init];
-	if (flipswitch) {
+	self = [super init];
+	if (self) {
 		loadPreferences();
 	}
-	return flipswitch;
+
+	return self;
 }
 
 - (NSString *)titleForSwitchIdentifier:(NSString *)switchIdentifier {

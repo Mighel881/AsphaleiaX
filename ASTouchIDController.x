@@ -1,28 +1,14 @@
 /* Modified from Sassoty's code
 https://github.com/Sassoty/BioTesting */
 #import "ASTouchIDController.h"
-#import <objc/runtime.h>
-#import <UIKit/UIKit.h>
 #import "ASActivatorListener.h"
 #import "ASControlPanel.h"
-#import <libactivator/libactivator.h>
-#import <dlfcn.h>
-#import <AudioToolbox/AudioServices.h>
 #import "ASPreferences.h"
-#import <substrate.h>
-#import <notify.h>
 
-#define ENABLE_VH "virtualhome.enable"
-#define DISABLE_VH "virtualhome.disable"
 
 @interface ASTouchIDController ()
 @property (readwrite) BOOL isMonitoring;
 @property (readwrite) id lastMatchedFingerprint;
-@end
-
-@interface SBScreenFlash
-+ (id)mainScreenFlasher;
-- (void)flashWhiteWithCompletion:(id)completion;
 @end
 
 void startMonitoringNotification(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -48,7 +34,7 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 	return sharedInstance;
 }
 
-- (void)biometricKitInterface:(id)interface handleEvent:(unsigned long long)event {
+- (void)biometricKitInterface:(_SBUIBiometricKitInterface *)interface handleEvent:(NSUInteger)event {
 	//[[objc_getClass("SBScreenFlash") mainScreenFlasher] flashWhiteWithCompletion:nil];
 	if (!self.isMonitoring || ![ASPreferences isTouchIDDevice]) {
 		return;
@@ -135,23 +121,23 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 	}
 */
 
-	_SBUIBiometricKitInterface *interface = [[objc_getClass("BiometricKit") manager] delegate];
+	_SBUIBiometricKitInterface *interface = [%c(BiometricKit) manager].delegate;
 	_oldDelegate = interface.delegate;
 
 	dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
-	Class la = objc_getClass("LASharedActivator");
+	Class la = %c(LAActivator);
 	if (la) {
-		if ([(LAActivator *)objc_getClass("LASharedActivator") hasListenerWithName:@"Dynamic Selection"]) {
+		if ([[%c(LAActivator) sharedInstance] hasListenerWithName:@"Dynamic Selection"]) {
 			[[ASActivatorListener sharedInstance] unload];
 		}
 
-		if ([(LAActivator *)objc_getClass("LASharedActivator") hasListenerWithName:@"Control Panel"]) {
+		if ([[%c(LAActivator) sharedInstance] hasListenerWithName:@"Control Panel"]) {
 			[[ASControlPanel sharedInstance] unload];
 		}
 	}
 
 	// Begin listening :D
-	[interface setDelegate:self];
+	interface.delegate = self;
 	[interface matchWithMode:0 andCredentialSet:nil];
 
 	starting = NO;
@@ -166,9 +152,9 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 	}
 	stopping = YES;
 
-	_SBUIBiometricKitInterface *interface = [[objc_getClass("BiometricKit") manager] delegate];
+	_SBUIBiometricKitInterface *interface = [%c(BiometricKit) manager].delegate;
 	[interface cancel];
-	[interface setDelegate:_oldDelegate];
+	interface.delegate = _oldDelegate;
 	[interface detectFingerWithOptions:nil];
 
 	_oldDelegate = nil;
@@ -188,12 +174,12 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 */
 
 	dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
-	Class la = objc_getClass("LASharedActivator");
+	Class la = %c(LAActivator);
 	if (la) {
-		if (![(LAActivator *)objc_getClass("LASharedActivator") hasListenerWithName:@"Dynamic Selection"]) {
+		if (![[%c(LAActivator) sharedInstance] hasListenerWithName:@"Dynamic Selection"]) {
 			[[ASActivatorListener sharedInstance] load];
 		}
-		if (![(LAActivator *)objc_getClass("LASharedActivator") hasListenerWithName:@"Control Panel"]) {
+		if (![[%c(LAActivator) sharedInstance] hasListenerWithName:@"Control Panel"]) {
 			[[ASControlPanel sharedInstance] load];
 		}
 	}

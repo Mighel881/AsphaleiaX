@@ -6,7 +6,7 @@
 #import <dlfcn.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 
-static NSString *const kPreferencesFilePath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
+static NSString *const ASPreferencesFilePath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
 
 #define kPrefsChangedNotification "com.a3tweaks.asphaleia/ReloadPrefs"
 #define kDisableAsphaleiaNotification "com.a3tweaks.asphaleia/DisableAsphaleia"
@@ -42,16 +42,16 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 		addObserver(preferencesChangedCallback,kPrefsChangedNotification);
 	});
 
-	_center = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.a3tweaks.asphaleia.xpc"];
-	void* handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
+	_center = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+	void *handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
 	if (handle) {
-		void (*rocketbootstrap_distributedmessagingcenter_apply)(CPDistributedMessagingCenter*) = (void(*)(CPDistributedMessagingCenter*))dlsym(handle, "rocketbootstrap_distributedmessagingcenter_apply");
+		void (*rocketbootstrap_distributedmessagingcenter_apply)(CPDistributedMessagingCenter *) = (void(*)(CPDistributedMessagingCenter *))dlsym(handle, "rocketbootstrap_distributedmessagingcenter_apply");
 		rocketbootstrap_distributedmessagingcenter_apply(_center);
 		dlclose(handle);
 	}
 
-	_prefs = [NSDictionary dictionaryWithContentsOfFile:kPreferencesFilePath];
-	if (![self passcodeEnabled] && ![self touchIDEnabled] && objc_getClass("SpringBoard")) {
+	_prefs = [NSDictionary dictionaryWithContentsOfFile:ASPreferencesFilePath];
+	if (![self passcodeEnabled] && ![self touchIDEnabled] && %c(SpringBoard)) {
 		_asphaleiaDisabled = YES;
 		_itemSecurityDisabled = YES;
 	} else {
@@ -64,7 +64,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	BOOL unlockOnWifi = [self objectForKey:kWifiUnlockKey] ? [[self objectForKey:kWifiUnlockKey] boolValue] : NO;
 	NSString *unlockSSIDValue = [self objectForKey:kWifiUnlockNetworkKey] ? [self objectForKey:kWifiUnlockNetworkKey] : @"";
 	NSArray *unlockSSIDs = [unlockSSIDValue componentsSeparatedByString:@", "];
-	NSString *currentSSID = [[objc_getClass("SBWiFiManager") sharedInstance] currentNetworkName];
+	NSString *currentSSID = [[%c(SBWiFiManager) sharedInstance] currentNetworkName];
 
 	for (NSString *SSID in unlockSSIDs) {
 		if (unlockOnWifi && [currentSSID isEqualToString:SSID]) {
@@ -75,10 +75,10 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 + (BOOL)isTouchIDDevice {
-	if (objc_getClass("BiometricKit")) {
-		return [[objc_getClass("BiometricKit") manager] isTouchIDCapable];
+	if (%c(BiometricKit)) {
+		return [[%c(BiometricKit) manager] isTouchIDCapable];
 	} else {
-		CPDistributedMessagingCenter *centre = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+		CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
 		rocketbootstrap_distributedmessagingcenter_apply(centre);
 		NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice" userInfo:nil];
 		return [reply[@"isTouchIDDevice"] boolValue];
@@ -123,7 +123,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 - (void)setObject:(id)object forKey:(NSString *)key {
 	NSMutableDictionary *tempPrefs = [NSMutableDictionary dictionaryWithDictionary:_prefs];
 	[tempPrefs setObject:object forKey:key];
-	[tempPrefs writeToFile:kPreferencesFilePath atomically:YES];
+	[tempPrefs writeToFile:ASPreferencesFilePath atomically:YES];
 	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR(kPrefsChangedNotification), NULL, NULL, YES);
 }
 
@@ -264,8 +264,8 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 - (BOOL)requiresSecurityForApp:(NSString *)app {
 	NSString *tempUnlockedApp;
-	if (objc_getClass("SpringBoard") && objc_getClass("ASAuthenticationController")) {
-		tempUnlockedApp = [[objc_getClass("ASAuthenticationController") sharedInstance] temporarilyUnlockedAppBundleID];
+	if (%c(SpringBoard) && %c(ASAuthenticationController)) {
+		tempUnlockedApp = [[%c(ASAuthenticationController) sharedInstance] temporarilyUnlockedAppBundleID];
 	} else {
 		NSDictionary *reply = [_center sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/GetCurrentTempUnlockedApp" userInfo:nil];
 		tempUnlockedApp = reply[@"bundleIdentifier"];
@@ -370,7 +370,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 // Custom setters/getters
 - (BOOL)asphaleiaDisabled {
-	if (objc_getClass("SpringBoard")) {
+	if (%c(SpringBoard)) {
 		return _asphaleiaDisabled;
 	}
 
@@ -379,7 +379,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)setAsphaleiaDisabled:(BOOL)value {
-	if (objc_getClass("SpringBoard")) {
+	if (%c(SpringBoard)) {
 		_asphaleiaDisabled = value;
 		return;
 	}
@@ -388,7 +388,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (BOOL)itemSecurityDisabled {
-	if (objc_getClass("SpringBoard")) {
+	if (%c(SpringBoard)) {
 		return _itemSecurityDisabled;
 	}
 
@@ -397,7 +397,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)setItemSecurityDisabled:(BOOL)value {
-	if (objc_getClass("SpringBoard")) {
+	if (%c(SpringBoard)) {
 		_itemSecurityDisabled = value;
 		return;
 	}

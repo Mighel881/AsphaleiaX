@@ -4,7 +4,7 @@
 
 typedef void (^ASPasscodeHandlerEventBlock) (BOOL authenticated);
 
-@interface ASPasscodeHandler : NSObject
+@interface ASPasscodeHandler : NSObject <SBUIPasscodeLockViewDelegate>
 @property (retain) NSString *passcode;
 + (instancetype)sharedInstance;
 - (void)showInKeyWindowWithPasscode:(NSString *)passcode iconView:(SBIconView *)iconView eventBlock:(ASPasscodeHandlerEventBlock)eventBlock;

@@ -11,7 +11,7 @@
 
 BOOL authenticated;
 BOOL authenticating;
-NSBundle *bundle;
+static NSBundle *bundle;
 
 %group UIImagePickerController
 %hook UIImagePickerController
