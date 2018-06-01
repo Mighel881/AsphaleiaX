@@ -16,7 +16,7 @@ include $(THEOS)/makefiles/common.mk
 LIBRARY_NAME = libasphaleiaui
 libasphaleiaui_FILES = ASCommon.x NSTimer+Blocks.m ASPreferences.x
 libasphaleiaui_FRAMEWORKS = UIKit
-MultiplexerCore_EXTRA_FRAMEWORKS = CydiaSubstrate
+libasphaleiaui_EXTRA_FRAMEWORKS = CydiaSubstrate
 libasphaleiaui_INSTALL_PATH = /usr/lib
 libasphaleiaui_LIBRARIES = rocketbootstrap
 libasphaleiaui_CFLAGS = -fobjc-arc -flto=thin
