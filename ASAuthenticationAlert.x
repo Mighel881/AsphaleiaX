@@ -2,6 +2,7 @@
 #import "ASAuthenticationController.h"
 #import "ASPreferences.h"
 #import <SpringBoard/SBAlertItemsController.h>
+#import <UIKit/UIImage+Private.h>
 #import "NSTimer+Blocks.h"
 #import "ASPasscodeHandler.h"
 
@@ -9,34 +10,23 @@
 #define titleWithSpacingForSmallIcon(t) [NSString stringWithFormat:@"\n\n%@",t]
 
 @interface ASAuthenticationAlert ()
-- (NSArray *)allSubviewsOfView:(UIView *)view;
-- (void)addSubviewToAlert:(UIView *)view;
-+ (PKGlyphView *)sharedGlyph;
 - (UIImage *)colouriseImage:(UIImage *)origImage withColour:(UIColor *)tintColour;
 @end
 
 static BOOL blockPasscode;
 
-%subclass ASAuthenticationAlert : SBAlertItem
-%property (nonatomic, assign) NSInteger tag;
-%property (nonatomic, retain) UIView *icon;
-%property (nonatomic, retain) NSTimer *resetFingerprintTimer;
-%property (nonatomic, assign) BOOL useSmallIcon;
+@implementation ASAuthenticationAlert
 
-%new
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message icon:(UIView *)icon smallIcon:(BOOL)useSmallIcon delegate:(id<ASAuthenticationAlertDelegate>)delegate {
-	self = [self init];
+	self = [super initWithTitle:title message:message delegate:delegate];
 	if (self) {
-		self.title = title;
-		self.message = message;
-		self.delegate = delegate;
 		self.icon = icon;
 		self.useSmallIcon = useSmallIcon;
 	}
+
 	return self;
 }
 
-%new
 - (instancetype)initWithApplication:(NSString *)identifier message:(NSString *)message delegate:(id<ASAuthenticationAlertDelegate>)delegate {
 	if (!identifier) {
 		return nil;
@@ -49,38 +39,33 @@ static BOOL blockPasscode;
 		self.message = message;
 		self.delegate = delegate;
 
-		SBApplicationIcon *appIcon = [[%c(SBApplicationIcon) alloc] initWithApplication:application];
-		SBIconView *iconView = [[%c(SBIconView) alloc] initWithContentType:0];
-		[iconView _setIcon:appIcon animated:YES];
-
-		UIImageView *imgView;
-		UIImage *iconImage = [iconView.icon getIconImage:2];
-		imgView = [[UIImageView alloc] initWithImage:iconImage];
-		imgView.frame = CGRectMake(0,0,iconImage.size.width,iconImage.size.height);
+		UIImage *iconImage = [UIImage _applicationIconImageForBundleIdentifier:identifier format:0 scale:[UIScreen mainScreen].scale];
+		UIImageView *imageView = [[UIImageView alloc] initWithImage:iconImage];
+		imageView.frame = CGRectMake(0,0,iconImage.size.width,iconImage.size.height);
 
 		if ([[ASPreferences sharedInstance] touchIDEnabled]) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[[ASAuthenticationController sharedInstance] initialiseGlyphIfRequired];
-				imgView.image = [self colouriseImage:iconImage withColour:[UIColor colorWithWhite:0.f alpha:0.5f]];
+				imageView.image = [self colouriseImage:iconImage withColour:[UIColor colorWithWhite:0.f alpha:0.5f]];
 				CGRect fingerframe = [[ASAuthenticationController sharedInstance] fingerglyph].frame;
-				fingerframe.size.height = [iconView _iconImageView].frame.size.height-10;
-				fingerframe.size.width = [iconView _iconImageView].frame.size.width-10;
+				fingerframe.size.height = [%c(SBIconView) defaultIconSize].height - 10;
+				fingerframe.size.width = [%c(SBIconView) defaultIconSize].width - 10;
 				[[ASAuthenticationController sharedInstance] fingerglyph].frame = fingerframe;
-				[[ASAuthenticationController sharedInstance] fingerglyph].center = CGPointMake(CGRectGetMidX(imgView.bounds),CGRectGetMidY(imgView.bounds));
-				[imgView addSubview:[[ASAuthenticationController sharedInstance] fingerglyph]];
+				[[ASAuthenticationController sharedInstance] fingerglyph].center = CGPointMake(CGRectGetMidX(imageView.bounds), CGRectGetMidY(imageView.bounds));
+				[imageView addSubview:[[ASAuthenticationController sharedInstance] fingerglyph]];
 			});
 		}
-		self.icon = imgView;
+		self.icon = imageView;
 
 		blockPasscode = ([[ASPreferences sharedInstance] securityLevelForApp:identifier] == 2);
 
 		self.useSmallIcon = NO;
 	}
+
 	return self;
 }
 
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode {
-	%orig;
 	if (self.useSmallIcon) {
 		[self alertController].title = titleWithSpacingForSmallIcon(self.title);
 		self.icon.center = CGPointMake(270/2,34);
@@ -93,8 +78,8 @@ static BOOL blockPasscode;
 	UIAlertAction *cancelButton = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, NULL, YES);
 		[[ASAuthenticationController sharedInstance] setCurrentAuthAlert:nil];
-		if (self.delegate) {
-			[self.delegate authAlertView:self dismissed:YES authorised:NO fingerprint:nil];
+		if (self.delegate && [self.delegate respondsToSelector:@selector(authAlertView:dismissed:authorised:fingerprint:)]) {
+			[(id)self.delegate authAlertView:self dismissed:YES authorised:NO fingerprint:nil];
 		}
 
 		[self dismiss];
@@ -107,8 +92,8 @@ static BOOL blockPasscode;
 			SBIconView *icon = [self.icon isKindOfClass:%c(SBIconView)] ? (SBIconView *)self.icon : nil;
 			id delegateReference = self.delegate;
 			[[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:icon eventBlock:^void(BOOL authenticated){
-				if (authenticated) {
-					[delegateReference authAlertView:self dismissed:YES authorised:YES fingerprint:nil];
+				if (authenticated && [delegateReference respondsToSelector:@selector(authAlertView:dismissed:authorised:fingerprint:)]) {
+					[(id)delegateReference authAlertView:self dismissed:YES authorised:YES fingerprint:nil];
 				}
 			}];
 		}
@@ -128,30 +113,6 @@ static BOOL blockPasscode;
 	return NO;
 }
 
-%new
-- (void)addSubviewToAlert:(UIView *)view {
-	UIView *labelSuperview;
-	for (id subview in [self allSubviewsOfView:[[self alertController] view]]) {
-		if ([subview isKindOfClass:[UILabel class]]) {
-			labelSuperview = [subview superview];
-		}
-	}
-	if ([labelSuperview respondsToSelector:@selector(addSubview:)]) {
-		[labelSuperview addSubview:view];
-	}
-}
-
-%new
-- (NSArray *)allSubviewsOfView:(UIView *)view {
-	NSMutableArray *viewArray = [[NSMutableArray alloc] init];
-	[viewArray addObject:view];
-	for (UIView *subview in view.subviews) {
-		[viewArray addObjectsFromArray:(NSArray *)[self allSubviewsOfView:subview]];
-	}
-	return [NSArray arrayWithArray:viewArray];
-}
-
-%new
 - (void)show {
 	if ([[ASAuthenticationController sharedInstance] currentAuthAlert]) {
 		[[[ASAuthenticationController sharedInstance] currentAuthAlert] dismiss];
@@ -168,12 +129,9 @@ static BOOL blockPasscode;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.authsuccess" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.authfailed" object:nil];
 
-	if (%c(SBAlertItemsController)) {
-		[[%c(SBAlertItemsController) sharedInstance] activateAlertItem:self];
-	}
+	[super show];
 }
 
-%new
 - (void)receivedNotification:(NSNotification *)notification {
 	NSString *name = [notification name];
 	if ([name isEqualToString:@"com.a3tweaks.asphaleia.fingerdown"]) {
@@ -201,8 +159,8 @@ static BOOL blockPasscode;
 			[[[ASAuthenticationController sharedInstance] fingerglyph] setState:0 animated:YES completionHandler:nil];
 		}
 
-		if (self.delegate) {
-			[self.delegate authAlertView:self dismissed:NO authorised:YES fingerprint:[notification userInfo][@"fingerprint"]];
+		if (self.delegate && [self.delegate respondsToSelector:@selector(authAlertView:dismissed:authorised:fingerprint:)]) {
+			[(id)self.delegate authAlertView:self dismissed:NO authorised:YES fingerprint:[notification userInfo][@"fingerprint"]];
 		}
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.authfailed"]) {
 		if (self.useSmallIcon) {
@@ -222,41 +180,10 @@ static BOOL blockPasscode;
 		[self.resetFingerprintTimer invalidate];
 		self.resetFingerprintTimer = nil;
 	}
-	%orig;
+	
+	[super dismiss];
 }
 
-// Properties
-%new
-- (void)setTitle:(NSString *)title {
-	objc_setAssociatedObject(self, @selector(title), title, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-	[self alertController].title = title;
-}
-%new
-- (NSString *)title {
-	return objc_getAssociatedObject(self, @selector(title));
-}
-
-%new
-- (void)setMessage:(NSString *)message {
-	objc_setAssociatedObject(self, @selector(message), message, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-	[self alertController].message = message;
-}
-%new
-- (NSString *)message {
-	return objc_getAssociatedObject(self, @selector(message));
-}
-
-%new
-- (void)setDelegate:(id<ASAuthenticationAlertDelegate>)delegate {
-	objc_setAssociatedObject(self, @selector(delegate), delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-%new
-- (id<ASAuthenticationAlertDelegate>)delegate {
-	return objc_getAssociatedObject(self, @selector(delegate));
-}
-
-// Other
-%new
 - (UIImage *)colouriseImage:(UIImage *)origImage withColour:(UIColor *)tintColour {
 	UIGraphicsBeginImageContextWithOptions(origImage.size, NO, origImage.scale);
 	CGContextRef imgContext = UIGraphicsGetCurrentContext();
@@ -275,4 +202,4 @@ static BOOL blockPasscode;
 	return finalImage;
 }
 
-%end
+@end

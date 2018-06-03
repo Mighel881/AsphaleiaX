@@ -1,4 +1,4 @@
-export TARGET = iphone:9.2
+export TARGET = iphone:11.2:10.0
 
 INSTALL_TARGET_PROCESSES = Preferences
 
@@ -16,14 +16,16 @@ include $(THEOS)/makefiles/common.mk
 LIBRARY_NAME = libasphaleiaui
 libasphaleiaui_FILES = ASCommon.x NSTimer+Blocks.m ASPreferences.x
 libasphaleiaui_FRAMEWORKS = UIKit
+libasphaleiaui_PRIVATE_FRAMEWORKS = AppSupport
 libasphaleiaui_EXTRA_FRAMEWORKS = CydiaSubstrate
 libasphaleiaui_INSTALL_PATH = /usr/lib
 libasphaleiaui_LIBRARIES = rocketbootstrap
-libasphaleiaui_CFLAGS = -fobjc-arc -flto=thin
+libasphaleiaui_CFLAGS = -fobjc-arc
 
 TWEAK_NAME = Asphaleia
-Asphaleia_FILES = Tweak.x ASXPCHandler.x ASTouchIDController.x ASAuthenticationController.x ASAuthenticationAlert.x ASAlert.x ASControlPanel.x ASPasscodeHandler.m ASTouchWindow.m ASActivatorListener.x
+Asphaleia_FILES = Tweak.x ASXPCHandler.x ASTouchIDController.x ASAuthenticationController.x ASAuthenticationAlert.x ASAlert.m ASControlPanel.x ASPasscodeHandler.m ASTouchWindow.m ASActivatorListener.x
 Asphaleia_FRAMEWORKS = UIKit CoreGraphics AudioToolbox
+Asphaleia_PRIVATE_FRAMEWORKS = AppSupport SpringBoardUI
 Asphaleia_LDFLAGS = -L$(THEOS_OBJ_DIR)
 Asphaleia_LIBRARIES = asphaleiaui rocketbootstrap
 Asphaleia_CFLAGS = -fobjc-arc

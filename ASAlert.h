@@ -12,12 +12,14 @@
 @property (nonatomic) NSString *message;
 @property (nonatomic, weak) id<ASAlertDelegate> delegate;
 @property (nonatomic) NSInteger tag;
+
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id<ASAlertDelegate>)delegate;
-- (_SBAlertController *)alertController;
 - (void)addButtonWithTitle:(NSString *)buttonTitle;
 - (void)removeButtonWithTitle:(NSString *)buttonTitle;
-- (void)setCancelButtonIndex:(NSInteger)cancelButtonIndex;
 - (void)setAboveTitleSubview:(UIView *)view;
 - (void)show;
+
+- (NSArray *)allSubviewsOfView:(UIView *)view;
+- (void)addSubviewToAlert:(UIView *)view;
 
 @end
