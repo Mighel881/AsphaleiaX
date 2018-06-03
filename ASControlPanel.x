@@ -40,49 +40,53 @@ static NSBundle *bundle;
     SBApplication *frontmostApp = [(SpringBoard *)[UIApplication sharedApplication] _accessibilityFrontMostApplication];
     NSString *bundleID = [frontmostApp bundleIdentifier];
     if ((bundleID && ![[ASPreferences sharedInstance] allowControlPanelInApps]) || ![[ASPreferences sharedInstance] enableControlPanel]) {
-        [event setHandled:YES];
+        event.handled = YES;
         return;
     }
 
     [[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertControlPanel dismissedHandler:^(BOOL wasCancelled) {
-        if (!wasCancelled) {
-            NSString *mySecuredAppsTitle = [ASPreferences sharedInstance].itemSecurityDisabled ? [bundle localizedStringForKey:@"ENABLE_SECURED_ITEMS" value:nil table:@"Localizable"] : [bundle localizedStringForKey:@"DISABLE_SECURED_ITEMS" value:nil table:@"Localizable"];
-            NSString *enableGlobalAppsTitle = ![[ASPreferences sharedInstance] protectAllApps] ? [bundle localizedStringForKey:@"ENABLE_GLOBAL_SECURITY" value:nil table:@"Localizable"] : [bundle localizedStringForKey:@"DISABLE_GLOBAL_SECURITY" value:nil table:@"Localizable"]; // Enable/Disable
-            NSString *addRemoveFromSecureAppsTitle = nil;
-            if (bundleID) {
-                NSString *removeApp = [bundle localizedStringForKey:@"REMOVE_APP" value:nil table:@"Localizable"];
-                NSString *addApp = [bundle localizedStringForKey:@"ADD_APP" value:nil table:@"Localizable"];
-                addRemoveFromSecureAppsTitle = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID] ? removeApp : addApp;
-                HBLogDebug(@"%@", addRemoveFromSecureAppsTitle);
-            }
-            NSMutableArray *buttonTitleArray = [NSMutableArray arrayWithObjects:mySecuredAppsTitle, enableGlobalAppsTitle, nil];
-            if (addRemoveFromSecureAppsTitle) {
-              [buttonTitleArray addObject:addRemoveFromSecureAppsTitle];
-            }
-
-            self.alertView = [[%c(ASAlert) alloc] initWithTitle:[bundle localizedStringForKey:@"CONTROL_PANEL" value:nil table:@"Localizable"] message:nil delegate:self];
-            for (NSString *buttonTitle in buttonTitleArray) {
-              [self.alertView addButtonWithTitle:buttonTitle];
-            }
-
-            NSBundle *asphaleiaAssets = [NSBundle bundleWithPath:ASBundlePath];
-            UIImage *iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
-            UIImageView *imgView = [[UIImageView alloc] initWithImage:iconImage];
-            imgView.frame = CGRectMake(0,0,iconImage.size.width,iconImage.size.height);
-            imgView.center = CGPointMake(270/2,32);
-            [self.alertView setAboveTitleSubview:imgView];
-
-            [self.alertView show];
+        if (wasCancelled) {
+            return;
         }
+
+        NSString *mySecuredAppsTitle = [ASPreferences sharedInstance].itemSecurityDisabled ? [bundle localizedStringForKey:@"ENABLE_SECURED_ITEMS" value:nil table:@"Localizable"] : [bundle localizedStringForKey:@"DISABLE_SECURED_ITEMS" value:nil table:@"Localizable"];
+        NSString *enableGlobalAppsTitle = ![[ASPreferences sharedInstance] protectAllApps] ? [bundle localizedStringForKey:@"ENABLE_GLOBAL_SECURITY" value:nil table:@"Localizable"] : [bundle localizedStringForKey:@"DISABLE_GLOBAL_SECURITY" value:nil table:@"Localizable"]; // Enable/Disable
+        NSString *addRemoveFromSecureAppsTitle = nil;
+        if (bundleID) {
+            NSString *removeApp = [bundle localizedStringForKey:@"REMOVE_APP" value:nil table:@"Localizable"];
+            NSString *addApp = [bundle localizedStringForKey:@"ADD_APP" value:nil table:@"Localizable"];
+            addRemoveFromSecureAppsTitle = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID] ? removeApp : addApp;
+            HBLogDebug(@"%@", addRemoveFromSecureAppsTitle);
+        }
+
+        NSMutableArray *buttonTitleArray = [NSMutableArray arrayWithObjects:mySecuredAppsTitle, enableGlobalAppsTitle, nil];
+        if (addRemoveFromSecureAppsTitle) {
+            [buttonTitleArray addObject:addRemoveFromSecureAppsTitle];
+        }
+
+        self.alertView = [[ASAlert alloc] initWithTitle:[bundle localizedStringForKey:@"CONTROL_PANEL" value:nil table:@"Localizable"] message:nil delegate:self];
+        for (NSString *buttonTitle in buttonTitleArray) {
+            [self.alertView addButtonWithTitle:buttonTitle];
+        }
+
+        NSBundle *asphaleiaAssets = [NSBundle bundleWithPath:ASBundlePath];
+        UIImage *iconImage = [UIImage imageNamed:@"IconDefault.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
+        UIImageView *imgView = [[UIImageView alloc] initWithImage:iconImage];
+        imgView.frame = CGRectMake(0,0,iconImage.size.width,iconImage.size.height);
+        imgView.center = CGPointMake(270/2,32);
+        [self.alertView setAboveTitleSubview:imgView];
+
+        [self.alertView show];
     }];
 
-    [event setHandled:YES];
+    event.handled = YES;
 }
 
 - (void)activator:(LAActivator *)activator abortEvent:(LAEvent *)event {
     if (!self.alertView) {
         return;
     }
+
     [self.alertView dismiss];
     self.alertView = nil;
 }

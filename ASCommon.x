@@ -35,7 +35,7 @@ void authenticationCancelled(CFNotificationCenterRef center, void *observer, CFS
 }
 
 - (BOOL)displayingAuthAlert {
-    CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+    CPDistributedMessagingCenter *centre = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
     rocketbootstrap_distributedmessagingcenter_apply(centre);
     NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/GetCurrentAuthAlert" userInfo:nil];
     return [reply[@"displayingAuthAlert"] boolValue];
@@ -46,7 +46,7 @@ void authenticationCancelled(CFNotificationCenterRef center, void *observer, CFS
       return [[%c(ASAuthenticationController) sharedInstance] authenticateAppWithDisplayIdentifier:appIdentifier customMessage:customMessage dismissedHandler:handler];
     }
 
-    CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+    CPDistributedMessagingCenter *centre = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
     rocketbootstrap_distributedmessagingcenter_apply(centre);
     NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/AuthenticateApp" userInfo:@{ @"appIdentifier" : appIdentifier, @"customMessage" : customMessage }];
     return [reply[@"isProtected"] boolValue];
@@ -58,7 +58,7 @@ void authenticationCancelled(CFNotificationCenterRef center, void *observer, CFS
     }
 
     authHandler = [handler copy];
-    CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+    CPDistributedMessagingCenter *centre = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
     rocketbootstrap_distributedmessagingcenter_apply(centre);
     NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/AuthenticateFunction" userInfo:@{ @"alertType" : [NSNumber numberWithInt:alertType] }];
     return [reply[@"isProtected"] boolValue];

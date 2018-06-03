@@ -42,13 +42,8 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 		addObserver(preferencesChangedCallback,kPrefsChangedNotification);
 	});
 
-	_center = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
-	void *handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
-	if (handle) {
-		void (*rocketbootstrap_distributedmessagingcenter_apply)(CPDistributedMessagingCenter *) = (void(*)(CPDistributedMessagingCenter *))dlsym(handle, "rocketbootstrap_distributedmessagingcenter_apply");
-		rocketbootstrap_distributedmessagingcenter_apply(_center);
-		dlclose(handle);
-	}
+	_center = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+	rocketbootstrap_distributedmessagingcenter_apply(_center);
 
 	_prefs = [NSDictionary dictionaryWithContentsOfFile:ASPreferencesFilePath];
 	if (![self passcodeEnabled] && ![self touchIDEnabled] && %c(SpringBoard)) {
@@ -78,7 +73,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	if (%c(BiometricKit)) {
 		return [[%c(BiometricKit) manager] isTouchIDCapable];
 	} else {
-		CPDistributedMessagingCenter *centre = [%c(CPDistributedMessagingCenter) centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+		CPDistributedMessagingCenter *centre = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
 		rocketbootstrap_distributedmessagingcenter_apply(centre);
 		NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice" userInfo:nil];
 		return [reply[@"isTouchIDDevice"] boolValue];
@@ -87,7 +82,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 + (BOOL)devicePasscodeSet {
 	// From http://pastebin.com/T9YwEjnL
-	NSData* secret = [@"Device has passcode set?" dataUsingEncoding:NSUTF8StringEncoding];
+	NSData *secret = [@"Device has passcode set?" dataUsingEncoding:NSUTF8StringEncoding];
 	NSDictionary *attributes = @{
 		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
 		(__bridge id)kSecAttrService: @"LocalDeviceServices",
@@ -117,13 +112,13 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (id)objectForKey:(NSString *)key {
-	return [_prefs objectForKey:key];
+	return _prefs[key];
 }
 
 - (void)setObject:(id)object forKey:(NSString *)key {
-	NSMutableDictionary *tempPrefs = [NSMutableDictionary dictionaryWithDictionary:_prefs];
-	[tempPrefs setObject:object forKey:key];
-	[tempPrefs writeToFile:ASPreferencesFilePath atomically:YES];
+	NSMutableDictionary *mutablePrefs = [NSMutableDictionary dictionaryWithDictionary:_prefs];
+	mutablePrefs[key] = object;
+	[mutablePrefs writeToFile:ASPreferencesFilePath atomically:YES];
 	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR(kPrefsChangedNotification), NULL, NULL, YES);
 }
 

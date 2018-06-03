@@ -31,34 +31,36 @@ static NSString *const ImageData = @"iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0o
 
     NSBundle *bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
 
-    [[ASCommon sharedInstance] authenticateFunction:ASAuthenticationAlertDynamicSelection dismissedHandler:^(BOOL wasCancelled){
-        if (!wasCancelled) {
-            BOOL appSecureValue = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID];
-
-            NSMutableDictionary *dict = [[ASPreferences sharedInstance] objectForKey:kSecuredAppsKey];
-            [dict setObject:[NSNumber numberWithBool:!appSecureValue] forKey:frontmostApp.bundleIdentifier];
-            [[ASPreferences sharedInstance] setObject:dict forKey:kSecuredAppsKey];
-
-            NSString *title = nil;
-            NSString *description = nil;
-            if (appSecureValue) {
-                title = [bundle localizedStringForKey:@"DISABLE_AUTH" value:nil table:@"Localizable"];
-                NSString *format = [bundle localizedStringForKey:@"DISABLE_AUTH_FOR" value:nil table:@"Localizable"];
-                description = [NSString stringWithFormat:format, frontmostApp.displayName];
-            } else {
-                title = [bundle localizedStringForKey:@"ENABLE_AUTH" value:nil table:@"Localizable"];
-                NSString *format = [bundle localizedStringForKey:@"ENABLE_AUTH_FOR" value:nil table:@"Localizable"];
-                description = [NSString stringWithFormat:format, frontmostApp.displayName];
-            }
-
-            ASAlert *alertView = [[%c(ASAlert) alloc] initWithTitle:title message:description delegate:nil];
-            [alertView addButtonWithTitle:@"OK"];
-            [alertView show];
+    [[ASCommon sharedInstance] authenticateFunction:ASAuthenticationAlertDynamicSelection dismissedHandler:^(BOOL wasCancelled) {
+        if (wasCancelled) {
+            return;
         }
+
+        BOOL appSecureValue = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID];
+
+        NSMutableDictionary *dict = [[ASPreferences sharedInstance] objectForKey:kSecuredAppsKey];
+        dict[frontmostApp.bundleIdentifier] = @(!appSecureValue);
+        [[ASPreferences sharedInstance] setObject:dict forKey:kSecuredAppsKey];
+
+        NSString *title = nil;
+        NSString *description = nil;
+        if (appSecureValue) {
+            title = [bundle localizedStringForKey:@"DISABLE_AUTH" value:nil table:@"Localizable"];
+            NSString *format = [bundle localizedStringForKey:@"DISABLE_AUTH_FOR" value:nil table:@"Localizable"];
+            description = [NSString stringWithFormat:format, frontmostApp.displayName];
+        } else {
+            title = [bundle localizedStringForKey:@"ENABLE_AUTH" value:nil table:@"Localizable"];
+            NSString *format = [bundle localizedStringForKey:@"ENABLE_AUTH_FOR" value:nil table:@"Localizable"];
+            description = [NSString stringWithFormat:format, frontmostApp.displayName];
+        }
+
+        ASAlert *alertView = [[ASAlert alloc] initWithTitle:title message:description delegate:nil];
+        [alertView addButtonWithTitle:@"OK"];
+        [alertView show];
     }];
 }
 
--(void)activator:(LAActivator *)activator abortEvent:(LAEvent *)event {
+- (void)activator:(LAActivator *)activator abortEvent:(LAEvent *)event {
     return;
 }
 

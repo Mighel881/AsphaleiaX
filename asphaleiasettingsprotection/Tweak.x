@@ -6,10 +6,6 @@
 #import "../ASPreferences.h"
 #import "../NSTimer+Blocks.h"
 
-@interface PSSpecifier ()
-@property (assign,nonatomic) Class detailControllerClass;
-@end
-
 @interface PSUIPrefsListController : PSListController
 - (void)lazyLoadBundle:(PSSpecifier *)specifier;
 - (id)table;

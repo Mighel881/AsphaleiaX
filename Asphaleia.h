@@ -102,20 +102,17 @@
 @property (nonatomic,copy) SBSwitchAppList * switchAppList;
 @end
 
-@interface SBIcon : NSObject
+@interface SBIcon ()
 // 8.4+
 - (NSString *)displayNameForLocation:(int)location;
 // 8.3+
-- (void)launchFromLocation:(int)location context:(id)context;
 // 8.1 and lower
 - (void)launchFromLocation:(int)location;
 - (NSString *)displayName;
 // All
 - (BOOL)isFolderIcon;
-- (BOOL)isApplicationIcon;
 - (NSString *)applicationBundleID;
 - (void)setBadge:(id)badge;
-- (id)getIconImage:(int)image;
 - (BOOL)isDownloadingIcon;
 @end
 
@@ -152,6 +149,7 @@
 @end
 
 @interface SBIconView : UIView
++ (CGSize)defaultIconSize;
 @property(assign, nonatomic) int location;
 @property(retain, nonatomic) SBIcon *icon;
 @property(assign, nonatomic) BOOL isEditing;
@@ -361,18 +359,15 @@
 - (NSUInteger)numberOfDigits;
 @end
 
-@interface UIAlertController ()
-@end
-
 @interface _SBAlertController : UIAlertController
 @end
 
-@interface SBAlertItem : NSObject {
-	_SBAlertController* _alertController;
-}
-- (_SBAlertController*)alertController;
+@interface SBAlertItem : NSObject
++ (void)activateAlertItem:(SBAlertItem *)alertItem;
+- (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode;
 - (void)dismiss;
-- (void)configure:(BOOL)arg1 requirePasscodeForActions:(BOOL)arg2;
+- (void)deactivateForButton; 
+- (_SBAlertController *)alertController; 
 @end
 
 @class _SBUIBiometricKitInterface;

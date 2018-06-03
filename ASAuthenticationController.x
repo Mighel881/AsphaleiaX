@@ -46,7 +46,7 @@ static NSBundle *bundle;
       message = [bundle localizedStringForKey:@"SCAN_FINGER_OPEN" value:nil table:@"Localizable"];
     }
 
-    ASAuthenticationAlert *alertView = [[%c(ASAuthenticationAlert) alloc] initWithApplication:appIdentifier message:message delegate:delegate];
+    ASAuthenticationAlert *alertView = [[ASAuthenticationAlert alloc] initWithApplication:appIdentifier message:message delegate:delegate];
     alertView.tag = ASAuthenticationItem;
 
     currentAuthAppBundleID = appIdentifier;
@@ -55,7 +55,7 @@ static NSBundle *bundle;
 }
 
 - (ASAuthenticationAlert *)returnAuthenticationAlertOfType:(ASAuthenticationAlertType)alertType delegate:(id<ASAuthenticationAlertDelegate>)delegate {
-    NSBundle *asphaleiaAssets = [[NSBundle alloc] initWithPath:ASBundlePath];
+    NSBundle *asphaleiaAssets = [NSBundle bundleWithPath:ASBundlePath];
 
     NSString *title;
     UIImage *iconImage;
@@ -132,7 +132,7 @@ static NSBundle *bundle;
     UIImageView *imgView = [[UIImageView alloc] initWithImage:iconImage];
     imgView.frame = CGRectMake(0,0,iconImage.size.width,iconImage.size.height);
 
-    ASAuthenticationAlert *alertView = [[%c(ASAuthenticationAlert) alloc] initWithTitle:title message:[bundle localizedStringForKey:@"SCAN_FINGER_ACCESS" value:nil table:@"Localizable"] icon:imgView smallIcon:YES delegate:delegate];
+    ASAuthenticationAlert *alertView = [[ASAuthenticationAlert alloc] initWithTitle:title message:[bundle localizedStringForKey:@"SCAN_FINGER_ACCESS" value:nil table:@"Localizable"] icon:imgView smallIcon:YES delegate:delegate];
     alertView.tag = tag;
 
     return alertView;
@@ -204,7 +204,7 @@ static NSBundle *bundle;
 
     if ([ASPreferences sharedInstance].asphaleiaDisabled || [ASPreferences sharedInstance].itemSecurityDisabled || [[iconView icon] isDownloadingIcon]) {
         [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
-        [iconView setHighlighted:NO];
+        iconView.highlighted = NO;
         return NO;
     }
 
@@ -217,7 +217,7 @@ static NSBundle *bundle;
     currentAuthAppBundleID = iconView.icon.applicationBundleID;
 
     if (_fingerglyph && _currentHSIconView && [[ASPreferences sharedInstance] securityLevelForApp:currentAuthAppBundleID] != 2) {
-        [iconView setHighlighted:NO];
+        iconView.highlighted = NO;
         if ([iconView isEqual:_currentHSIconView]) {
             [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:iconView eventBlock:^void(BOOL authenticated){
                 if (authenticated) {
@@ -230,10 +230,10 @@ static NSBundle *bundle;
 
         return YES;
     } else if (([iconView.icon isApplicationIcon] && ![[ASPreferences sharedInstance] requiresSecurityForApp:iconView.icon.applicationBundleID]) || ([iconView.icon isFolderIcon] && ![[ASPreferences sharedInstance] requiresSecurityForFolder:displayName])) {
-        [iconView setHighlighted:NO];
+        iconView.highlighted = NO;
         return NO;
     } else if ((![[ASPreferences sharedInstance] touchIDEnabled] || [[ASPreferences sharedInstance] securityLevelForApp:currentAuthAppBundleID] == 0) && [[ASPreferences sharedInstance] passcodeEnabled]) {
-        [iconView setHighlighted:NO];
+        iconView.highlighted = NO;
         [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:iconView eventBlock:^void(BOOL authenticated){
 
             if (authenticated){
