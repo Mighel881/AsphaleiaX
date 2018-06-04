@@ -1,17 +1,18 @@
 #import "ASPasscodeHandler.h"
+#import "Asphaleia.h"
 #import "ASCommon.h"
 #import "ASPreferences.h"
 #import <AudioToolbox/AudioServices.h>
-#import "Asphaleia.h"
+#import <UIKit/UIImage+Private.h>
 
 @interface ASPasscodeHandler ()
-@property SBUIPasscodeLockViewSimpleFixedDigitKeypad *passcodeView;
-@property UIWindow *passcodeWindow;
-@property (nonatomic, strong) ASPasscodeHandlerEventBlock eventBlock;
+@property (strong, nonatomic) SBUIPasscodeLockViewSimpleFixedDigitKeypad *passcodeView;
+@property (strong, nonatomic) UIWindow *passcodeWindow;
+@property (copy, nonatomic) ASPasscodeHandlerEventBlock eventBlock;
 @end
 
 void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	[[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated){
+	[[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated) {
 		if (authenticated) {
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.passcodeauthsuccess"), NULL, NULL, YES);
 		} else {
@@ -28,16 +29,16 @@ static NSBundle *bundle;
 	static ASPasscodeHandler *sharedInstance = nil;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-	  sharedInstance = [self new];
-	  addObserver(showPasscodeView,"com.a3tweaks.asphaleia.showpasscodeview");
+		sharedInstance = [[self alloc] init];
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, showPasscodeView, CFSTR("com.a3tweaks.asphaleia.showpasscodeview"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 		bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
 	});
 	return sharedInstance;
 }
 
 - (void)showInKeyWindowWithPasscode:(NSString *)passcode iconView:(SBIconView *)iconView eventBlock:(ASPasscodeHandlerEventBlock)eventBlock {
-	self.passcode = passcode;
-	self.eventBlock = [eventBlock copy];
+	_passcode = passcode;
+	self.eventBlock = eventBlock;
 
 	if (self.passcodeView && self.passcodeWindow) {
 		[self.passcodeView removeFromSuperview];
@@ -49,51 +50,70 @@ static NSBundle *bundle;
 	self.passcodeWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.passcodeWindow.windowLevel = UIWindowLevelAlert;
 	self.passcodeWindow._secure = YES;
-	self.passcodeView = [[objc_getClass("SBUIPasscodeLockViewSimpleFixedDigitKeypad") alloc] initWithLightStyle:NO numberOfDigits:passcode.length];
+
+	self.passcodeView = [[SBUIPasscodeLockViewSimpleFixedDigitKeypad alloc] initWithLightStyle:NO numberOfDigits:passcode.length];
+
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:2030 graphicsQuality:100];
+	UIColor *combinedTintColor = settings.combinedTintColor;
+	UIColor *customBackgroundColor = [combinedTintColor colorWithAlphaComponent:2030];
+	self.passcodeView.customBackgroundColor = customBackgroundColor;
+	self.passcodeView.backgroundAlpha = [combinedTintColor alphaComponent];
+
+	SBWallpaperLegibilitySettingsProvider *settingsProvider = [[NSClassFromString(@"SBWallpaperLegibilitySettingsProvider") alloc] initWithVariant:0];
+	self.passcodeView.backgroundLegibilitySettingsProvider = settingsProvider;
+
 	self.passcodeView.showsEmergencyCallButton = NO;
+	self.passcodeView.screenOn = YES;
 	self.passcodeView.delegate = self;
 
-	UIVisualEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-	UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-
-	effectView.frame = self.passcodeWindow.bounds;
-	[self.passcodeWindow insertSubview:effectView atIndex:0];
-
-	self.passcodeView.backgroundAlpha = 0.f;
-
-	UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[iconView.icon getIconImage:1]];
-	iconImageView.contentMode = UIViewContentModeScaleAspectFill;
-	iconImageView.frame = CGRectMake(0,0,40,40);
-	[self.passcodeView _layoutStatusView];
-	iconImageView.center = CGPointMake(CGRectGetMidX(self.passcodeWindow.bounds), self.passcodeView.statusTitleView.center.y / 2 - 5);
-
-	self.passcodeView.luminosityBoost = 0.33;
-	[self.passcodeView _evaluateLuminance];
-
-	[self.passcodeWindow addSubview:iconImageView];
+	self.passcodeView.frame = [UIScreen mainScreen].bounds;
+	self.passcodeView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[self.passcodeWindow addSubview:self.passcodeView];
+
+	Class SBPasscodeBackgroundViewClass = NSClassFromString(@"SBUIBackgroundView") ?: NSClassFromString(@"SBDashBoardBackgroundView");
+	SBDashBoardBackgroundView *backgroundView = [[SBPasscodeBackgroundViewClass alloc] initWithFrame:self.passcodeView.bounds];
+	backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	backgroundView.backgroundStyle = 3;
+	[self.passcodeWindow addSubview:backgroundView];
+	[self.passcodeWindow sendSubviewToBack:backgroundView];
+
+	if (iconView) {
+		NSString *identifier = [iconView.icon applicationBundleID];
+		UIImage *iconImage = [UIImage _applicationIconImageForBundleIdentifier:identifier format:0 scale:[UIScreen mainScreen].scale];
+		UIImageView *iconImageView = [[UIImageView alloc] initWithImage:iconImage];
+		iconImageView.contentMode = UIViewContentModeScaleAspectFill;
+		iconImageView.frame = CGRectMake(0, 0, 40, 40);
+		[self.passcodeView _layoutStatusView];
+		iconImageView.center = CGPointMake(CGRectGetMidX(self.passcodeWindow.bounds), self.passcodeView.statusTitleView.center.y / 2 - 5);
+		[self.passcodeWindow addSubview:iconImageView];
+		[self.passcodeWindow bringSubviewToFront:iconImageView];
+	}
+
 	self.passcodeWindow.alpha = 0.f;
 	[self.passcodeWindow makeKeyAndVisible];
 	[self.passcodeView updateStatusText:[bundle localizedStringForKey:@"ENTER_PASS" value:nil table:@"Localizable"] subtitle:nil animated:NO];
 	[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
 		self.passcodeWindow.alpha = 1.f;
 	} completion:nil];
+	[self.passcodeView becomeFirstResponder];
 }
 
 - (void)passcodeLockViewPasscodeEntered:(SBUIPasscodeLockViewSimpleFixedDigitKeypad *)passcodeView {
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 		if ([passcodeView.passcode length] == [self.passcode length] && [passcodeView.passcode isEqualToString:self.passcode]) {
-				[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-						self.passcodeWindow.alpha = 0.f;
-				} completion:^(BOOL finished){
-						if (finished) {
-								[self.passcodeView removeFromSuperview];
-								self.passcodeWindow.hidden = YES;
-								self.passcodeView = nil;
-								self.passcodeWindow = nil;
-								self.eventBlock(YES);
-						}
-				}];
+			[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+				self.passcodeWindow.alpha = 0.f;
+			} completion:^(BOOL finished) {
+				if (!finished) {
+					return;
+				}
+
+				[self.passcodeView removeFromSuperview];
+				self.passcodeWindow.hidden = YES;
+				self.passcodeView = nil;
+				self.passcodeWindow = nil;
+				self.eventBlock(YES);
+			}];
 		} else if ([passcodeView.passcode length] == [self.passcode length] && ![passcodeView.passcode isEqualToString:self.passcode]) {
 			[passcodeView resetForFailedPasscode];
 		}
@@ -104,13 +124,15 @@ static NSBundle *bundle;
 	[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
 		self.passcodeWindow.alpha = 0.f;
 	} completion:^(BOOL finished) {
-		if (finished) {
-			[self.passcodeView removeFromSuperview];
-			self.passcodeWindow.hidden = YES;
-			self.passcodeView = nil;
-			self.passcodeWindow = nil;
-			self.eventBlock(NO);
+		if (!finished) {
+			return;
 		}
+
+		[self.passcodeView removeFromSuperview];
+		self.passcodeWindow.hidden = YES;
+		self.passcodeView = nil;
+		self.passcodeWindow = nil;
+		self.eventBlock(NO);
 	}];
 }
 
@@ -121,14 +143,17 @@ static NSBundle *bundle;
 
 	[UIView animateWithDuration:0.15f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
 		self.passcodeWindow.alpha = 0.f;
-	} completion:^(BOOL finished){
-		if (finished) {
-			[self.passcodeView removeFromSuperview];
-			self.passcodeWindow.hidden = YES;
-			self.passcodeView = nil;
-			self.passcodeWindow = nil;
-			self.eventBlock(NO);
+	} completion:^(BOOL finished) {
+		if (!finished) {
+			return;
 		}
+
+		[self.passcodeView resignFirstResponder];
+		[self.passcodeView removeFromSuperview];
+		self.passcodeWindow.hidden = YES;
+		self.passcodeView = nil;
+		self.passcodeWindow = nil;
+		self.eventBlock(NO);
 	}];
 }
 

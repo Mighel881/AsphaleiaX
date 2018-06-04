@@ -103,12 +103,9 @@
 @end
 
 @interface SBIcon ()
+@property (copy, nonatomic, readonly) NSString *displayName;
 // 8.4+
-- (NSString *)displayNameForLocation:(int)location;
-// 8.3+
-// 8.1 and lower
-- (void)launchFromLocation:(int)location;
-- (NSString *)displayName;
+- (NSString *)displayNameForLocation:(NSInteger)location;
 // All
 - (BOOL)isFolderIcon;
 - (NSString *)applicationBundleID;
@@ -332,13 +329,22 @@
 - (void)passcodeLockViewPasscodeEnteredViaMesa:(SBUIPasscodeLockViewBase *)passcodeLockView;
 @end
 
+@protocol SBFLegibilitySettingsProvider <NSObject>
+
+@end
+
 @interface SBUIPasscodeLockViewBase : UIView
 @property (assign, setter=_setLuminosityBoost:, getter=_luminosityBoost, nonatomic) CGFloat luminosityBoost;
 @property (weak, nonatomic) id<SBUIPasscodeLockViewDelegate> delegate;
 @property (assign, nonatomic) CGFloat backgroundAlpha;
 @property (assign, nonatomic) BOOL showsEmergencyCallButton;
 @property (nonatomic, readonly) NSString *passcode;
+@property (nonatomic,retain) UIColor *customBackgroundColor;
+@property (nonatomic,retain) id<SBFLegibilitySettingsProvider> backgroundLegibilitySettingsProvider;
+@property (assign,getter=isScreenOn,nonatomic) BOOL screenOn;
 - (void)_evaluateLuminance;
+- (BOOL)resignFirstResponder;
+- (BOOL)becomeFirstResponder;
 @end
 
 @interface SBUIPasscodeLockViewWithKeypad : SBUIPasscodeLockViewBase
@@ -429,4 +435,30 @@
 - (NCNotificationShortLookView*)_notificationShortLookViewIfLoaded;
 - (CGRect)_frameForTransitionViewInScrollView;
 - (void)_updateScrollViewContentSize;
+@end
+
+@interface _UIBackdropViewSettings : NSObject
+@property (nonatomic,readonly) UIColor * combinedTintColor;
+
++ (instancetype)settingsForPrivateStyle:(NSInteger)style graphicsQuality:(NSInteger)quality;
+@end
+
+@interface UIColor ()
+
+- (CGFloat)alphaComponent;
+
+@end
+
+@interface SBDashBoardBackgroundView : UIView
+@property (assign, nonatomic) NSInteger backgroundStyle;
+@end
+
+@interface SBUIBackgroundView : UIView
+@property (assign,nonatomic) NSInteger backgroundStyle;
+@end
+
+@interface SBWallpaperLegibilitySettingsProvider : NSObject <SBFLegibilitySettingsProvider>
+
+- (instancetype)initWithVariant:(NSInteger)variant;
+
 @end
