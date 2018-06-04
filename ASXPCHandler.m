@@ -13,30 +13,35 @@
 @implementation ASXPCHandler
 
 + (instancetype)sharedInstance {
-	static ASXPCHandler *sharedHandlerObj = nil;
+	static ASXPCHandler *sharedInstance = nil;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-		sharedHandlerObj = [[self alloc] init];
-		[sharedHandlerObj loadServer];
+		sharedInstance = [[self alloc] init];
 	});
-	return sharedHandlerObj;
+
+	return sharedInstance;
 }
 
-- (void)loadServer {
-	_messagingServer = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
-	rocketbootstrap_distributedmessagingcenter_apply(_messagingServer);
+- (instancetype)init {
+	self = [super init];
+	if (self) {
+		_messagingServer = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
+		rocketbootstrap_distributedmessagingcenter_apply(_messagingServer);
 
-	[_messagingServer runServerOnCurrentThread];
+		[_messagingServer runServerOnCurrentThread];
 
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/CheckSlideUpControllerActive" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/ReadAsphaleiaState" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/SetUserAuthorisedApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/AuthenticateApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/AuthenticateFunction" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/GetCurrentAuthAlert" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/GetCurrentTempUnlockedApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
-	[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/CheckSlideUpControllerActive" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/ReadAsphaleiaState" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/SetUserAuthorisedApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/AuthenticateApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/AuthenticateFunction" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/GetCurrentAuthAlert" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/GetCurrentTempUnlockedApp" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+		[_messagingServer registerForMessageName:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+	}
+
+	return self;
 }
 
 - (NSDictionary *)handleMessageNamed:(NSString *)name withUserInfo:(NSDictionary *)userInfo {
@@ -56,21 +61,15 @@
 		[ASAuthenticationController sharedInstance].appUserAuthorisedID = userInfo[@"appIdentifier"];
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/AuthenticateApp"]) {
 		BOOL isProtected = [[ASAuthenticationController sharedInstance] authenticateAppWithDisplayIdentifier:userInfo[@"appIdentifier"] customMessage:userInfo[@"customMessage"] dismissedHandler:^(BOOL wasCancelled) {
-		if (wasCancelled) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.xpc/AuthCancelled"), NULL, NULL, YES);
-		} else {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.xpc/AuthSucceeded"), NULL, NULL, YES);
-		}
+			NSString *name = wasCancelled ? @"com.a3tweaks.asphaleia.xpc/AuthCancelled" : @"com.a3tweaks.asphaleia.xpc/AuthSucceeded";
+			[[NSNotificationCenter defaultCenter] postNotificationName:name object:nil];
 		}];
 
 		return @{ @"isProtected" : @(isProtected) };
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/AuthenticateFunction"]) {
 		BOOL isProtected = [[ASAuthenticationController sharedInstance] authenticateFunction:[userInfo[@"alertType"] intValue] dismissedHandler:^(BOOL wasCancelled) {
-		if (wasCancelled) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.xpc/AuthCancelled"), NULL, NULL, YES);
-		} else {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.xpc/AuthSucceeded"), NULL, NULL, YES);
-		}
+			NSString *name = wasCancelled ? @"com.a3tweaks.asphaleia.xpc/AuthCancelled" : @"com.a3tweaks.asphaleia.xpc/AuthSucceeded";
+			[[NSNotificationCenter defaultCenter] postNotificationName:name object:nil];
 		}];
 
 		return @{ @"isProtected" : @(isProtected) };
@@ -94,11 +93,3 @@
 }
 
 @end
-
-%ctor {
-	if (!IN_SPRINGBOARD) {
-		return;
-	}
-
-	[ASXPCHandler sharedInstance];
-}

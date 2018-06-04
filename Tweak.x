@@ -746,7 +746,11 @@ BOOL currentSwitchAuthenticated;
 
 	dlopen("/Library/MobileSubstrate/DynamicLibraries/Flipswitch.dylib", RTLD_NOW);
 	loadPreferences();
+
+	[ASXPCHandler sharedInstance];
 	[[ASControlPanel sharedInstance] load];
 	[[ASActivatorListener sharedInstance] load];
+
+
 	%init;
 }

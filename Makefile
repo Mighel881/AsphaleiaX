@@ -3,7 +3,7 @@ export TARGET = iphone:11.2:10.0
 INSTALL_TARGET_PROCESSES = Preferences
 
 ifeq ($(RESPRING),1)
-INSTALL_TARGET_PROCESSES += SpringBoard
+	INSTALL_TARGET_PROCESSES += SpringBoard
 endif
 
 ifeq ($(IPAD),1)
@@ -24,9 +24,9 @@ libasphaleiaui_INSTALL_PATH = /usr/lib
 libasphaleiaui_LIBRARIES = rocketbootstrap
 
 TWEAK_NAME = Asphaleia
-Asphaleia_FILES = Tweak.x ASXPCHandler.x ASTouchIDController.x ASAuthenticationController.x ASAuthenticationAlert.x ASAlert.m ASControlPanel.x ASPasscodeHandler.m ASTouchWindow.m ASActivatorListener.x
+Asphaleia_FILES = Tweak.x ASXPCHandler.m ASTouchIDController.x ASAuthenticationController.x ASAuthenticationAlert.x ASAlert.m ASControlPanel.x ASPasscodeHandler.m ASTouchWindow.m ASActivatorListener.x
 Asphaleia_FRAMEWORKS = UIKit CoreGraphics AudioToolbox
-Asphaleia_PRIVATE_FRAMEWORKS = AppSupport SpringBoardUI
+Asphaleia_PRIVATE_FRAMEWORKS = AppSupport SpringBoardUI SpringBoardUIServices
 Asphaleia_LDFLAGS = -L$(THEOS_OBJ_DIR)
 Asphaleia_LIBRARIES = asphaleiaui rocketbootstrap
 
