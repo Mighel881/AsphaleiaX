@@ -2,7 +2,6 @@
 #import <objc/message.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 
-#define addObserver(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce)
 #define loadPreferences() preferencesChangedCallback(NULL, NULL, NULL, NULL, NULL)
 
 void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo);

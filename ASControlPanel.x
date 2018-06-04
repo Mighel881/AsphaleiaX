@@ -38,7 +38,7 @@ static NSBundle *bundle;
 
 - (void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
     SBApplication *frontmostApp = [(SpringBoard *)[UIApplication sharedApplication] _accessibilityFrontMostApplication];
-    NSString *bundleID = [frontmostApp bundleIdentifier];
+    NSString *bundleID = frontmostApp.bundleIdentifier;
     if ((bundleID && ![[ASPreferences sharedInstance] allowControlPanelInApps]) || ![[ASPreferences sharedInstance] enableControlPanel]) {
         event.handled = YES;
         return;
@@ -56,7 +56,6 @@ static NSBundle *bundle;
             NSString *removeApp = [bundle localizedStringForKey:@"REMOVE_APP" value:nil table:@"Localizable"];
             NSString *addApp = [bundle localizedStringForKey:@"ADD_APP" value:nil table:@"Localizable"];
             addRemoveFromSecureAppsTitle = [[ASPreferences sharedInstance] securityEnabledForApp:bundleID] ? removeApp : addApp;
-            HBLogDebug(@"%@", addRemoveFromSecureAppsTitle);
         }
 
         NSMutableArray *buttonTitleArray = [NSMutableArray arrayWithObjects:mySecuredAppsTitle, enableGlobalAppsTitle, nil];
@@ -120,7 +119,7 @@ static NSBundle *bundle;
 }
 
 - (NSArray *)activator:(LAActivator *)activator requiresCompatibleEventModesForListenerWithName:(NSString *)listenerName {
-    return [NSArray arrayWithObjects:@"springboard", @"application", nil];
+    return @[@"springboard", @"application"];
 }
 
 - (NSData *)activator:(LAActivator *)activator requiresSmallIconDataForListenerName:(NSString *)listenerName scale:(CGFloat *)scale {

@@ -8,7 +8,6 @@
 
 static NSString *const ASPreferencesFilePath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
 
-#define kPrefsChangedNotification "com.a3tweaks.asphaleia/ReloadPrefs"
 #define kDisableAsphaleiaNotification "com.a3tweaks.asphaleia/DisableAsphaleia"
 #define kEnableAsphaleiaNotification "com.a3tweaks.asphaleia/EnableAsphaleia"
 
@@ -30,7 +29,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	static ASPreferences *sharedInstance = nil;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-			sharedInstance = [self new];
+		sharedInstance = [self new];
 	});
 
 	return sharedInstance;
@@ -39,7 +38,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 - (void)_loadPreferences {
 	static dispatch_once_t token = 0;
 	dispatch_once(&token, ^{
-		addObserver(preferencesChangedCallback,kPrefsChangedNotification);
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, preferencesChangedCallback, CFSTR("com.a3tweaks.asphaleia/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	});
 
 	_center = [CPDistributedMessagingCenter centerNamed:@"com.a3tweaks.asphaleia.xpc"];
@@ -119,7 +118,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	NSMutableDictionary *mutablePrefs = [NSMutableDictionary dictionaryWithDictionary:_prefs];
 	mutablePrefs[key] = object;
 	[mutablePrefs writeToFile:ASPreferencesFilePath atomically:YES];
-	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR(kPrefsChangedNotification), NULL, NULL, YES);
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia/ReloadPrefs"), NULL, NULL, YES);
 }
 
 - (BOOL)passcodeEnabled {
@@ -244,7 +243,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)increasePhotosProtectMessageCount {
-	[self setObject:[NSNumber numberWithInt:[[self objectForKey:kPhotosMessageCount] intValue]+1] forKey:kPhotosMessageCount];
+	[self setObject:@([[self objectForKey:kPhotosMessageCount] intValue] + 1) forKey:kPhotosMessageCount];
 }
 
 - (BOOL)securityEnabledForApp:(NSString *)app {
@@ -379,7 +378,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 		return;
 	}
 
-	[_center sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState" userInfo:@{@"asphaleiaDisabled" : [NSNumber numberWithBool:value]}];
+	[_center sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState" userInfo:@{@"asphaleiaDisabled" : @(value)}];
 }
 
 - (BOOL)itemSecurityDisabled {
@@ -397,7 +396,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 		return;
 	}
 
-	[_center sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState" userInfo:@{@"itemSecurityDisabled" : [NSNumber numberWithBool:value]}];
+	[_center sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/SetAsphaleiaState" userInfo:@{@"itemSecurityDisabled" : @(value)}];
 }
 
 @end

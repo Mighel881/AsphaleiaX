@@ -26,10 +26,11 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 	static ASTouchIDController *sharedInstance = nil;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-		sharedInstance = [self new];
-		addObserver(startMonitoringNotification,"com.a3tweaks.asphaleia.startmonitoring");
-		addObserver(stopMonitoringNotification,"com.a3tweaks.asphaleia.stopmonitoring");
+		sharedInstance = [[self alloc] init];
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, startMonitoringNotification, CFSTR("com.a3tweaks.asphaleia.startmonitoring"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, stopMonitoringNotification, CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	});
+
 	// Provide instance
 	return sharedInstance;
 }
