@@ -11,14 +11,6 @@
 - (void)authenticated:(BOOL)wasCancelled;
 @end
 
-void authenticationSuccessful(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-    [[ASCommon sharedInstance] authenticated:NO];
-}
-
-void authenticationCancelled(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-    [[ASCommon sharedInstance] authenticated:YES];
-}
-
 @implementation ASCommon
 
 + (instancetype)sharedInstance {
@@ -26,11 +18,24 @@ void authenticationCancelled(CFNotificationCenterRef center, void *observer, CFS
     static dispatch_once_t token;
     dispatch_once(&token, ^{
         sharedCommonObj = [[self alloc] init];
-        addObserver(authenticationSuccessful, "com.a3tweaks.asphaleia.xpc/AuthSucceeded");
-        addObserver(authenticationCancelled, "com.a3tweaks.asphaleia.xpc/AuthCancelled");
     });
 
     return sharedCommonObj;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        [center addObserverForName:@"com.a3tweaks.asphaleia.xpc/AuthSucceeded" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+            [self authenticated:NO];
+        }];
+        [center addObserverForName:@"com.a3tweaks.asphaleia.xpc/AuthCancelled" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+            [self authenticated:YES];
+        }];
+    }
+
+    return self;
 }
 
 - (BOOL)displayingAuthAlert {

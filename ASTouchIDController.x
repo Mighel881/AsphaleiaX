@@ -44,31 +44,26 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 		case TouchIDFingerDown: {
 			asphaleiaLogMsg(@"Finger down");
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.fingerdown" object:self];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.fingerdown"), NULL, NULL, YES);
 			break;
 		}
 		case TouchIDFingerUp: {
 			asphaleiaLogMsg(@"Finger up");
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.fingerup" object:self];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.fingerup"), NULL, NULL, YES);
 			break;
 		}
 		case TouchIDFingerHeld:
 			asphaleiaLogMsg(@"Finger held");
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.fingerheld" object:self];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.fingerheld"), NULL, NULL, YES);
 			break;
 		case TouchIDMatched:
 			asphaleiaLogMsg(@"Finger matched");
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.authsuccess" object:self];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.authsuccess"), NULL, NULL, YES);
 			[self stopMonitoring];
 			_shouldBlockLockscreenMonitor = NO;
 			break;
 		case TouchIDNotMatched: {
 			asphaleiaLogMsg(@"Authentication failed");
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.authfailed" object:self];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.authfailed"), NULL, NULL, YES);
 			if ([[ASPreferences sharedInstance] vibrateOnIncorrectFingerprint]) {
 				AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 			}
@@ -78,7 +73,6 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 		case 10: {
 			asphaleiaLogMsg(@"Authentication failed");
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.authfailed" object:self];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.authfailed"), NULL, NULL, YES);
 			if ([[ASPreferences sharedInstance] vibrateOnIncorrectFingerprint]) {
 				AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 			}
