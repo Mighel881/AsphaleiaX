@@ -1,10 +1,9 @@
+#import <UIKit/UIKit.h>
 #import <Preferences/PSSpecifier.h>
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>
 #import "../ASCommon.h"
-#import <UIKit/UIKit.h>
 #import "../ASPreferences.h"
-#import "../NSTimer+Blocks.h"
 
 @interface PSUIPrefsListController : PSListController
 - (void)lazyLoadBundle:(PSSpecifier *)specifier;

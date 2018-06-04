@@ -1,18 +1,15 @@
 #import <UIKit/UIKit.h>
-#import "ASTouchIDController.h"
-#import "ASAuthenticationController.h"
-
-#import "ASPreferences.h"
-#import "substrate.h"
-#import <AudioToolbox/AudioServices.h>
-#import "ASActivatorListener.h"
-#import "ASControlPanel.h"
-#import "NSTimer+Blocks.h"
-#import "ASPasscodeHandler.h"
-#import "ASTouchWindow.h"
-#import "Asphaleia.h"
 #import <rocketbootstrap/rocketbootstrap.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <AudioToolbox/AudioServices.h>
+#import "Asphaleia.h"
+#import "ASTouchIDController.h"
+#import "ASAuthenticationController.h"
+#import "ASPreferences.h"
+#import "ASActivatorListener.h"
+#import "ASControlPanel.h"
+#import "ASPasscodeHandler.h"
+#import "ASTouchWindow.h"
 #import "ASXPCHandler.h"
 
 static NSString *const ASBundlePath = @"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle";
@@ -230,9 +227,9 @@ UIWindow *blurredWindow;
 	%orig;
 	if ([[ASPreferences sharedInstance] delayAppSecurity]) {
 		[ASPreferences sharedInstance].itemSecurityDisabled = YES;
-		currentTempGlobalDisableTimer = [NSTimer scheduledTimerWithTimeInterval:[[ASPreferences sharedInstance] appSecurityDelayTime] block:^{
+		currentTempGlobalDisableTimer = [NSTimer scheduledTimerWithTimeInterval:[[ASPreferences sharedInstance] appSecurityDelayTime] repeats:NO block:^(NSTimer *timer) {
 			[ASPreferences sharedInstance].itemSecurityDisabled = NO;
-		} repeats:NO];
+		}];
 		return;
 	}
 
@@ -393,10 +390,11 @@ static BOOL controlCentreHasAuthenticated;
 	}
 
 	[ASAuthenticationController sharedInstance].temporarilyUnlockedAppBundleID = self.bundleIdentifier;
-	currentTempUnlockTimer = [NSTimer scheduledTimerWithTimeInterval:[[ASPreferences sharedInstance] appExitUnlockTime] block:^{
+
+	currentTempUnlockTimer = [NSTimer scheduledTimerWithTimeInterval:[[ASPreferences sharedInstance] appExitUnlockTime] repeats:NO block:^(NSTimer *timer) {
 		[ASAuthenticationController sharedInstance].temporarilyUnlockedAppBundleID = nil;
 		currentTempUnlockTimer = nil;
-	} repeats:NO];
+	}];
 }
 %end
 

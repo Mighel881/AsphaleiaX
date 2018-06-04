@@ -3,7 +3,6 @@
 #import "ASPreferences.h"
 #import <SpringBoard/SBAlertItemsController.h>
 #import <UIKit/UIImage+Private.h>
-#import "NSTimer+Blocks.h"
 #import "ASPasscodeHandler.h"
 
 #define titleWithSpacingForIcon(t) [NSString stringWithFormat:@"\n\n\n%@",t]
@@ -140,13 +139,15 @@ static BOOL blockPasscode;
 		} else {
 			[self alertController].title = titleWithSpacingForIcon(@"Scanning finger...");
 		}
-		self.resetFingerprintTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+
+		self.resetFingerprintTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer *timer) {
 			if (self.useSmallIcon) {
 				[self alertController].title = titleWithSpacingForSmallIcon(self.title);
 			} else {
 				[self alertController].title = titleWithSpacingForIcon(self.title);
 			}
-		} repeats:NO];
+		}];
+
 		if ([[ASAuthenticationController sharedInstance] fingerglyph]) {
 			[[[ASAuthenticationController sharedInstance] fingerglyph] setState:1 animated:YES completionHandler:nil];
 		}

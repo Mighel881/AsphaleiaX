@@ -1,8 +1,7 @@
 #import "ASCommon.h"
+#import "ASPreferences.h"
 #include <sys/sysctl.h>
 #import <objc/runtime.h>
-#import "NSTimer+Blocks.h"
-#import "ASPreferences.h"
 #import "ASPasscodeHandler.h"
 #import "ASAuthenticationController.h"
 #import <rocketbootstrap/rocketbootstrap.h>
