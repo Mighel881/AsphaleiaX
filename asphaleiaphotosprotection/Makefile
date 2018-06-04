@@ -4,7 +4,7 @@ TWEAK_NAME = AsphaleiaPhotosProtection
 AsphaleiaPhotosProtection_FILES = Tweak.x
 AsphaleiaPhotosProtection_FRAMEWORKS = UIKit
 AsphaleiaPhotosProtection_PRIVATE_FRAMEWORKS = AppSupport
-AsphaleiaPhotosProtection_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+AsphaleiaPhotosProtection_CFLAGS = -Wno-deprecated-declarations
 AsphaleiaPhotosProtection_LDFLAGS = -L"../.theos/obj/debug"
 AsphaleiaPhotosProtection_LIBRARIES = asphaleiaui rocketbootstrap
 

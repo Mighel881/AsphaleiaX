@@ -5,7 +5,6 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = AsphaleiaSettingsProtection
 AsphaleiaSettingsProtection_FILES = Tweak.x
 AsphaleiaSettingsProtection_FRAMEWORKS = UIKit
-AsphaleiaSettingsProtection_CFLAGS = -fobjc-arc
 AsphaleiaSettingsProtection_LDFLAGS = -L"../.theos/obj/debug"
 AsphaleiaSettingsProtection_LIBRARIES = asphaleiaui
 
