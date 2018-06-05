@@ -36,7 +36,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)_loadPreferences {
-	static dispatch_once_t token = 0;
+	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, preferencesChangedCallback, CFSTR("com.a3tweaks.asphaleia/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	});
@@ -65,6 +65,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 			return NO;
 		}
 	}
+
 	return YES;
 }
 
@@ -311,15 +312,18 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	NSDictionary *fingerprintDict = [fingerprintSettings objectForKey:kSecuredItemsFingerprintsKey];
 	BOOL usesFingerprintProtection = NO;
 	for (NSString *fingerprint in fingerprintDict) {
-		if ([[fingerprintDict objectForKey:fingerprint] boolValue]) {
-			usesFingerprintProtection = YES;
+		if (![fingerprintDict[fingerprint] boolValue]) {
+			continue;
 		}
+
+		usesFingerprintProtection = YES;
 	}
+
 	if (!usesFingerprintProtection) {
 		return YES;
 	}
 
-	return [[fingerprintDict objectForKey:fingerprint] boolValue];
+	return [fingerprintDict[fingerprint] boolValue];
 }
 
 - (BOOL)fingerprintProtectsSecurityMods:(NSString *)fingerprint {
@@ -331,15 +335,18 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	NSDictionary *fingerprintDict = [fingerprintSettings objectForKey:kSecurityModFingerprintsKey];
 	BOOL usesFingerprintProtection = NO;
 	for (NSString *fingerprint in fingerprintDict) {
-		if ([[fingerprintDict objectForKey:fingerprint] boolValue]) {
-			usesFingerprintProtection = YES;
+		if (![fingerprintDict[fingerprint] boolValue]) {
+			continue;
 		}
+
+		usesFingerprintProtection = YES;
 	}
+
 	if (!usesFingerprintProtection) {
 		return YES;
 	}
 
-	return [[fingerprintDict objectForKey:fingerprint] boolValue];
+	return [fingerprintDict[fingerprint] boolValue];
 }
 
 - (BOOL)fingerprintProtectsAdvancedSecurity:(NSString *)fingerprint {
@@ -351,15 +358,18 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	NSDictionary *fingerprintDict = [fingerprintSettings objectForKey:kAdvancedSecurityFingerprintsKey];
 	BOOL usesFingerprintProtection = NO;
 	for (NSString *fingerprint in fingerprintDict) {
-		if ([[fingerprintDict objectForKey:fingerprint] boolValue]) {
-			usesFingerprintProtection = YES;
+		if (![fingerprintDict[fingerprint] boolValue]) {
+			continue;
 		}
+
+		usesFingerprintProtection = YES;
 	}
+
 	if (!usesFingerprintProtection) {
 		return YES;
 	}
 
-	return [[fingerprintDict objectForKey:fingerprint] boolValue];
+	return [fingerprintDict[fingerprint] boolValue];
 }
 
 // Custom setters/getters

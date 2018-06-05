@@ -200,18 +200,20 @@ static NSBundle *bundle;
 
     if (![[ASPreferences sharedInstance] touchIDEnabled] || [[ASPreferences sharedInstance] securityLevelForApp:appIdentifier] == 0) {
         [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated){
-                if (authenticated) {
-                    _appUserAuthorisedID = appIdentifier;
-                }
+            if (authenticated) {
+                _appUserAuthorisedID = appIdentifier;
+            }
 
-                authHandler(!authenticated);
-            }];
+            authHandler(!authenticated);
+        }];
+
         return YES;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [alertView show];
     });
+
     return YES;
 }
 
@@ -233,18 +235,20 @@ static NSBundle *bundle;
         [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated){
             authHandler(!authenticated);
         }];
+
         return YES;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [alertView show];
     });
+
     return YES;
 }
 
 - (BOOL)authenticateAppWithIconView:(SBIconView *)iconView authenticatedHandler:(ASCommonAuthenticationHandler)handler {
     if (!IN_SPRINGBOARD) {
-      return NO;
+        return NO;
     }
 
     if ([ASPreferences sharedInstance].asphaleiaDisabled || [ASPreferences sharedInstance].itemSecurityDisabled || [[iconView icon] isDownloadingIcon]) {
@@ -263,9 +267,11 @@ static NSBundle *bundle;
                 if (authenticated) {
                     [ASAuthenticationController sharedInstance].appUserAuthorisedID = iconView.icon.applicationBundleID;
                 }
+
                 handler(!authenticated);
             }];
         }
+
         [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
 
         return YES;
@@ -275,12 +281,13 @@ static NSBundle *bundle;
     } else if ((![[ASPreferences sharedInstance] touchIDEnabled] || [[ASPreferences sharedInstance] securityLevelForApp:currentAuthAppBundleID] == 0) && [[ASPreferences sharedInstance] passcodeEnabled]) {
         iconView.highlighted = NO;
         [[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:iconView eventBlock:^void(BOOL authenticated){
-
             if (authenticated){
                 [ASAuthenticationController sharedInstance].appUserAuthorisedID = iconView.icon.applicationBundleID;
             }
+
             handler(!authenticated);
         }];
+
         return YES;
     }
 
@@ -304,16 +311,19 @@ static NSBundle *bundle;
         _fingerglyph.transform = CGAffineTransformMakeScale(1,1);
     }];
 
-    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.startmonitoring"), NULL, NULL, YES);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.startmonitoring" object:nil];
 
     [_currentHSIconView asphaleia_updateLabelWithText:@"Scan finger..."];
 
     [_anywhereTouchWindow blockTouchesAllowingTouchInView:_currentHSIconView touchBlockedHandler:^void(ASTouchWindow *touchWindow, BOOL blockedTouch){
-        if (blockedTouch) {
-            [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
-            handler(YES);
+        if (!blockedTouch) {
+            return;
         }
+
+        [[%c(SBIconController) sharedInstance] asphaleia_resetAsphaleiaIconView];
+        handler(YES);
     }];
+
     return YES;
 }
 
@@ -321,15 +331,17 @@ static NSBundle *bundle;
     if (!self.currentAuthAlert) {
         return;
     }
+
     [self.currentAuthAlert dismiss];
 }
 
 - (NSArray *)allSubviewsOfView:(UIView *)view {
-    NSMutableArray *viewArray = [[NSMutableArray alloc] init];
+    NSMutableArray *viewArray = [NSMutableArray array];
     [viewArray addObject:view];
     for (UIView *subview in view.subviews) {
         [viewArray addObjectsFromArray:(NSArray *)[self allSubviewsOfView:subview]];
     }
+
     return [NSArray arrayWithArray:viewArray];
 }
 
@@ -369,7 +381,9 @@ static NSBundle *bundle;
     } else if (correctFingerUsed && !dismissed) {
         [self.currentAuthAlert dismiss];
     }
-    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, NULL, YES);
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.stopmonitoring" object:nil];
+
     if (authorised) {
         _appUserAuthorisedID = currentAuthAppBundleID;
     }

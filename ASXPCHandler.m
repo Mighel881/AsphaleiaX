@@ -3,6 +3,7 @@
 #import <objc/runtime.h>
 #import "ASPreferences.h"
 #import "ASAuthenticationController.h"
+#import <Foundation/NSDistributedNotificationCenter.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 
 @interface ASPreferences ()
@@ -62,14 +63,14 @@
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/AuthenticateApp"]) {
 		BOOL isProtected = [[ASAuthenticationController sharedInstance] authenticateAppWithDisplayIdentifier:userInfo[@"appIdentifier"] customMessage:userInfo[@"customMessage"] dismissedHandler:^(BOOL wasCancelled) {
 			NSString *name = wasCancelled ? @"com.a3tweaks.asphaleia.xpc/AuthCancelled" : @"com.a3tweaks.asphaleia.xpc/AuthSucceeded";
-			[[NSNotificationCenter defaultCenter] postNotificationName:name object:nil];
+			[[NSDistributedNotificationCenter defaultCenter] postNotificationName:name object:nil];
 		}];
 
 		return @{ @"isProtected" : @(isProtected) };
 	} else if ([name isEqualToString:@"com.a3tweaks.asphaleia.xpc/AuthenticateFunction"]) {
 		BOOL isProtected = [[ASAuthenticationController sharedInstance] authenticateFunction:[userInfo[@"alertType"] intValue] dismissedHandler:^(BOOL wasCancelled) {
 			NSString *name = wasCancelled ? @"com.a3tweaks.asphaleia.xpc/AuthCancelled" : @"com.a3tweaks.asphaleia.xpc/AuthSucceeded";
-			[[NSNotificationCenter defaultCenter] postNotificationName:name object:nil];
+			[[NSDistributedNotificationCenter defaultCenter] postNotificationName:name object:nil];
 		}];
 
 		return @{ @"isProtected" : @(isProtected) };

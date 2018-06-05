@@ -11,14 +11,6 @@ https://github.com/Sassoty/BioTesting */
 @property (readwrite) id lastMatchedFingerprint;
 @end
 
-void startMonitoringNotification(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	[[ASTouchIDController sharedInstance] startMonitoring];
-}
-
-void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	[[ASTouchIDController sharedInstance] stopMonitoring];
-}
-
 @implementation ASTouchIDController
 
 + (instancetype)sharedInstance {
@@ -27,12 +19,26 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedInstance = [[self alloc] init];
-		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, startMonitoringNotification, CFSTR("com.a3tweaks.asphaleia.startmonitoring"), NULL, CFNotificationSuspensionBehaviorCoalesce);
-		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, stopMonitoringNotification, CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	});
 
 	// Provide instance
 	return sharedInstance;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if (self) {
+		NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+		[center addObserverForName:@"com.a3tweaks.asphaleia.startmonitoring" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+			[self startMonitoring];
+		}];
+
+		[center addObserverForName:@"com.a3tweaks.asphaleia.stopmonitoring" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+			[self stopMonitoring];
+		}];
+	}
+
+	return self;
 }
 
 - (void)biometricKitInterface:(_SBUIBiometricKitInterface *)interface handleEvent:(NSUInteger)event {
@@ -90,7 +96,6 @@ void stopMonitoringNotification(CFNotificationCenterRef center, void *observer, 
 	asphaleiaLogMsg(@"Finger matched");
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.authsuccess" object:self userInfo:@{ @"fingerprint" : result }];
 	self.lastMatchedFingerprint = result;
-	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.authsuccess"), NULL, NULL, YES);
 	_shouldBlockLockscreenMonitor = NO;
 }
 

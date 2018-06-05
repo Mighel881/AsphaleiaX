@@ -75,7 +75,7 @@ static BOOL blockPasscode;
 	[self alertController].message = self.message;
 
 	UIAlertAction *cancelButton = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, NULL, YES);
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.stopmonitoring" object:nil];
 		[[ASAuthenticationController sharedInstance] setCurrentAuthAlert:nil];
 		if (self.delegate && [self.delegate respondsToSelector:@selector(authAlertView:dismissed:authorised:fingerprint:)]) {
 			[(id)self.delegate authAlertView:self dismissed:YES authorised:NO fingerprint:nil];
@@ -85,7 +85,7 @@ static BOOL blockPasscode;
 	}];
 
 	UIAlertAction *passcodeButton = [UIAlertAction actionWithTitle:@"Passcode" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.stopmonitoring"), NULL, NULL, YES);
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"com.a3tweaks.asphaleia.stopmonitoring" object:nil];
 		[[ASAuthenticationController sharedInstance] setCurrentAuthAlert:nil];
 		if (self.delegate) {
 			SBIconView *icon = [self.icon isKindOfClass:%c(SBIconView)] ? (SBIconView *)self.icon : nil;
@@ -119,14 +119,15 @@ static BOOL blockPasscode;
 
 	[[ASAuthenticationController sharedInstance] setCurrentAuthAlert:self];
 
+	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
 	if ([[ASPreferences sharedInstance] touchIDEnabled]) {
-		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.startmonitoring"), NULL, NULL, YES);
+		[center postNotificationName:@"com.a3tweaks.asphaleia.startmonitoring" object:nil];
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.fingerdown" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.fingerup" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.authsuccess" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.authfailed" object:nil];
+	[center addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.fingerdown" object:nil];
+	[center addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.fingerup" object:nil];
+	[center addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.authsuccess" object:nil];
+	[center addObserver:self selector:@selector(receivedNotification:) name:@"com.a3tweaks.asphaleia.authfailed" object:nil];
 
 	[super show];
 }

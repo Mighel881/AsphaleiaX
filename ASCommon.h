@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import <AppSupport/CPDistributedMessagingCenter.h>
 
 typedef NS_ENUM(NSInteger, ASAuthenticationAlertType) {
 	ASAuthenticationAlertAppArranging,
@@ -23,6 +24,7 @@ typedef void (^ASCommonAuthenticationHandler) (BOOL wasCancelled);
 
 @interface ASCommon : NSObject {
 	ASCommonAuthenticationHandler authHandler;
+	CPDistributedMessagingCenter *_centre;
 }
 + (instancetype)sharedInstance;
 - (BOOL)displayingAuthAlert;

@@ -18,10 +18,10 @@
 	}
 
 	[[ASCommon sharedInstance] authenticateFunction:ASAuthenticationAlertSettingsPanel dismissedHandler:^(BOOL wasCancelled) {
-		if (!wasCancelled) {
-			%orig;
-		} else {
+		if (wasCancelled) {
 			[tableView deselectRowAtIndexPath:indexPath animated:YES];
+		} else {
+			%orig;
 		}
 	}];
 }

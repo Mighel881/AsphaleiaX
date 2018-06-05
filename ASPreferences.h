@@ -43,13 +43,17 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	NSDictionary *_prefs;
 	CPDistributedMessagingCenter *_center;
 }
-@property (readonly) BOOL asphaleiaDisabled;
-@property (readonly) BOOL itemSecurityDisabled;
+@property (assign, readonly, nonatomic) BOOL asphaleiaDisabled;
+@property (assign, readonly, nonatomic) BOOL itemSecurityDisabled;
+
 + (instancetype)sharedInstance;
 + (BOOL)isTouchIDDevice;
+
 + (BOOL)devicePasscodeSet;
+
 - (id)objectForKey:(NSString *)key;
 - (void)setObject:(id)object forKey:(NSString *)key;
+
 - (BOOL)requireAuthorisationOnWifi;
 - (BOOL)touchIDEnabled;
 - (BOOL)passcodeEnabled;

@@ -11,16 +11,6 @@
 @property (copy, nonatomic) ASPasscodeHandlerEventBlock eventBlock;
 @end
 
-void showPasscodeView(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	[[ASPasscodeHandler sharedInstance] showInKeyWindowWithPasscode:[[ASPreferences sharedInstance] getPasscode] iconView:nil eventBlock:^void(BOOL authenticated) {
-		if (authenticated) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.passcodeauthsuccess"), NULL, NULL, YES);
-		} else {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia.passcodeauthfailed"), NULL, NULL, YES);
-		}
-	}];
-}
-
 static NSBundle *bundle;
 
 @implementation ASPasscodeHandler
@@ -30,7 +20,6 @@ static NSBundle *bundle;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedInstance = [[self alloc] init];
-		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, showPasscodeView, CFSTR("com.a3tweaks.asphaleia.showpasscodeview"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 		bundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/AsphaleiaPrefs.bundle"];
 	});
 	return sharedInstance;
