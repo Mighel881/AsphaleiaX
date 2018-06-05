@@ -122,23 +122,25 @@
 @end
 
 @interface SBIconLabelImageParameters : NSObject <NSCopying, NSMutableCopying>
-@property(readonly, copy, nonatomic) NSString* text;
-- (id)mutableCopyWithZone:(NSZone*)zone;
-- (id)copyWithZone:(NSZone*)zone;
-- (void)setText:(NSString *)text;
-- (void)dealloc;
-- (id)initWithParameters:(id)parameters;
-- (id)init;
+@property (nonatomic,copy,readonly) NSString *text;
+
 @end
 
-@interface SBIconLabelView : UIView {
-	SBIconLabelImageParameters* _imageParameters;
-}
-@property(retain, nonatomic) SBIconLabelImageParameters* imageParameters;
-+ (void)updateIconLabelView:(id)view withSettings:(id)settings imageParameters:(id)parameters;
-+ (id)newIconLabelViewWithSettings:(id)settings imageParameters:(id)parameters;
-- (void)_checkInImages;
-- (void)dealloc;
+@interface SBMutableIconLabelImageParameters : SBIconLabelImageParameters
+@property (nonatomic, copy) NSString *text;
+
+@end
+
+@protocol SBIconLabelView
+@property (nonatomic,retain) UIImage *image; 
+
+@end
+
+@interface SBIconLegibilityLabelView : UIView <SBIconLabelView>
+@property (nonatomic,retain) SBIconLabelImageParameters *imageParameters;
+
+- (void)updateIconLabelWithSettings:(id)settings imageParameters:(SBIconLabelImageParameters *)parameters;
+
 @end
 
 @interface SBIconImageView : UIImageView
@@ -150,6 +152,7 @@
 @property(assign, nonatomic) int location;
 @property(retain, nonatomic) SBIcon *icon;
 @property(assign, nonatomic) BOOL isEditing;
+@property (nonatomic,readonly) SBIconLegibilityLabelView *labelView;
 - (void)setIsGrabbed:(BOOL)grabbed;
 - (void)setHighlighted:(BOOL)highlighted;
 - (void)setAllowJitter:(BOOL)jitter;
@@ -416,25 +419,32 @@
 @end
 
 @interface NCNotificationRequest : NSObject
-@property (nonatomic,copy,readonly) NSString * sectionIdentifier;                           //@synthesize sectionIdentifier=_sectionIdentifier - In the implementation block
-@property (nonatomic,copy,readonly) NSString * notificationIdentifier;                      //@synthesize notificationIdentifier=_notificationIdentifier - In the implementation block
-@property (nonatomic,copy,readonly) NSString * threadIdentifier;                            //@synthesize threadIdentifier=_threadIdentifier - In the implementation block
-@property (nonatomic,copy,readonly) NSString * categoryIdentifier;                          //@synthesize categoryIdentifier=_categoryIdentifier - In the implementation block
-@property (nonatomic,copy,readonly) NSSet * subSectionIdentifiers;                          //@synthesize subSectionIdentifiers=_subSectionIdentifiers - In the implementation block
-@property (nonatomic,copy,readonly) NSArray * peopleIdentifiers;                            //@synthesize peopleIdentifiers=_peopleIdentifiers - In the implementation block
-@property (nonatomic,copy,readonly) NSString * parentSectionIdentifier;
-@property (nonatomic,copy,readonly) NSDictionary * context;
-@property (nonatomic,readonly) BOOL isCollapsedNotification;                                //@synthesize isCollapsedNotification=_isCollapsedNotification - In the implementation block
-@property (nonatomic,copy,readonly) NSDictionary * sourceInfo;
+@property (nonatomic, copy, readonly) NSString *sectionIdentifier;
+@property (nonatomic, copy, readonly) NSString *notificationIdentifier;
+@property (nonatomic, copy, readonly) NSString *threadIdentifier;
+@property (nonatomic, copy, readonly) NSString *categoryIdentifier;
+@property (nonatomic, copy, readonly) NSSet *subSectionIdentifiers;
+@property (nonatomic, copy, readonly) NSArray *peopleIdentifiers;
+@property (nonatomic, copy, readonly) NSString *parentSectionIdentifier;
+@property (nonatomic, copy, readonly) NSDictionary *context;
+@property (nonatomic, readonly) BOOL isCollapsedNotification;
+@property (nonatomic, copy, readonly) NSDictionary *sourceInfo;
 @end
 
-@interface NCNotificationShortLookViewController : UIViewController {
-		UIView* _contextDefiningContainerView;
+@interface NCNotificationViewController : UIViewController
+@property (nonatomic, retain) NSString *groupName;
+@property (nonatomic, retain) NCNotificationRequest *notificationRequest;
+
+@end
+
+@interface NCNotificationShortLookViewController : NCNotificationViewController {
+		UIView *_contextDefiningContainerView;
 }
-@property (nonatomic,retain) NSString * groupName;
-- (NCNotificationShortLookView*)_notificationShortLookViewIfLoaded;
+
+- (NCNotificationShortLookView *)_notificationShortLookViewIfLoaded;
 - (CGRect)_frameForTransitionViewInScrollView;
 - (void)_updateScrollViewContentSize;
+
 @end
 
 @interface _UIBackdropViewSettings : NSObject
