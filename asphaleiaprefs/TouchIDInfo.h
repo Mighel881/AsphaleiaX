@@ -1,1 +1,1 @@
-BOOL isTouchIDDevice(void);
+BOOL isTouchIDDevice();

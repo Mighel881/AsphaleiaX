@@ -1,4 +1,4 @@
-#import <Preferences/PSListController.h>
+#import <CepheiPrefs/HBListController.h>
 
-@interface ASSecuredItemsListController : PSListController
+@interface ASSecuredItemsListController : HBListController
 @end

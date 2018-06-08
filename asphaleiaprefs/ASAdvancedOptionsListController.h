@@ -1,4 +1,5 @@
-#import <Preferences/PSListController.h>
+#import <CepheiPrefs/HBListController.h>
 
-@interface ASAdvancedOptionsListController : PSListController <UIActionSheetDelegate, UITextFieldDelegate>
+@interface ASAdvancedOptionsListController : HBListController <UITextFieldDelegate>
+
 @end

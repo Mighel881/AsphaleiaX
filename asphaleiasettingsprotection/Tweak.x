@@ -1,17 +1,38 @@
-#import <UIKit/UIKit.h>
-#import <Preferences/PSSpecifier.h>
-#import <Preferences/PSListController.h>
-#import <Preferences/PSTableCell.h>
+#import <Preferences/PSSpecifier+Private.h>
+#import <Preferences/DevicePINSetupController.h>
+#import <PreferencesUI/PSUIPrefsListController.h>
 #import "../ASCommon.h"
 #import "../ASPreferences.h"
-
-@interface PSUIPrefsListController : PSListController
-
-@end
 
 %hook PSUIPrefsListController
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	/// Protect Asphaleia pane
+    PSSpecifier *specifier = [self specifierAtIndex:[self indexForIndexPath:indexPath]];
+    PSSpecifier *asphaleiaSpecifier = [self specifierForID:@"ASPHALEIAX"];
+
+    // Don't show if first time
+    NSString *passcode = [[ASPreferences sharedInstance] getPasscode];
+
+    if (specifier && specifier == asphaleiaSpecifier && passcode) {
+        PSSpecifier *sidebarSpecifier = [self _sidebarSpecifierForCategoryController];
+        if (sidebarSpecifier != specifier) {
+            // Configure specifier
+            [specifier setProperty:@(3) forKey:@"mode"];
+            
+            // Configure PINController
+            DevicePINSetupController *controller = [[DevicePINSetupController alloc] init];
+            controller.allowOptionsButton = NO;
+            controller.parentController = self;
+
+            [specifier setProperty:self forKey:@"PINControllerDelegate"];
+            controller.specifier = specifier;
+            [self showController:controller];
+            return;
+        }
+    }
+
+	// General settings panel protection
 	if (![[ASPreferences sharedInstance] requiresSecurityForPanel:((PSTableCell *)[tableView cellForRowAtIndexPath:indexPath]).specifier.identifier]) {
 		%orig;
 		return;

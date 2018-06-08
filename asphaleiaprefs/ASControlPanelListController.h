@@ -1,4 +1,5 @@
-#import <Preferences/PSListController.h>
+#import <CepheiPrefs/HBListController.h>
 
-@interface ASControlPanelListController : PSListController <UIActionSheetDelegate>
+@interface ASControlPanelListController : HBListController
+
 @end

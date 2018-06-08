@@ -1,7 +1,8 @@
-#import <Preferences/PSListController.h>
+#import <CepheiPrefs/HBListController.h>
 
-@interface ASFingerprintsListController : PSListController {
+@interface ASFingerprintsListController : HBListController {
 	NSMutableDictionary *fingerprintSecurity;
 	NSMutableDictionary *asphaleiaSettings;
 }
+
 @end

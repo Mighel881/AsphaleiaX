@@ -5,4 +5,5 @@
 	NSMutableDictionary *securedFolders;
 	NSMutableDictionary *asphaleiaSettings;
 }
+
 @end

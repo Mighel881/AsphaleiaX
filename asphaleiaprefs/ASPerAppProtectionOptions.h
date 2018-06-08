@@ -1,8 +1,9 @@
-#import <Preferences/PSListController.h>
+#import <CepheiPrefs/HBListController.h>
 
-@interface ASPerAppProtectionOptions : PSListController {
-	NSString* _appName;
-	NSString* _identifier;
-}
-- (instancetype)initWithAppName:(NSString*)appName identifier:(NSString*)identifier;
+@interface ASPerAppProtectionOptions : HBListController
+@property (copy, readonly, nonatomic) NSString *appName;
+@property (copy, readonly, nonatomic) NSString *identifier;
+
+- (instancetype)initWithAppName:(NSString *)appName identifier:(NSString *)identifier;
+
 @end

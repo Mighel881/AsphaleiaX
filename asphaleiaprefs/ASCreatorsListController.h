@@ -1,5 +1,5 @@
-#import <CepheiPrefs/HBRootListController.h>
+#import <CepheiPrefs/HBListController.h>
 
-@interface ASCreatorsListController : HBRootListController
+@interface ASCreatorsListController : HBListController
 
 @end

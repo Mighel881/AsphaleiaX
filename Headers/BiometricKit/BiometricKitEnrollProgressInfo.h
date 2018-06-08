@@ -1,0 +1,3 @@
+@interface BiometricKitEnrollProgressInfo : NSObject
+
+@end

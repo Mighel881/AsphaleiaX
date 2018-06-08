@@ -6,16 +6,22 @@
 	<dict>
 		<key>bundle</key>
 		<string>AsphaleiaPrefs</string>
-		<key>cell</key>
-		<string>PSLinkCell</string>
 		<key>detail</key>
 		<string>ASRootListController</string>
-		<key>icon</key>
-		<string>AsphaleiaPrefs@2x.png</string>
+		<key>id</key>
+		<string>ASPHALEIAX</string>
+		<key>pane</key>
+		<string>DevicePINPane</string>
+		<key>cell</key>
+		<string>PSLinkCell</string>
+		<key>customControllerClass</key>
+		<string>ASPINController</string>
 		<key>isController</key>
 		<true/>
 		<key>label</key>
 		<string>Asphaleia X</string>
+		<key>icon</key>
+		<string>AsphaleiaPrefs@2x.png</string>
 	</dict>
 </dict>
 </plist>

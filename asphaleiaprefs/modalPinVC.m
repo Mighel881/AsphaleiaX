@@ -81,6 +81,7 @@
             [dashContainerView addSubview:dashView];
             [pageArray addObject:dashView];
         }
+
         [overallAray addObject:[[NSArray alloc] initWithArray:pageArray]];
 
 
@@ -444,7 +445,7 @@
 
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
 }
 
