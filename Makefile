@@ -17,7 +17,7 @@ include $(THEOS)/makefiles/common.mk
 
 LIBRARY_NAME = libasphaleiaui
 libasphaleiaui_FILES = ASCommon.x ASPreferences.x
-libasphaleiaui_FRAMEWORKS = UIKit
+libasphaleiaui_FRAMEWORKS = UIKit SystemConfiguration
 libasphaleiaui_PRIVATE_FRAMEWORKS = AppSupport
 libasphaleiaui_EXTRA_FRAMEWORKS = CydiaSubstrate
 libasphaleiaui_INSTALL_PATH = /usr/lib

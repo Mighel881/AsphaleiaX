@@ -57,16 +57,10 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 - (BOOL)requireAuthorisationOnWifi {
 	BOOL unlockOnWifi = [self objectForKey:kWifiUnlockKey] ? [[self objectForKey:kWifiUnlockKey] boolValue] : NO;
 	NSString *unlockSSIDValue = [self objectForKey:kWifiUnlockNetworkKey] ? [self objectForKey:kWifiUnlockNetworkKey] : @"";
-	NSArray *unlockSSIDs = [unlockSSIDValue componentsSeparatedByString:@", "];
-	NSString *currentSSID = [[%c(SBWiFiManager) sharedInstance] currentNetworkName];
+	NSArray<NSString *> *unlockSSIDs = [unlockSSIDValue componentsSeparatedByString:@", "];
+	NSString *currentSSID = [self.class currentNetworkSSID];
 
-	for (NSString *SSID in unlockSSIDs) {
-		if (unlockOnWifi && [currentSSID isEqualToString:SSID]) {
-			return NO;
-		}
-	}
-
-	return YES;
+	return !([unlockSSIDs containsObject:currentSSID] && unlockOnWifi);
 }
 
 + (BOOL)isTouchIDDevice {
@@ -78,6 +72,18 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 		NSDictionary *reply = [centre sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/IsTouchIDDevice" userInfo:nil];
 		return [reply[@"isTouchIDDevice"] boolValue];
 	}
+}
+
++ (NSString *)currentNetworkSSID {
+	NSString *SSID;
+
+	NSArray *supportedInterfaces = (__bridge_transfer id)CNCopySupportedInterfaces();
+	for (NSString *network in supportedInterfaces) {
+		NSDictionary *networkInfo = (__bridge_transfer id)CNCopyCurrentNetworkInfo((__bridge CFStringRef)network);
+		SSID = networkInfo[@"SSID"];
+	}
+
+	return SSID;
 }
 
 + (BOOL)devicePasscodeSet {
