@@ -86,9 +86,9 @@ static NSBundle *bundle;
 - (ASAuthenticationAlert *)returnAppAuthenticationAlertWithApplication:(NSString *)appIdentifier customMessage:(NSString *)customMessage delegate:(id<ASAuthenticationAlertDelegate>)delegate {
     NSString *message;
     if (customMessage) {
-      message = customMessage;
+        message = customMessage;
     } else {
-      message = [bundle localizedStringForKey:@"SCAN_FINGER_OPEN" value:nil table:@"Localizable"];
+        message = [bundle localizedStringForKey:@"SCAN_FINGER_OPEN" value:nil table:@"Localizable"];
     }
 
     ASAuthenticationAlert *alertView = [[ASAuthenticationAlert alloc] initWithApplication:appIdentifier message:message delegate:delegate];

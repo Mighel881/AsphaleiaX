@@ -1,8 +1,3 @@
-#import <UIKit/UIKit.h>
-#import <AppSupport/CPDistributedMessagingCenter.h>
-#import <AudioToolbox/AudioServices.h>
-#import <rocketbootstrap/rocketbootstrap.h>
-#import <UIKit/UIImage+Private.h>
 #import "Asphaleia.h"
 #import "ASTouchIDController.h"
 #import "ASAuthenticationController.h"
@@ -12,10 +7,16 @@
 #import "ASPasscodeHandler.h"
 #import "ASTouchWindow.h"
 #import "ASXPCHandler.h"
+#import <UIKit/UIKit.h>
+#import <AppSupport/CPDistributedMessagingCenter.h>
+#import <AudioToolbox/AudioServices.h>
+#import <rocketbootstrap/rocketbootstrap.h>
+#import <SpotlightUI/SPUISearchHeader.h>
+#import <UIKit/UIImage+Private.h>
 
 static NSString *const ASBundlePath = @"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle";
 
-#define asphaleiaLog() HBLogDebug(@"Method called: %@",NSStringFromSelector(_cmd))
+#define asphaleiaLog() HBLogDebug(@"Method called: %@", NSStringFromSelector(_cmd))
 
 NSTimer *currentTempUnlockTimer;
 NSTimer *currentTempGlobalDisableTimer;
@@ -295,20 +296,23 @@ UIWindow *blurredWindow;
 static BOOL searchControllerHasAuthenticated;
 static BOOL searchControllerAuthenticating;
 
-- (void)focusSearchField {
-	%orig;
-
-	if (!searchControllerHasAuthenticated && !searchControllerAuthenticating && [[ASPreferences sharedInstance] secureSpotlight]) {
-		[self unfocusSearchField];
-		[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSpotlight dismissedHandler:^(BOOL wasCancelled) {
-			searchControllerAuthenticating = NO;
-			if (!wasCancelled) {
-				searchControllerHasAuthenticated = YES;
-				[self focusSearchField];
-			}
-		}];
-		searchControllerAuthenticating = YES;
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+	if (searchControllerHasAuthenticated || searchControllerAuthenticating || ![[ASPreferences sharedInstance] secureSpotlight]) {
+		%orig;
+		return;
 	}
+
+	[self unfocusSearchField];
+	searchControllerAuthenticating = YES;
+	[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSpotlight dismissedHandler:^(BOOL wasCancelled) {
+		if (!wasCancelled) {
+			searchControllerHasAuthenticated = YES;
+			%orig;
+		} else {
+			searchControllerAuthenticating = NO;
+			searchControllerHasAuthenticated = NO;
+		}
+	}];
 }
 
 - (void)unfocusSearchField {

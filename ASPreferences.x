@@ -1,18 +1,17 @@
-#include <sys/sysctl.h>
 #import "ASPreferences.h"
 #import "ASAuthenticationController.h"
 #import "Asphaleia.h"
-#import <Flipswitch/Flipswitch.h>
+#import <BiometricKit/BiometricKit.h>
 #import <dlfcn.h>
+#import <Flipswitch/Flipswitch.h>
 #import <rocketbootstrap/rocketbootstrap.h>
+#import <sys/sysctl.h>
+#import <SystemConfiguration/CaptiveNetwork.h>
 
 static NSString *const ASPreferencesFilePath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
 
-#define kDisableAsphaleiaNotification "com.a3tweaks.asphaleia/DisableAsphaleia"
-#define kEnableAsphaleiaNotification "com.a3tweaks.asphaleia/EnableAsphaleia"
-
 @interface ASPreferences ()
-@property (readwrite) BOOL asphaleiaDisabled;
+@property (assign, nonatomic) BOOL asphaleiaDisabled;
 - (void)_loadPreferences;
 - (id)objectForKey:(NSString *)key;
 - (void)setObject:(id)object forKey:(NSString *)key;
@@ -29,7 +28,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	static ASPreferences *sharedInstance = nil;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-		sharedInstance = [self new];
+		sharedInstance = [[self alloc] init];
 	});
 
 	return sharedInstance;

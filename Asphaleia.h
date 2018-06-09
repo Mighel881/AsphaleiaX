@@ -1,4 +1,6 @@
 #import <AudioToolbox/AudioServices.h>
+#import <BiometricKit/BiometricKitDelegate.h>
+#import <BiometricKit/BiometricKitIdentity.h>
 #import <dlfcn.h>
 #import <Flipswitch/Flipswitch.h>
 #import <libactivator/libactivator.h>
@@ -212,35 +214,6 @@
 - (BOOL)isShowingBanner;
 @end
 
-@interface BiometricKitEnrollProgressInfo : NSObject
-
-@end
-
-@interface BiometricKitIdentity : NSObject <NSSecureCoding, NSCopying>
-@property (copy, nonatomic) NSString *name;
-@end
-
-@protocol BiometricKitDelegate <NSObject>
-@optional
-
-- (void)enrollProgress:(BiometricKitEnrollProgressInfo *)progress;
-- (void)enrollResult:(BiometricKitIdentity *)result;
-- (void)homeButtonPressed;
-- (void)matchResult:(BiometricKitIdentity *)result;
-- (void)matchResult:(BiometricKitIdentity *)result withDetails:(NSDictionary *)details;
-- (void)statusMessage:(NSUInteger)message;
-- (void)taskResumeStatus:(NSInteger)status;
-- (void)templateUpdate:(BiometricKitIdentity *)update withDetails:(NSDictionary *)details;
-- (void)touchIDButtonPressed:(BOOL)pressed;
-
-@end
-
-@interface BiometricKit : NSObject
-@property (assign, nonatomic) id<BiometricKitDelegate> delegate;
-+ (BiometricKit *)manager;
-- (id)identities:(id)object;
-- (BOOL)isTouchIDCapable;
-@end
 
 @interface SBLockScreenManager ()
 @property(assign, nonatomic, getter=isUIUnlocking) BOOL UIUnlocking;
