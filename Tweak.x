@@ -214,12 +214,10 @@ BOOL switcherAuthenticated = NO;
 	// darn bool values
 	BOOL orig = %orig;
 	if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticated) {
-		HBLogDebug(@"return 1");
 		return %orig;
 	}
 
 	if (!switcherAuthenticated) {
-		HBLogDebug(@"return 2");
 		[self dismissSwitcherNoninteractively];
 		switcherAuthenticated = YES;
 		[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
@@ -231,7 +229,6 @@ BOOL switcherAuthenticated = NO;
 
 		return orig;
 	} else {
-		HBLogDebug(@"return 3");
 		return orig;
 	}
 }
@@ -667,14 +664,6 @@ UILabel *authPassLabel;
 }
 
 %end
-
-/*
-var request = [NCNotificationRequest notificationRequestWithSectionId:@"com.atebits.Tweetie2" notificationId:nil threadId:nil title:@"Test" message:@"Notification test" timestamp:[NSDate date] destination:[NSNull null]]
-var notification = [[NCCoalescedNotification alloc] initWithNotificationRequest:request]
-choose(SBNotificationBannerDestination)
-var destination = #
-[destination _postNotificationRequest:request forCoalescedNotification:notification completion:nil]
-*/
 
 %hook SBMainWorkspace
 
