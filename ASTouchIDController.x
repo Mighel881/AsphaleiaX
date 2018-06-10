@@ -4,11 +4,13 @@ https://github.com/Sassoty/BioTesting */
 #import "ASActivatorListener.h"
 #import "ASControlPanel.h"
 #import "ASPreferences.h"
-
+#import <AudioToolbox/AudioServices.h>
+#import <BiometricKit/BiometricKit.h>
+#import <SpringBoardUIServices/_SBUIBiometricKitInterface.h>
 
 @interface ASTouchIDController ()
-@property (readwrite) BOOL isMonitoring;
-@property (readwrite) id lastMatchedFingerprint;
+@property (assign, readwrite, nonatomic) BOOL isMonitoring;
+@property (readwrite, nonatomic) id lastMatchedFingerprint;
 @end
 
 @implementation ASTouchIDController

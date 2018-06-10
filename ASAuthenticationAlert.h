@@ -1,4 +1,5 @@
 #import "ASAlert.h"
+#import <BiometricKit/BiometricKitIdentity.h>
 
 @class ASAuthenticationAlert;
 
@@ -8,7 +9,7 @@
 
 @interface ASAuthenticationAlert : ASAlert
 @property (strong, nonatomic) UIView *icon;
-@property (nonatomic) NSTimer *resetFingerprintTimer;
+@property (strong, nonatomic) NSTimer *resetFingerprintTimer;
 @property (assign, nonatomic) BOOL useSmallIcon;
 
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message icon:(UIView *)icon smallIcon:(BOOL)useSmallIcon delegate:(id<ASAuthenticationAlertDelegate>)delegate;

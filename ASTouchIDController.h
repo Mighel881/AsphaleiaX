@@ -1,11 +1,14 @@
 /* Modified from Sassoty's code
 https://github.com/Sassoty/BioTesting */
-#import "Asphaleia.h"
+#import <UIKit/UIKit.h>
+#import <HBLog.h>
+#import <SpringBoardUIServices/_SBUIBiometricKitInterfaceDelegate.h>
+
 @class ASTouchIDController;
 
 typedef void (^BTTouchIDEventBlock) (ASTouchIDController *controller, id monitor, unsigned event);
 
-#define asphaleiaLogMsg(str) HBLogDebug(@"[Asphaleia] %@",str)
+#define asphaleiaLogMsg(str) HBLogDebug(@"[Asphaleia] %@", str)
 
 #define TouchIDFingerDown  1
 #define TouchIDFingerUp    0
@@ -19,12 +22,16 @@ typedef void (^BTTouchIDEventBlock) (ASTouchIDController *controller, id monitor
 	BOOL stopping;
 	NSArray *activatorListenerNames;
 }
-@property (nonatomic, strong) BTTouchIDEventBlock biometricEventBlock;
-@property (readonly) BOOL isMonitoring;
-@property (readonly) id<_SBUIBiometricKitInterfaceDelegate> oldDelegate;
-@property (readonly) id lastMatchedFingerprint;
-@property (nonatomic) BOOL shouldBlockLockscreenMonitor;
+
+@property (copy, nonatomic) BTTouchIDEventBlock biometricEventBlock;
+@property (assign, readonly, nonatomic) BOOL isMonitoring;
+@property (readonly, nonatomic) id<_SBUIBiometricKitInterfaceDelegate> oldDelegate;
+@property (readonly, nonatomic) id lastMatchedFingerprint;
+@property (assign, nonatomic) BOOL shouldBlockLockscreenMonitor;
+
 + (instancetype)sharedInstance;
+
 - (void)startMonitoring;
 - (void)stopMonitoring;
+
 @end

@@ -1,20 +1,21 @@
 #import "ASPreferences.h"
 #import "ASAuthenticationController.h"
-#import "Asphaleia.h"
+#import <_Prefix/IOSMacros.h>
 #import <BiometricKit/BiometricKit.h>
 #import <dlfcn.h>
-#import <Flipswitch/Flipswitch.h>
 #import <rocketbootstrap/rocketbootstrap.h>
-#import <sys/sysctl.h>
 #import <SystemConfiguration/CaptiveNetwork.h>
 
 static NSString *const ASPreferencesFilePath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
 
 @interface ASPreferences ()
-@property (assign, nonatomic) BOOL asphaleiaDisabled;
+@property (assign, readwrite, nonatomic) BOOL asphaleiaDisabled;
+@property (assign, readwrite, nonatomic) BOOL itemSecurityDisabled;
+
 - (void)_loadPreferences;
 - (id)objectForKey:(NSString *)key;
 - (void)setObject:(id)object forKey:(NSString *)key;
+
 @end
 
 void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -22,7 +23,8 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 @implementation ASPreferences
-@synthesize asphaleiaDisabled = _asphaleiaDisabled, itemSecurityDisabled = _itemSecurityDisabled;
+@synthesize asphaleiaDisabled = _asphaleiaDisabled;
+@synthesize itemSecurityDisabled = _itemSecurityDisabled;
 
 + (instancetype)sharedInstance {
 	static ASPreferences *sharedInstance = nil;
@@ -44,7 +46,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	rocketbootstrap_distributedmessagingcenter_apply(_center);
 
 	_prefs = [NSDictionary dictionaryWithContentsOfFile:ASPreferencesFilePath];
-	if (![self passcodeEnabled] && ![self touchIDEnabled] && %c(SpringBoard)) {
+	if (![self passcodeEnabled] && ![self touchIDEnabled] && IN_SPRINGBOARD) {
 		_asphaleiaDisabled = YES;
 		_itemSecurityDisabled = YES;
 	} else {
@@ -74,7 +76,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 + (NSString *)currentNetworkSSID {
-	NSString *SSID;
+	NSString *SSID = nil;
 
 	NSArray *supportedInterfaces = (__bridge_transfer id)CNCopySupportedInterfaces();
 	for (NSString *network in supportedInterfaces) {
@@ -98,22 +100,11 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 	OSStatus status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
 	if (status == errSecSuccess) {
-		NSDictionary *query = @{
-			(__bridge id)kSecClass:  (__bridge id)kSecClassGenericPassword,
-			(__bridge id)kSecAttrService: @"LocalDeviceServices",
-			(__bridge id)kSecAttrAccount: @"NoAccount"
-		};
-
-		status = SecItemDelete((__bridge CFDictionaryRef)query);
-
+		SecItemDelete((__bridge CFDictionaryRef)attributes);
 		return YES;
 	}
 
-	if (status == errSecDecode) {
-		return NO;
-	}
-
-	return YES;
+	return NO;
 }
 
 - (id)objectForKey:(NSString *)key {
@@ -264,7 +255,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 - (BOOL)requiresSecurityForApp:(NSString *)app {
 	NSString *tempUnlockedApp;
-	if (%c(SpringBoard) && %c(ASAuthenticationController)) {
+	if (IN_SPRINGBOARD && %c(ASAuthenticationController)) {
 		tempUnlockedApp = [[%c(ASAuthenticationController) sharedInstance] temporarilyUnlockedAppBundleID];
 	} else {
 		NSDictionary *reply = [_center sendMessageAndReceiveReplyName:@"com.a3tweaks.asphaleia.xpc/GetCurrentTempUnlockedApp" userInfo:nil];
@@ -379,7 +370,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 
 // Custom setters/getters
 - (BOOL)asphaleiaDisabled {
-	if (%c(SpringBoard)) {
+	if (IN_SPRINGBOARD) {
 		return _asphaleiaDisabled;
 	}
 
@@ -388,7 +379,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)setAsphaleiaDisabled:(BOOL)value {
-	if (%c(SpringBoard)) {
+	if (IN_SPRINGBOARD) {
 		_asphaleiaDisabled = value;
 		return;
 	}
@@ -397,7 +388,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (BOOL)itemSecurityDisabled {
-	if (%c(SpringBoard)) {
+	if (IN_SPRINGBOARD) {
 		return _itemSecurityDisabled;
 	}
 
@@ -406,7 +397,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)setItemSecurityDisabled:(BOOL)value {
-	if (%c(SpringBoard)) {
+	if (IN_SPRINGBOARD) {
 		_itemSecurityDisabled = value;
 		return;
 	}

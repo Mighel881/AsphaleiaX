@@ -1,4 +1,5 @@
-#import "Asphaleia.h"
+#import <UIKit/UIKit.h>
+#import <SpringBoardUI/SBAlertItem+Private.h>
 
 @class ASAlert;
 

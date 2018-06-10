@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
-#import "Asphaleia.h"
+#import <SpringBoard/SBIconView.h>
+
 @class ASTouchWindow;
 
 typedef void (^ASTouchWindowTouchBlockedEvent) (ASTouchWindow *touchWindow, BOOL blockedTouch);
@@ -7,7 +8,10 @@ typedef void (^ASTouchWindowTouchBlockedEvent) (ASTouchWindow *touchWindow, BOOL
 @interface ASTouchWindow : UIWindow {
 	BOOL touchedOutside;
 }
-@property (assign) SBIconView *viewToAllowTouchIn;
-@property (nonatomic, strong) ASTouchWindowTouchBlockedEvent handler;
+
+@property (strong, nonatomic) SBIconView *viewToAllowTouchIn;
+@property (copy, nonatomic) ASTouchWindowTouchBlockedEvent handler;
+
 - (void)blockTouchesAllowingTouchInView:(SBIconView *)touchView touchBlockedHandler:(ASTouchWindowTouchBlockedEvent)handler;
+
 @end

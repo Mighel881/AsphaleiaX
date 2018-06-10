@@ -1,13 +1,15 @@
 #import "../ASCommon.h"
 #import "../ASPreferences.h"
-#import <UIKit/UIKit.h>
-#import <Photos/Photos.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import <LocalAuthentication/LocalAuthentication.h>
-#import <dlfcn.h>
-#import <rocketbootstrap/rocketbootstrap.h>
+#import <_Prefix/IOSMacros.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
-#import "../Asphaleia.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <dlfcn.h>
+#import <Photos/Photos.h>
+#import <rocketbootstrap/rocketbootstrap.h>
+
+@interface CAMImageWell : UIButton
+
+@end
 
 BOOL authenticated;
 BOOL authenticating;

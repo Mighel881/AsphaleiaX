@@ -1,4 +1,3 @@
-#import "Asphaleia.h"
 #import "ASTouchIDController.h"
 #import "ASAuthenticationController.h"
 #import "ASPreferences.h"
@@ -7,14 +6,36 @@
 #import "ASPasscodeHandler.h"
 #import "ASTouchWindow.h"
 #import "ASXPCHandler.h"
-#import <UIKit/UIKit.h>
+#import <_Prefix/IOSMacros.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <AudioToolbox/AudioServices.h>
+#import <Flipswitch/Flipswitch.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 #import <SpotlightUI/SPUISearchHeader.h>
+#import <SpringBoard/SBApplication.h>
+#import <SpringBoard/SBApplicationController.h>
+#import <SpringBoard/SBApplicationIcon.h>
+#import <SpringBoard/SBAppSwitcherSnapshotView+Asphaleia.h>
+#import <SpringBoard/SBBannerController+Private.h>
+#import <SpringBoard/SBControlCenterController.h>
+#import <SpringBoard/SBDisplayItem.h>
+#import <SpringBoard/SBDisplayLayout.h>
+#import <SpringBoard/SBIcon.h>
+#import <SpringBoard/SBIconController+Private.h>
+#import <SpringBoard/SBIconLegibilityLabelView.h>
+#import <SpringBoard/SBIconView+Private.h>
+#import <SpringBoard/SBLockScreenManager.h>
+#import <SpringBoard/SBLockScreenSlideUpToAppController.h>
+#import <SpringBoard/SBMainSwitcherViewController.h>
+#import <SpringBoard/SBMutableIconLabelImageParameters.h>
+#import <SpringBoard/SBToAppsWorkspaceTransaction.h>
+#import <SpringBoard/SBWiFiManager.h>
+#import <SpringBoard/SBWorkspaceTransaction.h>
+#import <SpringBoard/SpringBoard+Private.h>
 #import <UIKit/UIImage+Private.h>
-
-static NSString *const ASBundlePath = @"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle";
+#import <UserNotificationsKit/NCNotificationRequest.h>
+#import <UserNotificationsUIKit/NCNotificationShortLookView+Private.h>
+#import <UserNotificationsUIKit/NCNotificationShortLookViewController.h>
 
 #define asphaleiaLog() HBLogDebug(@"Method called: %@", NSStringFromSelector(_cmd))
 
@@ -34,8 +55,8 @@ void DeregisterForTouchIDNotifications(id observer) {
 }
 
 @interface ASPreferences ()
-@property (readwrite) BOOL asphaleiaDisabled;
-@property (readwrite) BOOL itemSecurityDisabled;
+@property (assign, readwrite, nonatomic) BOOL asphaleiaDisabled;
+@property (assign, readwrite, nonatomic) BOOL itemSecurityDisabled;
 @end
 
 %hook SBIconController
@@ -57,14 +78,14 @@ void DeregisterForTouchIDNotifications(id observer) {
 }
 
 - (void)iconHandleLongPress:(SBIconView *)iconView withFeedbackBehavior:(id)arg2 {
-	if (self.isEditing || ![[ASPreferences sharedInstance] secureAppArrangement]) {
+	if ([self isEditing] || ![[ASPreferences sharedInstance] secureAppArrangement]) {
 		%orig;
 		return;
 	}
 
-	iconView.highlighted = NO;
+	[iconView setHighlighted:NO];
 	[iconView cancelLongPressTimer];
-	iconView.touchDownInIcon = NO;
+	[iconView setTouchDownInIcon:NO];
 
 	[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertAppArranging dismissedHandler:^(BOOL wasCancelled) {
 		if (wasCancelled) {
@@ -194,24 +215,24 @@ BOOL switcherAuthenticating;
 
 /*
 - (BOOL)activateSwitcherNoninteractively {
-		// darn bool values
+	// darn bool values
 		if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticating) {
-				return %orig;
-		}
+		return %orig;
+	}
 
 		if (!switcherAuthenticating) {
-			[self dismissSwitcherNoninteractively];
+		[self dismissSwitcherNoninteractively];
 			switcherAuthenticating = YES;
 			BOOL authenticated = [[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
 					switcherAuthenticating = NO;
-					if (!wasCancelled) {
-							[self activateSwitcherNoninteractively];
-					}
-			}];
+			if (!wasCancelled) {
+				[self activateSwitcherNoninteractively];
+			}
+		}];
 			return authenticated;
-		} else {
+	} else {
 			return %orig;
-		}
+	}
 }
 */
 %end
@@ -272,6 +293,7 @@ UIWindow *blurredWindow;
 %end
 
 %hook SBDashBoardViewController
+
 - (void)viewDidDisappear:(BOOL)animated {
 	%orig;
 
@@ -383,7 +405,7 @@ static BOOL controlCentreHasAuthenticated;
 		[ASTouchIDController sharedInstance].shouldBlockLockscreenMonitor = NO;
 		if (!wasCancelled) {
 			controlCentreHasAuthenticated = YES;
-			[self presentAnimated:YES];
+			[self presentAnimated:YES completion:nil];
 		}
 	}];
 }

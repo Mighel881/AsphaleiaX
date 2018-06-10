@@ -1,7 +1,5 @@
 #import "ASCommon.h"
 #import "ASPreferences.h"
-#include <sys/sysctl.h>
-#import <objc/runtime.h>
 #import "ASPasscodeHandler.h"
 #import "ASAuthenticationController.h"
 #import <Foundation/NSDistributedNotificationCenter.h>

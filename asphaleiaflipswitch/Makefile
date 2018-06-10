@@ -3,7 +3,6 @@ include $(THEOS)/makefiles/common.mk
 BUNDLE_NAME = AsphaleiaFlipswitch
 AsphaleiaFlipswitch_FILES = Switch.m
 AsphaleiaFlipswitch_FRAMEWORKS = UIKit
-AsphaleiaFlipswitch_LDFLAGS = -L"../.theos/obj/debug"
 AsphaleiaFlipswitch_LIBRARIES = flipswitch asphaleiaui rocketbootstrap
 AsphaleiaFlipswitch_INSTALL_PATH = /Library/Switches
 

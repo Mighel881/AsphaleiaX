@@ -2,8 +2,8 @@
 #import "../ASPreferences.h"
 
 @interface ASPreferences ()
-@property (readwrite) BOOL asphaleiaDisabled;
-@property (readwrite) BOOL itemSecurityDisabled;
+@property (assign, readwrite, nonatomic) BOOL asphaleiaDisabled;
+@property (assign, readwrite, nonatomic) BOOL itemSecurityDisabled;
 @end
 
 @implementation AsphaleiaFlipswitchSwitch

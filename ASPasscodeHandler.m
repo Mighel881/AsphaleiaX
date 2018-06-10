@@ -1,9 +1,16 @@
 #import "ASPasscodeHandler.h"
-#import "Asphaleia.h"
 #import "ASCommon.h"
 #import "ASPreferences.h"
 #import <AudioToolbox/AudioServices.h>
+#import <SpringBoard/SBDashBoardBackgroundView.h>
+#import <SpringBoard/SBIcon+Private.h>
+#import <SpringBoard/SBWallpaperLegibilitySettingsProvider.h>
+#import <SpringBoardUI/SBUIBackgroundView.h>
+#import <SpringBoardUIServices/SBUIPasscodeLockViewSimpleFixedDigitKeypad+Private.h>
+#import <UIKit/_UIBackdropViewSettings+Private.h>
+#import <UIKit/UIColor+Internal.h>
 #import <UIKit/UIImage+Private.h>
+#import <UIKit/UIWindow+Internal.h>
 
 @interface ASPasscodeHandler ()
 @property (strong, nonatomic) SBUIPasscodeLockViewSimpleFixedDigitKeypad *passcodeView;

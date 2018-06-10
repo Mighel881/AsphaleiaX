@@ -1,0 +1,3 @@
+@protocol SBFLegibilitySettingsProvider <NSObject>
+
+@end

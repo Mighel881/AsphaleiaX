@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "TouchIDInfo.h"
 #import "../ASPreferences.h"
 

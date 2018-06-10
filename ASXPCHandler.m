@@ -1,14 +1,12 @@
 #import "ASXPCHandler.h"
-#import "Asphaleia.h"
-#import <objc/runtime.h>
 #import "ASPreferences.h"
 #import "ASAuthenticationController.h"
 #import <Foundation/NSDistributedNotificationCenter.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 
 @interface ASPreferences ()
-@property (readwrite) BOOL asphaleiaDisabled;
-@property (readwrite) BOOL itemSecurityDisabled;
+@property (assign, readwrite, nonatomic) BOOL asphaleiaDisabled;
+@property (assign, readwrite, nonatomic) BOOL itemSecurityDisabled;
 @end
 
 @implementation ASXPCHandler

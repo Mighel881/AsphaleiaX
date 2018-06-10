@@ -1,14 +1,15 @@
 #import <UIKit/UIKit.h>
-#import "Asphaleia.h"
 #import "ASTouchIDController.h"
 #import "ASTouchWindow.h"
 #import "ASCommon.h"
 #import "ASAuthenticationAlert.h"
+#import <PassKitUIFoundation/PKGlyphView.h>
 
 @interface ASAuthenticationController : NSObject <ASAuthenticationAlertDelegate> {
 	ASCommonAuthenticationHandler authHandler;
 	NSString *currentAuthAppBundleID;
 }
+
 @property (strong, nonatomic) ASAuthenticationAlert *currentAuthAlert;
 @property (strong, nonatomic) SBIconView *currentHSIconView;
 @property (strong, nonatomic) PKGlyphView *fingerglyph;
@@ -16,6 +17,7 @@
 @property (nonatomic) BOOL catchAllIgnoreRequest;
 @property (copy, nonatomic) NSString *temporarilyUnlockedAppBundleID;
 @property (strong, nonatomic) ASTouchWindow *anywhereTouchWindow;
+
 + (instancetype)sharedInstance;
 - (void)initialiseGlyphIfRequired;
 - (ASAuthenticationAlert *)returnAppAuthenticationAlertWithApplication:(NSString *)appIdentifier customMessage:(NSString *)customMessage delegate:(id<ASAuthenticationAlertDelegate>)delegate;

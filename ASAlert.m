@@ -1,17 +1,20 @@
 #import "ASAlert.h"
 #import "ASPreferences.h"
+#import <SpringBoard/SBApplication.h>
+#import <SpringBoard/SBApplicationController.h>
+#import <SpringBoard/SpringBoard+Private.h>
 
 #define titleWithSpacingForIcon(t) [NSString stringWithFormat:@"\n\n\n%@",t]
 #define titleWithSpacingForSmallIcon(t) [NSString stringWithFormat:@"\n\n%@",t]
 
 @interface ASPreferences ()
-@property (readwrite) BOOL asphaleiaDisabled;
-@property (readwrite) BOOL itemSecurityDisabled;
+@property (assign, readwrite, nonatomic) BOOL asphaleiaDisabled;
+@property (assign, readwrite, nonatomic) BOOL itemSecurityDisabled;
 @end
 
 @interface ASAlert ()
-@property (nonatomic) NSMutableArray *buttons;
-@property (nonatomic) UIView *aboveTitleSubview;
+@property (strong, nonatomic) NSMutableArray *buttons;
+@property (strong, nonatomic) UIView *aboveTitleSubview;
 @end
 
 @implementation ASAlert 
@@ -35,7 +38,7 @@
 	[self alertController].message = self.message;
 
 	SBApplication *frontmostApp = [(SpringBoard *)[UIApplication sharedApplication] _accessibilityFrontMostApplication];
-	NSString *bundleID = [frontmostApp bundleIdentifier];
+	NSString *bundleID = frontmostApp.bundleIdentifier;
 
 	UIAlertAction *securedItemsAction = [UIAlertAction actionWithTitle:self.buttons[0] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 		[ASPreferences sharedInstance].itemSecurityDisabled = ![ASPreferences sharedInstance].itemSecurityDisabled;

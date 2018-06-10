@@ -1,9 +1,12 @@
 #import "ASAuthenticationController.h"
-#include <sys/sysctl.h>
-#import <objc/runtime.h>
-#import <AudioToolbox/AudioServices.h>
 #import "ASPreferences.h"
 #import "ASPasscodeHandler.h"
+#import <_Prefix/IOSMacros.h>
+#import <AudioToolbox/AudioServices.h>
+#import <SpringBoard/SBIcon+Private.h>
+#import <SpringBoard/SBIconImageView.h>
+#import <SpringBoard/SBIconController+Private.h>
+#import <SpringBoard/SBIconView+Private.h>
 
 static NSString *const ASBundlePath = @"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle";
 #define titleWithSpacingForIcon(t) [NSString stringWithFormat:@"\n\n\n%@",t]

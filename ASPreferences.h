@@ -1,3 +1,4 @@
+#import <UIKit/UIKit.h>
 #import <notify.h>
 #import <objc/message.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
@@ -43,6 +44,7 @@ void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, 
 	NSDictionary *_prefs;
 	CPDistributedMessagingCenter *_center;
 }
+
 @property (assign, readonly, nonatomic) BOOL asphaleiaDisabled;
 @property (assign, readonly, nonatomic) BOOL itemSecurityDisabled;
 

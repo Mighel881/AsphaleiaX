@@ -1,3 +1,4 @@
+#import <UIKit/UIKit.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 
 @interface ASXPCHandler : NSObject {

@@ -1,8 +1,8 @@
+#import "../ASCommon.h"
+#import "../ASPreferences.h"
 #import <Preferences/PSSpecifier+Private.h>
 #import <Preferences/DevicePINSetupController.h>
 #import <PreferencesUI/PSUIPrefsListController.h>
-#import "../ASCommon.h"
-#import "../ASPreferences.h"
 
 %hook PSUIPrefsListController
 
@@ -19,13 +19,12 @@
         if (sidebarSpecifier != specifier) {
             // Configure specifier
             [specifier setProperty:@(3) forKey:@"mode"];
+            [specifier setProperty:self forKey:@"PINControllerDelegate"];
             
             // Configure PINController
             DevicePINSetupController *controller = [[DevicePINSetupController alloc] init];
             controller.allowOptionsButton = NO;
             controller.parentController = self;
-
-            [specifier setProperty:self forKey:@"PINControllerDelegate"];
             controller.specifier = specifier;
             [self showController:controller];
             return;

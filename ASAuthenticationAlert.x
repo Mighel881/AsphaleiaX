@@ -1,9 +1,11 @@
 #import "ASAuthenticationAlert.h"
 #import "ASAuthenticationController.h"
 #import "ASPreferences.h"
-#import <SpringBoard/SBAlertItemsController.h>
-#import <UIKit/UIImage+Private.h>
 #import "ASPasscodeHandler.h"
+#import <SpringBoard/SBAlertItemsController.h>
+#import <SpringBoard/SBApplication.h>
+#import <SpringBoard/SBApplicationController.h>
+#import <UIKit/UIImage+Private.h>
 
 #define titleWithSpacingForIcon(t) [NSString stringWithFormat:@"\n\n\n%@",t]
 #define titleWithSpacingForSmallIcon(t) [NSString stringWithFormat:@"\n\n%@",t]
