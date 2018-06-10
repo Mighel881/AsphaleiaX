@@ -139,7 +139,7 @@ void DeregisterForTouchIDNotifications(id observer) {
 %end
 
 %hook SBAppSwitcherSnapshotView
-%property (nonatomic, retain) UIView *obscurityView;
+%property (nonatomic, retain) UIVisualEffectView *obscurityView;
 
 - (void)_layoutFakeStatusBar {
 	if (![[ASPreferences sharedInstance] requiresSecurityForApp:self.displayItem.displayIdentifier] || ![[ASPreferences sharedInstance] obscureAppContent]) {
@@ -156,19 +156,16 @@ void DeregisterForTouchIDNotifications(id observer) {
 		return;
 	}
 
-	CAFilter *filter = [CAFilter filterWithName:@"gaussianBlur"];
-	[filter setValue:@10 forKey:@"inputRadius"];
-	UIView *snapshotImageView = [self valueForKey:@"_containerView"];
-	snapshotImageView.layer.filters = [NSArray arrayWithObject:filter];
+	NSBundle *asphaleiaAssets = [NSBundle bundleWithPath:@"/Library/Application Support/Asphaleia/AsphaleiaAssets.bundle"];
+	UIImage *obscurityEye = [UIImage imageNamed:@"unocme.png" inBundle:asphaleiaAssets];
 
-	NSBundle *asphaleiaAssets = [NSBundle bundleWithPath:ASBundlePath];
-	UIImage *obscurityEye = [UIImage imageNamed:@"unocme.png" inBundle:asphaleiaAssets compatibleWithTraitCollection:nil];
-
-	UIView *obscurityView = [[UIView alloc] initWithFrame:self.bounds];
-	obscurityView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.7f];
+	UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+	UIVisualEffectView *obscurityView = [[UIVisualEffectView alloc] initWithEffect:effect];
+	obscurityView.frame = self.bounds;
+	obscurityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
 	UIImageView *imageView = [[UIImageView alloc] initWithImage:obscurityEye];
-	imageView.frame = CGRectMake(0, 0, obscurityEye.size.width*2, obscurityEye.size.height*2);
+	imageView.frame = CGRectMake(0, 0, obscurityEye.size.width * 2, obscurityEye.size.height * 2);
 	imageView.center = obscurityView.center;
 	[obscurityView addSubview:imageView];
 
@@ -203,38 +200,42 @@ void DeregisterForTouchIDNotifications(id observer) {
 %end
 
 %hook SBMainSwitcherViewController
-BOOL switcherAuthenticating;
+BOOL switcherAuthenticated = NO;
 
 - (BOOL)isVisible {
-	if (switcherAuthenticating) {
+	if (switcherAuthenticated) {
 		return YES;
 	} else {
 		return %orig;
 	}
 }
 
-/*
-- (BOOL)activateSwitcherNoninteractively {
+- (BOOL)toggleSwitcherNoninteractively {
 	// darn bool values
-		if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticating) {
+	BOOL orig = %orig;
+	if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticated) {
+		HBLogDebug(@"return 1");
 		return %orig;
 	}
 
-		if (!switcherAuthenticating) {
+	if (!switcherAuthenticated) {
+		HBLogDebug(@"return 2");
 		[self dismissSwitcherNoninteractively];
-			switcherAuthenticating = YES;
-			BOOL authenticated = [[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
-					switcherAuthenticating = NO;
+		switcherAuthenticated = YES;
+		[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
+			switcherAuthenticated = NO;
 			if (!wasCancelled) {
 				[self activateSwitcherNoninteractively];
 			}
 		}];
-			return authenticated;
+
+		return orig;
 	} else {
-			return %orig;
+		HBLogDebug(@"return 3");
+		return orig;
 	}
 }
-*/
+
 %end
 
 
@@ -668,19 +669,11 @@ UILabel *authPassLabel;
 %end
 
 /*
-
-%hook SBBannerController
-
-- (BOOL)gestureRecognizerShouldBegin:(id)gestureRecognizer {
-	if (![[ASPreferences sharedInstance] requiresSecurityForApp:bundleIdentifier] || currentBannerAuthenticated || ![[ASPreferences sharedInstance] obscureNotifications]) {
-		return %orig;
-	} else {
-		return NO;
-	}
-}
-
-%end
-
+var request = [NCNotificationRequest notificationRequestWithSectionId:@"com.atebits.Tweetie2" notificationId:nil threadId:nil title:@"Test" message:@"Notification test" timestamp:[NSDate date] destination:[NSNull null]]
+var notification = [[NCCoalescedNotification alloc] initWithNotificationRequest:request]
+choose(SBNotificationBannerDestination)
+var destination = #
+[destination _postNotificationRequest:request forCoalescedNotification:notification completion:nil]
 */
 
 %hook SBMainWorkspace
