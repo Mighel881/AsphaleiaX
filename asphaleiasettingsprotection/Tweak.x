@@ -14,7 +14,7 @@
     // Don't show if first time
     NSString *passcode = [[ASPreferences sharedInstance] getPasscode];
 
-    if (specifier && specifier == asphaleiaSpecifier && passcode) {
+    if (specifier && (specifier == asphaleiaSpecifier) && passcode) {
         PSSpecifier *sidebarSpecifier = [self _sidebarSpecifierForCategoryController];
         if (sidebarSpecifier != specifier) {
             // Configure specifier

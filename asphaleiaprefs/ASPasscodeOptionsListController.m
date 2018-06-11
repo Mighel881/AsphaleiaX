@@ -19,6 +19,13 @@
 - (NSMutableArray <PSSpecifier *> *)specifiers {
 	NSMutableArray <PSSpecifier *> *specifiers = [super specifiers];
 
+	NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:kPreferencesPath];
+	NSString *PIN = settings[@"passcode"];
+	if (!PIN) {
+		PSSpecifier *specifier = specifiers[1];
+		[specifier setProperty:@(0) forKey:@"mode"];
+	}
+
 	dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
 	Class la = NSClassFromString(@"LAActivator");
 	if (!la) {
@@ -48,14 +55,6 @@
 	}
 
 	return cell;
-}
-
-- (void)changePasscode {
-	if ([(NSString *)[[[NSDictionary alloc]initWithContentsOfFile:kPreferencesPath] objectForKey:@"passcode"] length] == 0) {
-		[(UIViewController *)[[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder] presentViewController:[[modalPinVC alloc] initToSetPasscode:self] animated:YES completion:NULL];
-	} else {
-		[(UIViewController *)[[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder] presentViewController:[[modalPinVC alloc] initWithDelegate:self] animated:YES completion:NULL];
-	}
 }
 
 - (void)resetAllSettings {

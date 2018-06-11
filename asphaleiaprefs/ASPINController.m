@@ -1,5 +1,4 @@
 #import "ASPINController.h"
-#import <Preferences/DevicePINController.h>
 
 @implementation ASPINController
 
@@ -27,6 +26,21 @@
     NSDictionary *preferences = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist"];
     NSString *passcode = preferences[@"passcode"];
     return [PIN isEqualToString:passcode];
+}
+
+- (void)setPIN:(NSString *)PIN completion:(id)completion {
+    NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+    NSString *settingsPath = @"/var/mobile/Library/Preferences/com.a3tweaks.asphaleia.plist";
+    [settings addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:settingsPath]];
+    
+    settings[@"passcode"] = PIN;
+    [settings writeToFile:settingsPath atomically:YES];
+
+	CFNotificationCenterPostNotification (CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.a3tweaks.asphaleia/ReloadPrefs"), NULL, NULL, YES);
+}
+
+- (void)setPIN:(NSString *)PIN {
+    [self setPIN:PIN completion:nil];
 }
 
 - (NSBundle *)stringsBundle {

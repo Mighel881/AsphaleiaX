@@ -11,16 +11,18 @@
 			<string>PIN_FOOTER</string>
 		</dict>
 		<dict>
+			<key>buttonAction</key>
+			<string>showPINSheet:</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
-			<key>id</key>
-			<string>changePasscodeButton</string>
-			<key>action</key>
-			<string>changePasscode</string>
+			<key>customControllerClass</key>
+			<string>ASPINController</string>
 			<key>label</key>
 			<string>CHANGE_PASSCODE</string>
-			<key>PostNotification</key>
-			<string>com.a3tweaks.asphaleia/ReloadPrefs</string>
+			<key>mode</key>
+			<integer>2</integer>
+			<key>pane</key>
+			<string>DevicePINPane</string>
 		</dict>
 		<dict>
 			<key>cell</key>
