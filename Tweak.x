@@ -10,6 +10,7 @@
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <AudioToolbox/AudioServices.h>
 #import <Flipswitch/Flipswitch.h>
+#import <HBLog.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 #import <SpotlightUI/SPUISearchHeader.h>
 #import <SpringBoard/SBApplication.h>
@@ -163,28 +164,27 @@ void DeregisterForTouchIDNotifications(id observer) {
 	UIVisualEffectView *obscurityView = [[UIVisualEffectView alloc] initWithEffect:effect];
 	obscurityView.frame = self.bounds;
 	obscurityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	obscurityView.layer.cornerRadius = [self cornerRadius];
+	obscurityView.clipsToBounds = YES;
 
 	UIImageView *imageView = [[UIImageView alloc] initWithImage:obscurityEye];
 	imageView.frame = CGRectMake(0, 0, obscurityEye.size.width * 2, obscurityEye.size.height * 2);
 	imageView.center = obscurityView.center;
 	[obscurityView addSubview:imageView];
 
-	obscurityView.tag = 80085; // ;)
-
 	[self addSubview:obscurityView];
 	self.obscurityView = obscurityView;
 }
 
 - (void)respondToBecomingInvisibleIfNecessary {
-	self.layer.filters = nil;
-	UIView *obscurityView = self.obscurityView;
-	if (obscurityView) {
-		[obscurityView removeFromSuperview];
+	if (self.obscurityView) {
+		[self.obscurityView removeFromSuperview];
 	}
 
 	self.obscurityView = nil;
 	%orig;
 }
+
 %end
 
 %hook SBUIController
@@ -199,8 +199,10 @@ void DeregisterForTouchIDNotifications(id observer) {
 
 %end
 
+/*
 %hook SBMainSwitcherViewController
-BOOL switcherAuthenticated = NO;
+static BOOL switcherAuthenticated;
+static BOOL switcherAuthenticating;
 
 - (BOOL)isVisible {
 	if (switcherAuthenticated) {
@@ -210,31 +212,34 @@ BOOL switcherAuthenticated = NO;
 	}
 }
 
-- (BOOL)toggleSwitcherNoninteractively {
-	// darn bool values
-	BOOL orig = %orig;
-	if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticated) {
-		return %orig;
+- (void)viewWillAppear:(BOOL)animated {
+	if (![[ASPreferences sharedInstance] secureSwitcher] || switcherAuthenticated || switcherAuthenticating) {
+		%orig;
+		return;
 	}
 
-	if (!switcherAuthenticated) {
-		[self dismissSwitcherNoninteractively];
-		switcherAuthenticated = YES;
-		[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
+	[self dismissSwitcherNoninteractively];
+	switcherAuthenticating = YES;
+	[[ASAuthenticationController sharedInstance] authenticateFunction:ASAuthenticationAlertSwitcher dismissedHandler:^(BOOL wasCancelled) {
+		if (!wasCancelled) {
+			switcherAuthenticated = YES;
+			[self activateSwitcherNoninteractively];
+			%orig;
+		} else {
 			switcherAuthenticated = NO;
-			if (!wasCancelled) {
-				[self activateSwitcherNoninteractively];
-			}
-		}];
+			switcherAuthenticating = NO;
+		}
+	}];
+}
 
-		return orig;
-	} else {
-		return orig;
-	}
+- (void)viewWillDisappear:(BOOL)animated {
+	switcherAuthenticated = NO;
+	switcherAuthenticating = NO;
+	%orig;
 }
 
 %end
-
+*/
 
 %hook SBLockScreenManager
 UIWindow *blurredWindow;
