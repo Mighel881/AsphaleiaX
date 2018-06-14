@@ -1,29 +1,23 @@
 #import "ASSecuredSettingsListController.h"
 #import "ASRootListController.h"
 #import <Preferences/PSSpecifier.h>
-#import <Preferences/PSRootController.h>
 #import <Preferences/PSTableCell.h>
+#import <PreferencesUI/PSUIPrefsListController.h>
+#import <PreferencesUI/PSUIPrefsRootController+Private.h>
 
-#define kIconStateFile @"/private/var/mobile/Library/SpringBoard/IconState.plist"
-
-@interface PrefsListController : PSListController
--(id)table;
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-@end
-@interface PrefsRootController : PSRootController
--(PrefsListController *)rootListController;
-@end
-
-@interface PSListController ()
--(PrefsRootController *)navigationController;
-@end
-
-@implementation ASSecuredSettingsListController
+@implementation ASSecuredSettingsListController {
+	PSUIPrefsListController *_rootListController;
+}
 
 - (NSMutableArray <PSSpecifier *> *)specifiers {
 	return nil;
+}
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
+
+	PSUIPrefsRootController *navigationController = (PSUIPrefsRootController *)self.navigationController;
+	_rootListController = [navigationController rootListController];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -44,7 +38,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [[[self navigationController] rootListController] tableView:[[[self navigationController] rootListController] table] cellForRowAtIndexPath:indexPath];
+	UITableViewCell *cell = [_rootListController tableView:[_rootListController table] cellForRowAtIndexPath:indexPath];
 	if (!cell) { // Invalid indexPath.
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ASSettingsCell"];
 		return cell;
@@ -59,8 +53,9 @@
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	UISwitch *switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
-	if ([[(PSTableCell *)cell specifier] identifier] && ![settingsPanelNames containsObject:[[(PSTableCell *)cell specifier] identifier]]) {
-		[settingsPanelNames insertObject:[[(PSTableCell *)cell specifier] identifier] atIndex:[self getRowIndexFromAllRows:indexPath]];
+	NSString *identifier = ((PSTableCell *)cell).specifier.identifier;
+	if (identifier && ![settingsPanelNames containsObject:identifier]) {
+		[settingsPanelNames insertObject:identifier atIndex:[self getRowIndexFromAllRows:indexPath]];
 	}
 
 	[switchview addTarget:self action:@selector(updateSwitchAtIndexPath:) forControlEvents:UIControlEventValueChanged];
@@ -80,11 +75,11 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return [[[self navigationController] rootListController] numberOfSectionsInTableView:[[[self navigationController] rootListController] table]];
+	return [_rootListController numberOfSectionsInTableView:[_rootListController table]];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [[[self navigationController] rootListController] tableView:[[[self navigationController] rootListController] table] numberOfRowsInSection:section];
+	return [_rootListController tableView:[_rootListController table] numberOfRowsInSection:section];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

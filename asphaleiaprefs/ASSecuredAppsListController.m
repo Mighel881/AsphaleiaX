@@ -96,7 +96,7 @@ void AppListNeedsToReload() {
 }
 
 
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
 	// Need to mimic what PSListController does when it handles didSelectRowAtIndexPath
@@ -106,7 +106,7 @@ void AppListNeedsToReload() {
 	controller.parentController = self;
 
 	[self pushController:controller];
-	[tableView deselectRowAtIndexPath:indexPath animated:true];
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

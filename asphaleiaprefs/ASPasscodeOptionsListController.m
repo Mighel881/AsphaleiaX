@@ -1,6 +1,5 @@
 #import "ASPasscodeOptionsListController.h"
 #import "ASRootListController.h"
-#import "modalPinVC.h"
 #import "TouchIDInfo.h"
 #import <dlfcn.h>
 #import <libactivator/libactivator.h>

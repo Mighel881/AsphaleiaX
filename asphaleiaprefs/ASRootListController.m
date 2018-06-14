@@ -57,7 +57,7 @@
 }
 
 - (void)showSupportController {
-	TSContactViewController *supportController = [HBSupportController supportViewControllerForBundle:self.bundle];
+	TSContactViewController *supportController = [HBSupportController supportViewControllerForBundle:[NSBundle bundleForClass:self.class] preferencesIdentifier:@"com.a3tweaks.asphaleiaprefs"];;
 	[self.navigationController pushViewController:supportController animated:YES];
 }
 

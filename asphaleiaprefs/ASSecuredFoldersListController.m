@@ -2,7 +2,7 @@
 #import "ASRootListController.h"
 #import <Preferences/PSSpecifier.h>
 
-#define kIconStateFile @"/private/var/mobile/Library/SpringBoard/IconState.plist"
+static NSString *const SBIconStatePath = @"/private/var/mobile/Library/SpringBoard/IconState.plist";
 
 @implementation ASSecuredFoldersListController
 
@@ -13,7 +13,7 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 
-	NSDictionary *iconState = [NSMutableDictionary dictionaryWithContentsOfFile:kIconStateFile];
+	NSMutableDictionary *iconState = [NSMutableDictionary dictionaryWithContentsOfFile:SBIconStatePath];
 	asphaleiaSettings = [NSMutableDictionary dictionaryWithContentsOfFile:kPreferencesPath];
 	securedFolders = [asphaleiaSettings objectForKey:@"securedFolders"] ? asphaleiaSettings[@"securedFolders"] : [NSMutableDictionary dictionary];
 	[self processDictionaryOrArray:iconState];
